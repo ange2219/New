@@ -62,24 +62,19 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .btn-primary.done { background: #1f7a45; }
 .btn-primary.red { background: var(--red); }
 
-/* ── Scene 1 : Looks ────────────────── */
-.looks-row {
-  position: absolute; left: 0; right: 0; bottom: 6vh; top: 70px;
-  display: flex; align-items: flex-end; justify-content: center;
-  padding: 0 4vw;
+/* ── Scene 1 : Looks (cercle en perspective) ── */
+.title-lg { font-size: clamp(24px, 2.6vw, 34px); font-weight: 700; letter-spacing: -.03em; margin: 0 0 6px; }
+.looks-title { max-width: 300px; }
+.ring-stage { position: absolute; left: 0; top: 0; bottom: 0; z-index: 1; touch-action: pan-y; cursor: grab; overflow: hidden; }
+.ring-stage:active { cursor: grabbing; }
+.ring-floor {
+  position: absolute; left: 6%; right: 6%; bottom: 7vh; height: 18vh; border-radius: 50%;
+  background: radial-gradient(ellipse at center, rgba(0,0,0,.07), transparent 65%);
+  pointer-events: none;
 }
-.look-slot { position: relative; height: min(68vh, 640px); aspect-ratio: 200 / 540; margin: 0 -0.6vw; flex: none; }
-.look-figure { width: 100%; height: 100%; display: block; }
-.look-label {
-  position: absolute; left: 50%; bottom: -26px; transform: translateX(-50%);
-  white-space: nowrap; font-size: 12px; font-weight: 500; pointer-events: none;
-}
-.look-stage {
-  position: absolute; left: 0; right: 380px; top: 0; bottom: 0;
-  display: flex; align-items: flex-end; justify-content: center; padding-bottom: 4vh; pointer-events: none;
-}
-.look-stage-figure { position: relative; height: min(82vh, 780px); aspect-ratio: 200 / 540; pointer-events: auto; }
-.stage-arrows { position: absolute; bottom: 5vh; right: 32px; display: flex; gap: 8px; pointer-events: auto; }
+.ring-figure { position: absolute; left: 50%; bottom: 13vh; transform-origin: 50% 100%; will-change: transform, filter; }
+.ring-hit { display: block; width: 100%; height: 100%; }
+.hotspots { position: absolute; inset: 0; pointer-events: none; }
 .hotspot {
   position: absolute; width: 26px; height: 26px; margin: -13px 0 0 -13px; border-radius: 50%;
   background: rgba(255,255,255,.55); backdrop-filter: blur(4px); display: grid; place-items: center;
@@ -91,10 +86,27 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   animation: ping 1.8s ease-out infinite;
 }
 .hotspot.on { background: var(--ink); }
+.hotspot-tip {
+  position: absolute; left: calc(100% + 8px); top: 50%; transform: translateY(-50%);
+  font-style: normal; font-size: 11px; font-weight: 600; white-space: nowrap;
+  background: var(--card); color: var(--ink); padding: 4px 8px; border-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,.1);
+  opacity: 0; transition: opacity .2s; pointer-events: none;
+}
+.hotspot:hover .hotspot-tip, .hotspot.on .hotspot-tip { opacity: 1; }
 @keyframes ping { from { transform: scale(1); opacity: .9; } to { transform: scale(2.2); opacity: 0; } }
 
+.ring-pager { position: absolute; left: 0; bottom: 3.5vh; display: flex; align-items: center; justify-content: center; gap: 14px; z-index: 2; padding: 0 16px; }
+.pager-list { display: flex; gap: 6px; }
+.pager-item { display: flex; flex-direction: column; align-items: flex-start; gap: 5px; min-width: 34px; position: relative; }
+.pager-bar { width: 100%; height: 2px; background: var(--line); transition: background .3s; }
+.pager-item.on .pager-bar { background: var(--ink); }
+.pager-num { font-size: 10px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.pager-item.on .pager-num { color: var(--ink); font-weight: 600; }
+.pager-name { position: absolute; left: 22px; bottom: 0; font-size: 10px; white-space: nowrap; color: var(--ink); }
+.pager-item.on { min-width: 110px; }
+
 .look-panel {
-  position: absolute; right: 20px; top: 8px; bottom: 20px; width: 340px;
+  position: absolute; right: 20px; top: 8px; bottom: 20px; width: 340px; z-index: 5;
   background: var(--card); border: 1px solid var(--line); border-radius: 6px;
   display: flex; flex-direction: column; z-index: 10;
 }
@@ -213,12 +225,21 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   .scene-title, .sneaker-title, .detail-back { left: 16px; }
   .sneaker-title { max-width: 80vw; }
 
-  .looks-row { justify-content: flex-start; overflow-x: auto; overflow-y: hidden; padding: 0 16px; top: 60px; bottom: 40px; scrollbar-width: none; }
-  .look-slot { height: min(58vh, 520px); margin: 0 -2px; }
-  .look-stage { right: 0; bottom: 46vh; align-items: flex-end; padding-bottom: 0; }
-  .look-stage-figure { height: 40vh; }
-  .stage-arrows { right: 16px; bottom: auto; top: 18px; }
-  .look-panel { left: 12px; right: 12px; top: auto; bottom: 12px; width: auto; max-height: 44vh; }
+  .looks-title { max-width: 80vw; }
+  .ring-figure { bottom: 20vh; }
+  .ring-floor { bottom: 15vh; }
+  .ring-pager { bottom: 11vh; gap: 8px; }
+  .pager-item { min-width: 22px; }
+  .pager-item.on { min-width: 30px; }
+  .sheet-toggle {
+    position: absolute; left: 16px; right: 16px; bottom: max(16px, env(safe-area-inset-bottom, 0px)); height: 50px; border-radius: 4px;
+    background: var(--ink); color: #fff; font-size: 13px; font-weight: 600; z-index: 3;
+  }
+  .look-sheet {
+    position: fixed; left: 0; right: 0; bottom: 0; max-height: 78vh; background: var(--card); z-index: 100;
+    border-radius: 14px 14px 0 0; display: flex; flex-direction: column; padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .sheet-grip { width: 40px; height: 4px; border-radius: 2px; background: var(--line); margin: 10px auto 0; flex: none; }
   .panel-item { grid-template-columns: 56px 1fr auto; gap: 10px; padding: 6px; }
   .panel-thumb { width: 56px; height: 56px; }
 
