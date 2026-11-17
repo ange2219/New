@@ -13,6 +13,7 @@ const N = looks.length
 // Ramène un décalage dans [-N/2, N/2[ : la rangée boucle à l'infini
 const wrap = (v) => ((((v % N) + N) % N) + N / 2) % N - N / 2
 const SPRING = { type: 'spring', stiffness: 70, damping: 18, mass: 1 }
+const STEP = (Math.PI * 2) / N
 
 export default function Looks() {
   const { w, h } = useViewport()
@@ -27,7 +28,9 @@ export default function Looks() {
   // Mesures
   const figH = mobile ? Math.min(h * 0.58, 520) : Math.min(h * 0.68, 640)
   const figW = (figH * 200) / 540
-  const spacing = mobile ? figW * 1.05 : Math.max(figW * 1.08, (w - 80) / 6.2)
+  // Rayon du cercle : assez large pour que les mannequins de devant couvrent tout l'écran
+  const R = mobile ? w * 0.62 : Math.max(figW * 1.6, (w - 60) * 0.47)
+  const spacing = R * Math.sin(STEP) // distance horizontale entre deux voisins, devant
   const panelW = mobile ? 0 : 380
   const openScale = mobile ? 0.56 : 1.18
   const openShiftX = -panelW / 2
@@ -130,8 +133,8 @@ export default function Looks() {
             motionBlur={motionBlur}
             figW={figW}
             figH={figH}
-            spacing={spacing}
-            halfW={w / 2}
+            R={R}
+            mobile={mobile}
             openScale={openScale}
             openShiftX={openShiftX}
             openShiftY={openShiftY}
@@ -203,28 +206,29 @@ export default function Looks() {
   )
 }
 
-function LineupFigure({ look, i, pos, openMv, motionBlur, figW, figH, spacing, halfW, openScale, openShiftX, openShiftY, isActive, open, activeSlot, setActiveSlot, onClick }) {
+function LineupFigure({ look, i, pos, openMv, motionBlur, figW, figH, R, mobile, openScale, openShiftX, openShiftY, isActive, open, activeSlot, setActiveSlot, onClick }) {
   const off = useTransform(pos, (p) => wrap(i - p))
   // Le look central quand on ouvre : 1 pour lui, 0 pour les autres (en douceur)
   const focus = useTransform(off, (o) => Math.max(0, 1 - Math.abs(o) * 2))
 
+  // Position sur le cercle (vu de face) : sin → horizontal, cos → profondeur
+  const depth = useTransform(off, (o) => 1 - Math.cos(o * STEP)) // 0 devant → 2 au fond
   const x = useTransform([off, openMv, focus], ([o, t, f]) => {
-    const base = o * spacing
-    // à l'ouverture, les autres s'écartent vers les bords, le central va au centre de la zone libre
-    return base + t * (base * 0.9 * (1 - f)) + t * f * openShiftX
+    const base = Math.sin(o * STEP) * R
+    // à l'ouverture, les autres s'écartent vers l'extérieur, le look choisi se place au centre de la zone libre
+    return base + t * (1 - f) * base * 0.8 + t * f * openShiftX
   })
-  const y = useTransform([openMv, focus], ([t, f]) => t * f * openShiftY)
-  const scale = useTransform([off, openMv, focus], ([o, t, f]) => {
-    const lineup = 1 - Math.min(Math.abs(o), 3) * 0.035
-    return lineup * (1 + t * f * (openScale - 1))
+  const y = useTransform([depth, openMv, focus], ([d, t, f]) => -d * (mobile ? 14 : 26) * (1 - t * f) + t * f * openShiftY)
+  const scale = useTransform([depth, openMv, focus], ([d, t, f]) => {
+    const ring = 1 - d * 0.24
+    return ring + t * f * (openScale - ring)
   })
-  const opacity = useTransform([off, openMv, focus], ([o, t, f]) => {
-    // fondu aux bords de l'écran pour que la boucle soit invisible
-    const edge = Math.min(1, Math.max(0, (halfW + figW * 0.2 - Math.abs(o * spacing)) / (figW * 0.9)))
-    return edge * (1 - t * (1 - f))
+  const opacity = useTransform([depth, openMv, focus], ([d, t, f]) => Math.max(0.22, 1 - d * 0.36) * (1 - t * (1 - f)))
+  const filter = useTransform([depth, motionBlur, openMv, focus], ([d, b, t, f]) => {
+    const ring = d * (mobile ? 1.6 : 2.6) * (1 - t * f)
+    return `blur(${(ring + b + t * (1 - f) * 10).toFixed(2)}px)`
   })
-  const filter = useTransform([motionBlur, openMv, focus], ([b, t, f]) => `blur(${(b + t * (1 - f) * 10).toFixed(2)}px)`)
-  const zIndex = useTransform(off, (o) => Math.round(100 - Math.abs(o) * 10))
+  const zIndex = useTransform(depth, (d) => Math.round(300 - d * 100))
 
   return (
     <motion.div
