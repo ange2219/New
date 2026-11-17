@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { animate, motion, useMotionValue, useScroll, useSpring, useTransform } from 'framer-motion'
-import { BRAND, formatPrice, looks, sneakers, tops } from '../data/catalog.js'
-import { GarmentVisual, LookVisual, SneakerVisual } from '../components/Visuals.jsx'
+import { BRAND, accessories, formatPrice, looks, sneakers, tops } from '../data/catalog.js'
+import { AccessoryVisual, GarmentVisual, LookVisual, SneakerVisual } from '../components/Visuals.jsx'
 import { EASE, useViewport } from '../hooks.js'
 
 // Contexte : conteneur de défilement + hauteur d'un écran
@@ -41,6 +41,9 @@ export default function Home({ onNavigate }) {
         </Panel>
         <Panel index={4} length={1.2} className="tone-dark">
           {(p) => <SneakerShow {...p} onNavigate={onNavigate} />}
+        </Panel>
+        <Panel index={5} className="tone-light">
+          {(p) => <AccShow {...p} onNavigate={onNavigate} />}
         </Panel>
         <Footer onNavigate={onNavigate} />
       </div>
@@ -91,6 +94,9 @@ const FLOATS = [
   { kind: 'sneaker', id: 'drift-3', left: 4, top: 66, w: 20, rot: -8, depth: 40, m: { left: 4, top: 82, w: 38 } },
   { kind: 'garment', id: 'tee-black', left: 70, top: 76, w: 8, rot: -6, depth: 18 },
   { kind: 'garment', id: 'jk-navy', left: 26, top: 4, w: 9, rot: 8, depth: 14 },
+  { kind: 'acc', id: 'gl-black', left: 26, top: 84, w: 8, rot: -10, depth: 22 },
+  { kind: 'acc', id: 'wt-steel', left: 93, top: 38, w: 5, rot: 16, depth: 35 },
+  { kind: 'acc', id: 'ch-gold', left: 12, top: 46, w: 6, rot: 6, depth: 20 },
 ]
 
 function Hero({ exit, onNavigate }) {
@@ -160,7 +166,8 @@ function Float({ f, i, mx, my, mobile }) {
   const x = useTransform(mx, (v) => v * f.depth * 2)
   const y = useTransform(my, (v) => v * f.depth * 2)
   const pos = mobile && f.m ? f.m : f
-  const product = f.kind === 'garment' ? tops.find((t) => t.id === f.id) : sneakers.find((s) => s.id === f.id)
+  const product =
+    f.kind === 'garment' ? tops.find((t) => t.id === f.id) : f.kind === 'acc' ? accessories.find((a) => a.id === f.id) : sneakers.find((s) => s.id === f.id)
   return (
     <motion.div
       className="float"
@@ -170,7 +177,13 @@ function Float({ f, i, mx, my, mobile }) {
       transition={{ delay: 0.6 + i * 0.12, type: 'spring', stiffness: 60, damping: 14 }}
     >
       <motion.div animate={{ y: [0, -14, 0], rotate: [0, 2, 0] }} transition={{ duration: 4 + i * 0.6, repeat: Infinity, ease: 'easeInOut' }}>
-        {f.kind === 'garment' ? <GarmentVisual product={product} className="fill" /> : <SneakerVisual product={product} className="fill" />}
+        {f.kind === 'garment' ? (
+          <GarmentVisual product={product} className="fill" />
+        ) : f.kind === 'acc' ? (
+          <AccessoryVisual product={product} className="fill" />
+        ) : (
+          <SneakerVisual product={product} className="fill" />
+        )}
       </motion.div>
     </motion.div>
   )
@@ -354,7 +367,41 @@ function SneakerShow({ inner, enter, onNavigate }) {
   )
 }
 
-// ── 6. Pied de page ─────────────────────────────────────────
+// ── 6. Accessoires : les pièces se placent en orbite ──
+function AccShow({ enter, onNavigate }) {
+  const picks = ['gl-black', 'cap-cream', 'ch-cuban', 'wt-steel', 'br-gold', 'rg-signet'].map((id) => accessories.find((a) => a.id === id))
+  const headY = useTransform(enter, [0, 1], [100, 0])
+  return (
+    <div className="accshow">
+      <motion.div className="accshow-head" style={{ y: headY }}>
+        <span className="eyebrow">Pour finir le look</span>
+        <h2 className="section-title">Accessoires</h2>
+        <p className="muted">Lunettes, casquettes, chaînes, montres, bracelets et bagues.</p>
+        <button className="btn-pill dark" onClick={() => onNavigate('accessories')}>Voir les accessoires</button>
+      </motion.div>
+      <div className="accshow-grid">
+        {picks.map((a, i) => (
+          <AccTile key={a.id} a={a} i={i} enter={enter} onClick={() => onNavigate('accessories')} />
+        ))}
+      </div>
+    </div>
+  )
+}
+
+function AccTile({ a, i, enter, onClick }) {
+  const y = useTransform(enter, [0, 1], [160 + i * 40, 0])
+  const rotate = useTransform(enter, [0, 1], [i % 2 ? 20 : -20, 0])
+  return (
+    <motion.button className="accshow-tile" style={{ y, rotate }} onClick={onClick} whileHover={{ y: -8, scale: 1.04 }}>
+      <motion.div className="fill" animate={{ y: [0, -8, 0] }} transition={{ duration: 3 + i * 0.4, repeat: Infinity, ease: 'easeInOut' }}>
+        <AccessoryVisual product={a} className="fill" />
+      </motion.div>
+      <span>{a.name}</span>
+    </motion.button>
+  )
+}
+
+// ── 7. Pied de page ─────────────────────────────────────────
 function Footer({ onNavigate }) {
   const [email, setEmail] = useState('')
   const [done, setDone] = useState(false)
@@ -389,6 +436,7 @@ function Footer({ onNavigate }) {
           <b>Boutique</b>
           <button onClick={() => onNavigate('rack')}>Collection</button>
           <button onClick={() => onNavigate('sneakers')}>Sneakers</button>
+          <button onClick={() => onNavigate('accessories')}>Accessoires</button>
           <button onClick={() => onNavigate('looks')}>Cabine virtuelle</button>
         </div>
         <div>

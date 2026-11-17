@@ -1,6 +1,8 @@
 import Garment from './art/Garment.jsx'
 import Sneaker from './art/Sneaker.jsx'
 import Figure from './art/Figure.jsx'
+import Accessory from './art/Accessory.jsx'
+import { ACC_TYPES } from '../data/catalog.js'
 
 // Ces composants utilisent la vraie photo si elle est renseignée dans le catalogue,
 // sinon le visuel provisoire en SVG.
@@ -24,7 +26,13 @@ export function LookVisual({ look, className, style }) {
   return <Figure look={look} className={className} style={style} />
 }
 
+export function AccessoryVisual({ product, className, style }) {
+  if (product.image) return <img src={product.image} alt="" draggable="false" className={className} style={{ objectFit: 'contain', ...style }} />
+  return <Accessory product={product} className={className} style={style} />
+}
+
 export function ProductThumb({ product, className }) {
+  if (ACC_TYPES[product.type]) return <AccessoryVisual product={product} className={className} />
   if (product.colorways) return <SneakerVisual product={product} className={className} />
   if (product.type === 'pants') return <PantsThumb product={product} className={className} />
   return <GarmentVisual product={product} className={className} />

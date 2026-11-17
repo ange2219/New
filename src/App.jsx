@@ -6,10 +6,11 @@ import Home from './scenes/Home.jsx'
 import Looks from './scenes/Looks.jsx'
 import Rack from './scenes/Rack.jsx'
 import Sneakers from './scenes/Sneakers.jsx'
+import Accessories from './scenes/Accessories.jsx'
 import { BagProvider } from './store.jsx'
 import { EASE } from './hooks.js'
 
-const SCENE_COMPONENTS = { home: Home, looks: Looks, rack: Rack, sneakers: Sneakers }
+const SCENE_COMPONENTS = { home: Home, looks: Looks, rack: Rack, sneakers: Sneakers, accessories: Accessories }
 
 export default function App() {
   const [scene, setScene] = useState(() => {

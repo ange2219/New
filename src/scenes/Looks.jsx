@@ -1,13 +1,25 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { AnimatePresence, animate, motion, useMotionValue, useMotionValueEvent, useTransform, useVelocity } from 'framer-motion'
-import { byId, formatPrice, looks } from '../data/catalog.js'
+import { ACC_TYPES, byId, formatPrice, looks } from '../data/catalog.js'
 import { LookVisual, ProductThumb } from '../components/Visuals.jsx'
 import { FIGURE_HOTSPOTS } from '../components/art/Figure.jsx'
 import { useBag } from '../store.jsx'
 import { EASE, useKey, useViewport } from '../hooks.js'
 
 const SLOTS = ['top', 'bottom', 'shoes']
-const CATEGORY = { top: 'Haut', bottom: 'Bas', shoes: 'Sneakers' }
+const CATEGORY = { top: 'Haut', bottom: 'Bas', shoes: 'Sneakers', ...ACC_TYPES }
+
+// Taille proposée par défaut quand on ajoute depuis la cabine
+const defaultSize = (slot) => (slot === 'shoes' ? '42' : slot === 'ring' ? '56' : ACC_TYPES[slot] ? null : 'M')
+
+// Toutes les pièces d'un look : vêtements + accessoires (clé = emplacement sur la silhouette)
+const lookItems = (look) => [
+  ...SLOTS.map((slot) => ({ slot, product: byId(look[slot]) })),
+  ...(look.acc || []).map((id) => {
+    const product = byId(id)
+    return { slot: product.type, product }
+  }),
+]
 const N = looks.length
 
 // Ramène un décalage dans [-N/2, N/2[ : la rangée boucle à l'infini
@@ -249,7 +261,7 @@ function LineupFigure({ look, i, pos, openMv, motionBlur, figW, figH, R, mobile,
       <AnimatePresence>
         {open && isActive && (
           <motion.div className="hotspots" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ delay: 0.5 }}>
-            {SLOTS.map((slot, k) => (
+            {lookItems(look).map(({ slot }, k) => (
               <motion.button
                 key={slot}
                 className={`hotspot ${activeSlot === slot ? 'on' : ''}`}
@@ -276,11 +288,11 @@ function LineupFigure({ look, i, pos, openMv, motionBlur, figW, figH, R, mobile,
 function LookPanel({ look, index, activeSlot, setActiveSlot }) {
   const { add } = useBag()
   const [added, setAdded] = useState(false)
-  const products = SLOTS.map((s) => ({ slot: s, product: byId(look[s]) }))
+  const products = lookItems(look)
   const total = products.reduce((s, p) => s + p.product.price, 0)
 
   const addAll = () => {
-    add(products.map((p) => ({ product: p.product, size: p.slot === 'shoes' ? '42' : 'M' })))
+    add(products.map((p) => ({ product: p.product, size: defaultSize(p.slot) })))
     setAdded(true)
     setTimeout(() => setAdded(false), 1800)
   }
@@ -315,9 +327,10 @@ function LookPanel({ look, index, activeSlot, setActiveSlot }) {
               <div className="panel-info">
                 <span className="eyebrow">{CATEGORY[slot]}</span>
                 <strong>{product.name}</strong>
+                {product.subtitle && ACC_TYPES[slot] && <span className="muted">{product.subtitle}</span>}
                 <span>{formatPrice(product.price)}</span>
               </div>
-              <button className="icon-btn small" onClick={() => add({ product, size: slot === 'shoes' ? '42' : 'M' })} aria-label={`Ajouter ${product.name}`}>
+              <button className="icon-btn small" onClick={() => add({ product, size: defaultSize(slot) })} aria-label={`Ajouter ${product.name}`}>
                 +
               </button>
             </motion.li>

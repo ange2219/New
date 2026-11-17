@@ -7,6 +7,7 @@ export const SCENES = [
   { id: 'looks', label: 'Cabine' },
   { id: 'rack', label: 'Collection' },
   { id: 'sneakers', label: 'Sneakers' },
+  { id: 'accessories', label: 'Accessoires' },
 ]
 
 export default function Header({ scene, onScene }) {

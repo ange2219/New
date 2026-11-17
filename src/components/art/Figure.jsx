@@ -8,6 +8,12 @@ export const FIGURE_HOTSPOTS = {
   top: { x: 50, y: 33 },
   bottom: { x: 61, y: 68 },
   shoes: { x: 36, y: 91 },
+  cap: { x: 56, y: 5.5 },
+  glasses: { x: 50, y: 9.4 },
+  chain: { x: 50, y: 21 },
+  watch: { x: 23.5, y: 49.6 },
+  bracelet: { x: 76.5, y: 49.6 },
+  ring: { x: 77, y: 55.5 },
 }
 
 export default function Figure({ look, className, style }) {
@@ -24,6 +30,15 @@ export default function Figure({ look, className, style }) {
   const bDark = shade(bc, -0.22)
   const baggy = bottom.fit === 'baggy'
   const longSleeve = top.type !== 'tee'
+  const accs = (look.acc || []).map(byId).filter(Boolean)
+  const acc = (type) => accs.find((a) => a.type === type)
+  const glasses = acc('glasses')
+  const cap = acc('cap')
+  const chain = acc('chain')
+  const watch = acc('watch')
+  const bracelet = acc('bracelet')
+  const ring = acc('ring')
+  const handY = longSleeve ? 280 : 276
 
   const pants = baggy
     ? 'M58 266 L142 266 L154 486 L106 489 L100 334 L94 489 L46 486 Z'
@@ -141,11 +156,11 @@ export default function Figure({ look, className, style }) {
       {look.hairStyle === 'long' && <path d="M80 54 C76 22 124 22 120 54 C114 38 106 34 100 36 C92 34 84 40 80 54 Z" fill={look.hair} />}
 
       {/* Yeux / lunettes */}
-      {look.glasses ? (
+      {glasses ? (
         <g>
-          <rect x="84" y="47" width="14" height="8" rx="3" fill="#111" />
-          <rect x="102" y="47" width="14" height="8" rx="3" fill="#111" />
-          <path d="M98 50 L102 50" stroke="#111" strokeWidth="2" />
+          <rect x="83" y="46" width="15" height="9" rx="3.5" fill={glasses.lens} stroke={glasses.color} strokeWidth="1.6" />
+          <rect x="102" y="46" width="15" height="9" rx="3.5" fill={glasses.lens} stroke={glasses.color} strokeWidth="1.6" />
+          <path d="M98 50 L102 50 M83 49 L80 48 M117 49 L120 48" stroke={glasses.color} strokeWidth="1.6" />
         </g>
       ) : (
         <g fill={shade(skin, -0.6)}>
@@ -153,6 +168,35 @@ export default function Figure({ look, className, style }) {
           <ellipse cx="108" cy="51" rx="2" ry="1.6" />
         </g>
       )}
+
+      {/* Casquette */}
+      {cap && (
+        <g>
+          <path d="M79 44 C78 18 122 18 121 44 Z" fill={cap.color} />
+          <path d="M100 20 L100 44" stroke={shade(cap.color, -0.2)} strokeWidth="1" />
+          <ellipse cx="100" cy="44" rx="25" ry="5" fill={shade(cap.color, -0.18)} />
+          {cap.accent && <rect x="94" y="30" width="12" height="6" rx="1.5" fill={cap.accent} />}
+        </g>
+      )}
+
+      {/* Chaîne */}
+      {chain && (
+        <g>
+          <path d="M87 94 C88 122 112 122 113 94" fill="none" stroke={chain.color} strokeWidth="2.6" strokeDasharray="3 1.6" />
+          {chain.pendant && <circle cx="100" cy="122" r="4" fill={chain.color} stroke={shade(chain.color, -0.3)} strokeWidth=".8" />}
+        </g>
+      )}
+
+      {/* Montre (poignet gauche), bracelet (poignet droit), bague (main droite) */}
+      {watch && (
+        <g>
+          <rect x="39" y={handY - 15} width="16" height="7" rx="2" fill={watch.strap || watch.color} />
+          <circle cx="47" cy={handY - 11.5} r="5" fill={watch.color} />
+          <circle cx="47" cy={handY - 11.5} r="3.4" fill={watch.dial || '#111'} />
+        </g>
+      )}
+      {bracelet && <rect x="145" y={handY - 14} width="16" height="5" rx="2.5" fill={bracelet.color} stroke={shade(bracelet.color, -0.3)} strokeWidth=".6" />}
+      {ring && <rect x="150" y={handY + 6} width="7" height="3.2" rx="1.6" fill={ring.color} stroke={shade(ring.color, -0.3)} strokeWidth=".6" />}
     </svg>
   )
 }

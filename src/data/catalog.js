@@ -106,20 +106,64 @@ export const sneakers = [
   },
 ]
 
+// ── Accessoires ──────────────────────────────────────────────
+// type : 'glasses' | 'cap' | 'chain' | 'watch' | 'bracelet' | 'ring'
+export const ACC_TYPES = {
+  glasses: 'Lunettes',
+  cap: 'Casquette',
+  chain: 'Chaîne',
+  watch: 'Montre',
+  bracelet: 'Bracelet',
+  ring: 'Bague',
+}
+export const ACC_PLURAL = {
+  glasses: 'Lunettes',
+  cap: 'Casquettes',
+  chain: 'Chaînes',
+  watch: 'Montres',
+  bracelet: 'Bracelets',
+  ring: 'Bagues',
+}
+export const SIZES_RINGS = ['50', '52', '54', '56', '58', '60', '62']
+
+export const accessories = [
+  { id: 'gl-black', type: 'glasses', name: 'Shade 01', subtitle: 'Noir mat', price: 89, color: '#151515', lens: '#1c1c1c' },
+  { id: 'gl-tort', type: 'glasses', name: 'Shade 02', subtitle: 'Écaille', price: 95, color: '#7a4a24', lens: '#3a2618' },
+  { id: 'gl-clear', type: 'glasses', name: 'Studio Optic', subtitle: 'Cristal', price: 99, color: '#c9c6bf', lens: '#e8eef2' },
+  { id: 'cap-black', type: 'cap', name: 'Casquette 6 panneaux', subtitle: 'Noir', price: 39, color: '#1b1b1d', accent: '#e9e9e9' },
+  { id: 'cap-cream', type: 'cap', name: 'Casquette 6 panneaux', subtitle: 'Crème', price: 39, color: '#e9e1cf', accent: '#28513a' },
+  { id: 'cap-navy', type: 'cap', name: 'Casquette délavée', subtitle: 'Marine', price: 42, color: '#2a3654' },
+  { id: 'ch-cuban', type: 'chain', name: 'Chaîne cubaine', subtitle: 'Argent 925', price: 120, color: '#c9ccd1' },
+  { id: 'ch-gold', type: 'chain', name: 'Chaîne corde', subtitle: 'Plaqué or', price: 140, color: '#d6ad55' },
+  { id: 'ch-pendant', type: 'chain', name: 'Chaîne médaille', subtitle: 'Argent 925', price: 135, color: '#c9ccd1', pendant: true },
+  { id: 'wt-steel', type: 'watch', name: 'Montre Field', subtitle: 'Acier · cadran noir', price: 189, color: '#c4c7cc', dial: '#141414', strap: '#b9bcc1' },
+  { id: 'wt-black', type: 'watch', name: 'Montre Night', subtitle: 'Noir · bracelet caoutchouc', price: 169, color: '#2a2a2c', dial: '#0e0e0e', strap: '#202022' },
+  { id: 'wt-gold', type: 'watch', name: 'Montre Dress', subtitle: 'Doré · cuir brun', price: 210, color: '#d6ad55', dial: '#f1ece0', strap: '#5a3a22' },
+  { id: 'br-silver', type: 'bracelet', name: 'Bracelet maille', subtitle: 'Argent 925', price: 65, color: '#c9ccd1' },
+  { id: 'br-beads', type: 'bracelet', name: 'Bracelet perles', subtitle: 'Onyx', price: 45, color: '#2a2a2a', beads: true },
+  { id: 'br-gold', type: 'bracelet', name: 'Bracelet gourmette', subtitle: 'Plaqué or', price: 79, color: '#d6ad55' },
+  { id: 'rg-signet', type: 'ring', name: 'Chevalière', subtitle: 'Argent 925', price: 75, color: '#c9ccd1', signet: true },
+  { id: 'rg-gold', type: 'ring', name: 'Bague jonc', subtitle: 'Plaqué or', price: 85, color: '#d6ad55' },
+  { id: 'rg-black', type: 'ring', name: 'Bague brossée', subtitle: 'Acier noir', price: 55, color: '#3a3a3d' },
+]
+
 // ── Looks (mannequins) ───────────────────────────────────────
 // image : '/images/look-1.png' pour remplacer le mannequin dessiné par une vraie photo détourée.
 // hotspots : position (en %) des points cliquables sur la silhouette.
 export const looks = [
-  { id: 'look-1', name: 'Studio Day', skin: '#8d5a3b', hair: '#141110', hairStyle: 'short', glasses: true, top: 'tee-black', bottom: 'jn-light', shoes: 'nova-1' },
-  { id: 'look-2', name: 'Weekend Uniform', skin: '#e8c4a6', hair: '#3b2a1e', hairStyle: 'curly', top: 'hd-sage', bottom: 'cg-brown', shoes: 'court-og' },
-  { id: 'look-3', name: 'Night Shift', skin: '#5c3a26', hair: '#0f0d0c', hairStyle: 'buzz', top: 'hd-charcoal', bottom: 'tr-black', shoes: 'orbit-low' },
-  { id: 'look-4', name: 'Off Duty', skin: '#d9a982', hair: '#1c1714', hairStyle: 'long', top: 'cr-burgundy', bottom: 'cg-grey', shoes: 'drift-3' },
-  { id: 'look-5', name: 'Morning Run', skin: '#f0d0b5', hair: '#7a5634', hairStyle: 'short', top: 'tee-sky', bottom: 'jn-mid', shoes: 'vapor-run' },
-  { id: 'look-6', name: 'Gallery Walk', skin: '#a26c47', hair: '#141110', hairStyle: 'curly', glasses: true, top: 'jk-navy', bottom: 'jn-raw', shoes: 'halo-mid' },
-  { id: 'look-7', name: 'Soft Layers', skin: '#c58e66', hair: '#2a1d14', hairStyle: 'long', top: 'cr-cream', bottom: 'jn-light', shoes: 'pulse-5' },
+  { id: 'look-1', name: 'Studio Day', skin: '#8d5a3b', hair: '#141110', hairStyle: 'short', top: 'tee-black', bottom: 'jn-light', shoes: 'nova-1', acc: ['gl-black', 'ch-cuban', 'wt-steel'] },
+  { id: 'look-2', name: 'Weekend Uniform', skin: '#e8c4a6', hair: '#3b2a1e', hairStyle: 'curly', top: 'hd-sage', bottom: 'cg-brown', shoes: 'court-og', acc: ['cap-cream', 'br-beads'] },
+  { id: 'look-3', name: 'Night Shift', skin: '#5c3a26', hair: '#0f0d0c', hairStyle: 'buzz', top: 'hd-charcoal', bottom: 'tr-black', shoes: 'orbit-low', acc: ['cap-black', 'ch-gold', 'rg-signet'] },
+  { id: 'look-4', name: 'Off Duty', skin: '#d9a982', hair: '#1c1714', hairStyle: 'long', top: 'cr-burgundy', bottom: 'cg-grey', shoes: 'drift-3', acc: ['gl-tort', 'br-gold'] },
+  { id: 'look-5', name: 'Morning Run', skin: '#f0d0b5', hair: '#7a5634', hairStyle: 'short', top: 'tee-sky', bottom: 'jn-mid', shoes: 'vapor-run', acc: ['cap-navy', 'wt-black'] },
+  { id: 'look-6', name: 'Gallery Walk', skin: '#a26c47', hair: '#141110', hairStyle: 'curly', top: 'jk-navy', bottom: 'jn-raw', shoes: 'halo-mid', acc: ['gl-clear', 'ch-pendant', 'rg-gold'] },
+  { id: 'look-7', name: 'Soft Layers', skin: '#c58e66', hair: '#2a1d14', hairStyle: 'long', top: 'cr-cream', bottom: 'jn-light', shoes: 'pulse-5', acc: ['wt-gold', 'br-silver', 'rg-black'] },
 ]
 
 export const byId = (id) =>
-  tops.find((p) => p.id === id) || bottoms.find((p) => p.id === id) || sneakers.find((p) => p.id === id)
+  tops.find((p) => p.id === id) ||
+  bottoms.find((p) => p.id === id) ||
+  sneakers.find((p) => p.id === id) ||
+  accessories.find((p) => p.id === id)
 
 export const formatPrice = (n) => `${n.toFixed(2).replace('.', ',')} ${BRAND.currency}`
