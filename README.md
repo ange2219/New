@@ -52,3 +52,17 @@ src/
   components/Visuals.jsx ← choisit photo réelle ou SVG
   store.jsx              ← panier
 ```
+
+## Modèles 3D
+
+Les produits marqués **3D** utilisent un vrai modèle `.glb` (dossier `public/models/`), affiché avec
+[`<model-viewer>`](https://modelviewer.dev) : rotation, zoom, ombres et coloris intégrés.
+Pour ajouter un modèle, mets le fichier dans `public/models/` et ajoute `model: 'models/mon-fichier.glb'` au produit dans `catalog.js`.
+
+Crédits (licence [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/), via [Khronos glTF Sample Assets](https://github.com/KhronosGroup/glTF-Sample-Assets)) :
+- `sneaker-runner.glb` : « Materials Variants Shoe », © 2021 Shopify.
+- `sunglasses.glb` : « Sunglasses Khronos », © 2024 Darmstadt Graphics Group GmbH, Eric Chadwick.
+- `watch-chrono.glb` : « Chronograph Watch », © 2025 Darmstadt Graphics Group GmbH, Eric Chadwick, d'après « Chronograph Watch Mudmaster » de graphiccompressor.
+
+Les fichiers ont été optimisés (textures WebP 1024 px, géométrie simplifiée pour la montre). Ce sont des modèles de démonstration
+(la montre et les lunettes portent le logo Khronos) : à remplacer par tes propres produits avant la mise en vente.

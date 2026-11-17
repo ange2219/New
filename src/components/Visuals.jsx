@@ -3,6 +3,7 @@ import Sneaker from './art/Sneaker.jsx'
 import Figure from './art/Figure.jsx'
 import Accessory from './art/Accessory.jsx'
 import { ACC_TYPES } from '../data/catalog.js'
+import Model3D from './Model3D.jsx'
 
 // Ces composants utilisent la vraie photo si elle est renseignée dans le catalogue,
 // sinon le visuel provisoire en SVG.
@@ -13,8 +14,14 @@ export function GarmentVisual({ product, color, side = 'front', className, style
   return <Garment product={product} color={color} side={side} className={className} style={style} />
 }
 
-export function SneakerVisual({ product, colorwayIndex = 0, className, style }) {
+// allow3D : affiche le vrai modèle 3D si le produit en a un (sinon visuel 2D)
+export function SneakerVisual({ product, colorwayIndex = 0, className, style, allow3D, interactive, autoRotate }) {
   const cw = product.colorways[colorwayIndex] || product.colorways[0]
+  if (allow3D && product.model) {
+    return (
+      <Model3D src={product.model} alt={product.name} variant={cw.variant} interactive={interactive} autoRotate={autoRotate} cameraOrbit={product.cameraOrbit} className={className} style={style} />
+    )
+  }
   if (cw.image || product.image) {
     return <img src={cw.image || product.image} alt="" draggable="false" className={className} style={{ objectFit: 'contain', ...style }} />
   }
@@ -26,7 +33,12 @@ export function LookVisual({ look, className, style }) {
   return <Figure look={look} className={className} style={style} />
 }
 
-export function AccessoryVisual({ product, className, style }) {
+export function AccessoryVisual({ product, className, style, allow3D, interactive, autoRotate, variant }) {
+  if (allow3D && product.model) {
+    return (
+      <Model3D src={product.model} alt={product.name} variant={variant} interactive={interactive} autoRotate={autoRotate} cameraOrbit={product.cameraOrbit} className={className} style={style} />
+    )
+  }
   if (product.image) return <img src={product.image} alt="" draggable="false" className={className} style={{ objectFit: 'contain', ...style }} />
   return <Accessory product={product} className={className} style={style} />
 }

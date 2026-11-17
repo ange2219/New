@@ -133,13 +133,13 @@ export default function Sneakers() {
               >
                 <AnimatePresence mode="popLayout" initial={false}>
                   <motion.div
-                    key={isActive ? colorway : 0}
+                    key={isActive && !s.model ? colorway : 0}
                     initial={{ opacity: 0, rotateY: 50, x: 30 }}
                     animate={{ opacity: 1, rotateY: 0, x: 0 }}
                     exit={{ opacity: 0, rotateY: -50, x: -30 }}
                     transition={{ duration: 0.45, ease: EASE }}
                   >
-                    <SneakerVisual product={s} colorwayIndex={isActive ? colorway : 0} className="fill" />
+                    <SneakerVisual product={s} colorwayIndex={isActive ? colorway : 0} className="fill" allow3D={Math.abs(d) <= 2} interactive={open && isActive} autoRotate={open && isActive} />
                   </motion.div>
                 </AnimatePresence>
               </motion.div>
@@ -185,11 +185,18 @@ function SneakerPanel({ product, colorway, setColorway, onClose }) {
       </motion.button>
 
       <motion.div className="colorways" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }} transition={{ delay: 0.4, duration: 0.4 }}>
-        {product.colorways.map((_, i) => (
-          <button key={i} className={`cw ${i === colorway ? 'on' : ''}`} onClick={() => setColorway(i)} aria-label={`Coloris ${i + 1}`}>
-            <SneakerVisual product={product} colorwayIndex={i} className="fill" />
-          </button>
-        ))}
+        {product.colorways.map((cw, i) =>
+          product.model ? (
+            <button key={i} className={`cw cw-label ${i === colorway ? 'on' : ''}`} onClick={() => setColorway(i)}>
+              <span className="cw-dot" style={{ background: `linear-gradient(135deg, ${cw.upper} 50%, ${cw.panel} 50%)` }} />
+              {cw.label}
+            </button>
+          ) : (
+            <button key={i} className={`cw ${i === colorway ? 'on' : ''}`} onClick={() => setColorway(i)} aria-label={`Coloris ${i + 1}`}>
+              <SneakerVisual product={product} colorwayIndex={i} className="fill" />
+            </button>
+          ),
+        )}
       </motion.div>
 
       <motion.aside className="detail-info sneaker-info" initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 50 }} transition={{ duration: 0.55, ease: EASE, delay: 0.2 }}>
@@ -226,6 +233,7 @@ function SneakerPanel({ product, colorway, setColorway, onClose }) {
           {state === 'added' ? 'Ajouté au panier ✓' : 'Ajouter au panier'}
         </motion.button>
         <p className="muted small">Cuir pleine fleur · Semelle caoutchouc · Retours gratuits 30 jours</p>
+        {product.model && <p className="muted small credit">Glisse sur la chaussure pour la faire tourner, pince pour zoomer. {product.credit}</p>}
       </motion.aside>
     </>
   )

@@ -78,10 +78,11 @@ function AccCard({ a, i, hidden, onOpen }) {
         {!hidden && (
           <motion.div layoutId={`acc-${a.id}`} className="acc-visual" style={{ rotateX: rx, rotateY: ry }} transition={{ type: 'spring', stiffness: 120, damping: 20 }}>
             <motion.div className="fill" animate={{ y: [0, -6, 0] }} transition={{ duration: 3.4 + (i % 4) * 0.4, repeat: Infinity, ease: 'easeInOut' }}>
-              <AccessoryVisual product={a} className="fill" />
+              <AccessoryVisual product={a} className="fill" allow3D autoRotate />
             </motion.div>
           </motion.div>
         )}
+        {a.model && <span className="badge-3d">3D</span>}
       </div>
       <div className="acc-info">
         <span className="eyebrow">{ACC_TYPES[a.type]}</span>
@@ -98,6 +99,7 @@ function AccDetail({ a, onClose, onNavigate }) {
   const isRing = a.type === 'ring'
   const [size, setSize] = useState(null)
   const [state, setState] = useState('idle')
+  const [variant, setVariant] = useState(a.variants?.[0]?.variant)
   const wornIn = looks.filter((l) => (l.acc || []).includes(a.id))
 
   // Glisser pour faire pivoter
@@ -119,12 +121,16 @@ function AccDetail({ a, onClose, onNavigate }) {
           className="acc-big"
           style={{ rotateY: rotY }}
           transition={{ type: 'spring', stiffness: 110, damping: 20 }}
-          onPan={(_, info) => rot.set(Math.max(-40, Math.min(40, info.offset.x * 0.25)))}
-          onPanEnd={() => rot.set(0)}
+          onPan={a.model ? undefined : (_, info) => rot.set(Math.max(-40, Math.min(40, info.offset.x * 0.25)))}
+          onPanEnd={a.model ? undefined : () => rot.set(0)}
         >
-          <motion.div className="fill" animate={{ y: [0, -14, 0], rotate: [0, 2, 0] }} transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}>
-            <AccessoryVisual product={a} className="fill" />
-          </motion.div>
+          {a.model ? (
+            <AccessoryVisual product={a} className="fill" allow3D interactive autoRotate variant={variant} />
+          ) : (
+            <motion.div className="fill" animate={{ y: [0, -14, 0], rotate: [0, 2, 0] }} transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}>
+              <AccessoryVisual product={a} className="fill" />
+            </motion.div>
+          )}
         </motion.div>
         <motion.div className="floor-shadow" initial={{ opacity: 0, scaleX: 0.4 }} animate={{ opacity: 1, scaleX: 1 }} transition={{ delay: 0.4 }} />
       </div>
@@ -134,6 +140,17 @@ function AccDetail({ a, onClose, onNavigate }) {
         <h2 className="title-md">{a.name}</h2>
         <p className="muted">{a.subtitle}</p>
         <p className="price">{formatPrice(a.price)}</p>
+
+        {a.variants && (
+          <div className="field">
+            <span className="field-label">Cadran · {a.variants.find((v) => v.variant === variant)?.label}</span>
+            <div className="swatches">
+              {a.variants.map((v) => (
+                <button key={v.variant} className={`swatch ${v.variant === variant ? 'on' : ''}`} style={{ background: v.color }} onClick={() => setVariant(v.variant)} aria-label={v.label} />
+              ))}
+            </div>
+          </div>
+        )}
 
         {isRing && (
           <div className="field">
@@ -160,6 +177,8 @@ function AccDetail({ a, onClose, onNavigate }) {
         <motion.button className={`btn-primary ${state === 'added' ? 'red' : ''}`} onClick={addToBag} whileTap={{ scale: 0.97 }}>
           {state === 'added' ? 'Ajouté au panier ✓' : 'Ajouter au panier'}
         </motion.button>
+
+        {a.model && <p className="muted small credit">Glisse pour faire tourner, pince ou molette pour zoomer. {a.credit}</p>}
 
         {wornIn.length > 0 && (
           <div className="worn-in">

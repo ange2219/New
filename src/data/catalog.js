@@ -54,6 +54,16 @@ export const bottoms = [
 // shape : 'high' | 'low'   — colorways : variantes affichées en miniatures
 export const sneakers = [
   {
+    id: 'runner-3d', name: 'NOVA RUNNER', subtitle: 'Running · 3 coloris · 3D', price: 199, shape: 'low',
+    model: 'models/sneaker-runner.glb', cameraOrbit: '180deg 75deg 72%',
+    credit: 'Modèle 3D © 2021 Shopify, CC BY 4.0 (Khronos glTF Sample Assets)',
+    colorways: [
+      { variant: 'midnight', label: 'Midnight', upper: '#2a3654', panel: '#111', sole: '#f2f2f2', outsole: '#1b1b1b', laces: '#eee' },
+      { variant: 'beach', label: 'Beach', upper: '#e8d9b8', panel: '#c96f4a', sole: '#f6f1e6', outsole: '#b98d55', laces: '#fff' },
+      { variant: 'street', label: 'Street', upper: '#3b3f46', panel: '#d7262d', sole: '#f2f2f2', outsole: '#2a2a2a', laces: '#222' },
+    ],
+  },
+  {
     id: 'nova-1', name: 'NOVA 1 HIGH', subtitle: 'Royal / Black', price: 189, shape: 'high',
     colorways: [
       { upper: '#1d4fc4', panel: '#121212', sole: '#f5f5f2', outsole: '#1b1b1b', laces: '#111' },
@@ -127,6 +137,22 @@ export const ACC_PLURAL = {
 export const SIZES_RINGS = ['50', '52', '54', '56', '58', '60', '62']
 
 export const accessories = [
+  {
+    id: 'gl-3d', type: 'glasses', name: 'Shade Lab', subtitle: 'Modèle 3D · verres irisés', price: 119, color: '#1c1c1c', lens: '#2c3a46',
+    model: 'models/sunglasses.glb', cameraOrbit: '0deg 80deg 110%',
+    credit: 'Modèle 3D © 2024 Darmstadt Graphics Group, Eric Chadwick, CC BY 4.0 (Khronos glTF Sample Assets)',
+  },
+  {
+    id: 'wt-chrono', type: 'watch', name: 'Chronographe', subtitle: 'Modèle 3D · 4 cadrans', price: 249, color: '#c4c7cc', dial: '#f2f2f2', strap: '#2a2a2a',
+    model: 'models/watch-chrono.glb', cameraOrbit: '0deg 75deg 105%',
+    variants: [
+      { variant: 'Surgical White', label: 'Blanc', color: '#f2f2f2' },
+      { variant: 'Midnight Gold', label: 'Nuit & or', color: '#1c1f2b' },
+      { variant: 'Commerce Green', label: 'Vert', color: '#2f6b4a' },
+      { variant: 'Khronos Red', label: 'Rouge', color: '#c8322f' },
+    ],
+    credit: 'Modèle 3D © 2025 Darmstadt Graphics Group, Eric Chadwick, d’après graphiccompressor, CC BY 4.0 (Khronos glTF Sample Assets)',
+  },
   { id: 'gl-black', type: 'glasses', name: 'Shade 01', subtitle: 'Noir mat', price: 89, color: '#151515', lens: '#1c1c1c' },
   { id: 'gl-tort', type: 'glasses', name: 'Shade 02', subtitle: 'Écaille', price: 95, color: '#7a4a24', lens: '#3a2618' },
   { id: 'gl-clear', type: 'glasses', name: 'Studio Optic', subtitle: 'Cristal', price: 99, color: '#c9c6bf', lens: '#e8eef2' },

@@ -301,6 +301,16 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .accshow-tile { aspect-ratio: 1; background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 18%; position: relative; display: block; }
 .accshow-tile span { position: absolute; left: 12px; bottom: 10px; font-size: 11px; color: var(--muted); }
 
+
+/* ── Modèles 3D ─────────────────────── */
+model-viewer.model3d { display: block; width: 100%; height: 100%; background: transparent; --poster-color: transparent; --progress-bar-color: transparent; opacity: 0; transition: opacity .6s ease; }
+model-viewer.model3d.is-loaded { opacity: 1; }
+.badge-3d { position: absolute; top: 10px; left: 10px; font-size: 10px; font-weight: 800; letter-spacing: .08em; background: var(--ink); color: #fff; padding: 4px 7px; border-radius: 4px; }
+.acc-stage { position: relative; }
+.credit { margin-top: 10px; font-size: 11px; }
+.cw.cw-label { width: auto; height: 44px; display: flex; align-items: center; gap: 8px; padding: 0 14px 0 8px; font-size: 12px; font-weight: 500; }
+.cw-dot { width: 26px; height: 26px; border-radius: 50%; box-shadow: inset 0 0 0 1px rgba(0,0,0,.12); }
+
 /* ── Panier ─────────────────────────── */
 .scrim { position: fixed; inset: 0; background: rgba(10,10,10,.25); backdrop-filter: blur(3px); z-index: 90; }
 .drawer {
