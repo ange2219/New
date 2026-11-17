@@ -3,7 +3,8 @@ import { BRAND } from '../data/catalog.js'
 import { useBag } from '../store.jsx'
 
 export const SCENES = [
-  { id: 'looks', label: 'Looks' },
+  { id: 'home', label: 'Accueil' },
+  { id: 'looks', label: 'Cabine' },
   { id: 'rack', label: 'Collection' },
   { id: 'sneakers', label: 'Sneakers' },
 ]
@@ -12,7 +13,7 @@ export default function Header({ scene, onScene }) {
   const { items, setOpen, pulse } = useBag()
   return (
     <header className="header">
-      <button className="brand" onClick={() => onScene('looks')}>
+      <button className="brand" onClick={() => onScene('home')}>
         {BRAND.name}
       </button>
       <nav className="nav">
