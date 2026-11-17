@@ -19,7 +19,11 @@ export default function App() {
 
   const changeScene = (s) => {
     setScene(s)
-    window.history.replaceState(null, '', `#${s}`)
+    try {
+      window.history.replaceState(null, '', `#${s}`)
+    } catch {
+      /* ignoré dans les environnements restreints */
+    }
   }
 
   return (
