@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { AnimatePresence, animate, motion, useMotionValue, useMotionValueEvent, useTransform } from 'framer-motion'
+import { AnimatePresence, animate, motion, useMotionValue, useMotionValueEvent, useTransform, useVelocity } from 'framer-motion'
 import { byId, formatPrice, looks } from '../data/catalog.js'
 import { LookVisual, ProductThumb } from '../components/Visuals.jsx'
 import { FIGURE_HOTSPOTS } from '../components/art/Figure.jsx'
@@ -9,63 +9,58 @@ import { EASE, useKey, useViewport } from '../hooks.js'
 const SLOTS = ['top', 'bottom', 'shoes']
 const CATEGORY = { top: 'Haut', bottom: 'Bas', shoes: 'Sneakers' }
 const N = looks.length
-const STEP = (Math.PI * 2) / N
 
-// Ramène un décalage dans l'intervalle [-N/2, N/2[ pour que le cercle boucle
+// Ramène un décalage dans [-N/2, N/2[ : la rangée boucle à l'infini
 const wrap = (v) => ((((v % N) + N) % N) + N / 2) % N - N / 2
+const SPRING = { type: 'spring', stiffness: 70, damping: 18, mass: 1 }
 
 export default function Looks() {
   const { w, h } = useViewport()
   const mobile = w < 760
-  const pos = useMotionValue(-3) // position (en index flottant) du cercle
-  const [active, setActive] = useState(0)
-  const [activeSlot, setActiveSlot] = useState(null)
-  const [sheetOpen, setSheetOpen] = useState(false)
-  const lastInteraction = useRef(0)
 
-  // Rayon du cercle et taille des mannequins
-  const stageW = mobile ? w : w - 380
-  const R = mobile ? w * 0.44 : Math.min(stageW * 0.4, 560)
-  const figH = mobile ? Math.min(h * 0.5, 460) : Math.min(h * 0.66, 640)
+  const pos = useMotionValue(0) // index (flottant) du look au centre
+  const openMv = useMotionValue(0) // 0 = rangée, 1 = look ouvert
+  const [active, setActive] = useState(0)
+  const [open, setOpen] = useState(false)
+  const [activeSlot, setActiveSlot] = useState(null)
+
+  // Mesures
+  const figH = mobile ? Math.min(h * 0.58, 520) : Math.min(h * 0.68, 640)
+  const figW = (figH * 200) / 540
+  const spacing = mobile ? figW * 1.05 : Math.max(figW * 1.08, (w - 80) / 6.2)
+  const panelW = mobile ? 0 : 380
+  const openScale = mobile ? 0.56 : 1.18
+  const openShiftX = -panelW / 2
+  const openShiftY = mobile ? -h * 0.37 : 0
 
   useMotionValueEvent(pos, 'change', (p) => {
     const a = ((Math.round(p) % N) + N) % N
     setActive((cur) => (cur === a ? cur : a))
   })
 
-  const goTo = useCallback(
-    (target) => {
-      animate(pos, target, { type: 'spring', stiffness: 60, damping: 16, mass: 1 })
-    },
-    [pos],
-  )
-  const step = useCallback(
-    (d) => {
-      lastInteraction.current = Date.now()
-      goTo(Math.round(pos.get()) + d)
-    },
-    [goTo, pos],
-  )
+  const goTo = useCallback((target) => animate(pos, target, SPRING), [pos])
+  const step = useCallback((d) => goTo(Math.round(pos.get()) + d), [goTo, pos])
+  const goToIndex = useCallback((i) => goTo(Math.round(pos.get() + wrap(i - pos.get()))), [goTo, pos])
 
-  // Entrée : le cercle fait un tour pour se mettre en place
-  useEffect(() => {
-    const c = animate(pos, 0, { duration: 1.8, ease: EASE })
-    return () => c.stop()
-  }, [pos])
-
-  // Rotation automatique douce, suspendue dès que l'on interagit
-  useEffect(() => {
-    const t = setInterval(() => {
-      if (Date.now() - lastInteraction.current > 9000 && !sheetOpen) goTo(Math.round(pos.get()) + 1)
-    }, 4800)
-    return () => clearInterval(t)
-  }, [goTo, pos, sheetOpen])
+  const openLook = useCallback(
+    (i) => {
+      goToIndex(i)
+      setOpen(true)
+      animate(openMv, 1, { duration: 0.8, ease: EASE })
+    },
+    [goToIndex, openMv],
+  )
+  const closeLook = useCallback(() => {
+    setOpen(false)
+    setActiveSlot(null)
+    animate(openMv, 0, { duration: 0.7, ease: EASE })
+  }, [openMv])
 
   useKey('ArrowRight', () => step(1))
   useKey('ArrowLeft', () => step(-1))
-  useKey('Escape', () => setSheetOpen(false), sheetOpen)
+  useKey('Escape', closeLook, open)
 
-  // Molette
+  // Molette / trackpad : un cran = un look
   const stageRef = useRef(null)
   const wheelLock = useRef(0)
   useEffect(() => {
@@ -74,7 +69,7 @@ export default function Looks() {
     const onWheel = (e) => {
       e.preventDefault()
       const d = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY
-      if (Math.abs(d) < 8 || Date.now() - wheelLock.current < 520) return
+      if (Math.abs(d) < 8 || Date.now() - wheelLock.current < 450) return
       wheelLock.current = Date.now()
       step(d > 0 ? 1 : -1)
     }
@@ -82,82 +77,87 @@ export default function Looks() {
     return () => el.removeEventListener('wheel', onWheel)
   }, [step])
 
-  // Glisser pour faire tourner
+  // Glisser
   const panStart = useRef(0)
   const panned = useRef(false)
 
-  const pick = (i) => {
-    if (panned.current) return
-    lastInteraction.current = Date.now()
-    const off = wrap(i - pos.get())
-    if (Math.abs(off) < 0.3) {
-      if (mobile) setSheetOpen(true)
-      return
-    }
-    goTo(Math.round(pos.get() + off))
-  }
+  // Flou de mouvement proportionnel à la vitesse de défilement
+  const vel = useVelocity(pos)
+  const motionBlur = useTransform(vel, (v) => Math.min(6, Math.abs(v) * 1.6))
 
   const look = looks[active]
 
   return (
     <div className="scene looks">
       <div className="scene-title looks-title">
-        <h1 className="title-lg">Try the Look.</h1>
-        <p className="muted small">{N} looks, stylés de la tête aux pieds. Touche un point pour voir la pièce.</p>
+        <AnimatePresence mode="wait">
+          {open ? (
+            <motion.div key={`t-${look.id}`} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.3, ease: EASE }}>
+              <button className="back-link" onClick={closeLook}>← Tous les looks</button>
+              <span className="eyebrow">Look {String(active + 1).padStart(2, '0')}</span>
+              <h1 className="title-sm">{look.name}</h1>
+            </motion.div>
+          ) : (
+            <motion.div key="t-all" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.3, ease: EASE }}>
+              <h1 className="title-lg">Try the Look.</h1>
+              <p className="muted small">{N} looks, stylés de la tête aux pieds. Clique sur un mannequin pour voir les pièces.</p>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       <motion.div
         ref={stageRef}
-        className="ring-stage"
-        style={{ right: mobile ? 0 : 380 }}
+        className="lineup"
         onPanStart={() => {
           pos.stop()
           panStart.current = pos.get()
           panned.current = true
-          lastInteraction.current = Date.now()
         }}
-        onPan={(_, info) => pos.set(panStart.current - info.offset.x / (R * 1.1))}
+        onPan={(_, info) => pos.set(panStart.current - info.offset.x / spacing)}
         onPanEnd={(_, info) => {
-          const projected = pos.get() - info.velocity.x / (R * 3.2)
-          goTo(Math.round(projected))
+          goTo(Math.round(pos.get() - info.velocity.x / (spacing * 4)))
           setTimeout(() => (panned.current = false), 60)
         }}
       >
-        <div className="ring-floor" />
         {looks.map((l, i) => (
-          <RingFigure
+          <LineupFigure
             key={l.id}
             look={l}
             i={i}
             pos={pos}
-            R={R}
+            openMv={openMv}
+            motionBlur={motionBlur}
+            figW={figW}
             figH={figH}
-            mobile={mobile}
+            spacing={spacing}
+            halfW={w / 2}
+            openScale={openScale}
+            openShiftX={openShiftX}
+            openShiftY={openShiftY}
             isActive={i === active}
+            open={open}
             activeSlot={activeSlot}
             setActiveSlot={setActiveSlot}
-            onPick={() => pick(i)}
+            onClick={() => {
+              if (panned.current) return
+              if (open && i === active) return
+              openLook(i)
+            }}
           />
         ))}
       </motion.div>
 
-      {/* Pagination en bas */}
-      <div className="ring-pager" style={{ right: mobile ? 0 : 380 }}>
+      {/* Pagination */}
+      <motion.div className="ring-pager" style={{ right: open ? panelW : 0 }} animate={{ opacity: 1 }}>
         <button className="icon-btn" onClick={() => step(-1)} aria-label="Look précédent">←</button>
         <div className="pager-list">
           {looks.map((l, i) => (
-            <button
-              key={l.id}
-              className={`pager-item ${i === active ? 'on' : ''}`}
-              onClick={() => {
-                lastInteraction.current = Date.now()
-                goTo(Math.round(pos.get() + wrap(i - pos.get())))
-              }}
-            >
+            <button key={l.id} className={`pager-item ${i === active ? 'on' : ''}`} onClick={() => goToIndex(i)}>
               <span className="pager-bar" />
               <span className="pager-num">{String(i + 1).padStart(2, '0')}</span>
               {i === active && !mobile && (
-                <motion.span className="pager-name" initial={{ opacity: 0, x: -6 }} animate={{ opacity: 1, x: 0 }}>
+                <motion.span key={l.id} className="pager-name" initial={{ opacity: 0, x: -6 }} animate={{ opacity: 1, x: 0 }}>
                   {l.name}
                 </motion.span>
               )}
@@ -165,77 +165,106 @@ export default function Looks() {
           ))}
         </div>
         <button className="icon-btn" onClick={() => step(1)} aria-label="Look suivant">→</button>
-      </div>
+      </motion.div>
 
-      {mobile ? (
-        <>
-          <motion.button className="sheet-toggle" onClick={() => setSheetOpen(true)} whileTap={{ scale: 0.97 }}>
-            Voir le look · {look.name}
-          </motion.button>
-          <AnimatePresence>
-            {sheetOpen && (
-              <>
-                <motion.div className="scrim" onClick={() => setSheetOpen(false)} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} />
-                <motion.div
-                  className="look-sheet"
-                  initial={{ y: '100%' }}
-                  animate={{ y: 0 }}
-                  exit={{ y: '100%' }}
-                  transition={{ type: 'spring', stiffness: 320, damping: 36 }}
-                  drag="y"
-                  dragConstraints={{ top: 0, bottom: 0 }}
-                  dragElastic={{ top: 0, bottom: 0.6 }}
-                  onDragEnd={(_, info) => info.offset.y > 80 && setSheetOpen(false)}
-                >
-                  <span className="sheet-grip" />
-                  <LookPanel look={look} index={active} activeSlot={activeSlot} setActiveSlot={setActiveSlot} />
-                </motion.div>
-              </>
-            )}
-          </AnimatePresence>
-        </>
-      ) : (
-        <motion.aside className="look-panel" initial={{ opacity: 0, x: 40 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6, ease: EASE, delay: 0.4 }}>
-          <LookPanel look={look} index={active} activeSlot={activeSlot} setActiveSlot={setActiveSlot} />
-        </motion.aside>
-      )}
+      {/* Détails du look */}
+      <AnimatePresence>
+        {open &&
+          (mobile ? (
+            <motion.div
+              key="sheet"
+              className="look-sheet"
+              initial={{ y: '100%' }}
+              animate={{ y: 0 }}
+              exit={{ y: '100%' }}
+              transition={{ type: 'spring', stiffness: 300, damping: 36, delay: 0.15 }}
+              drag="y"
+              dragConstraints={{ top: 0, bottom: 0 }}
+              dragElastic={{ top: 0, bottom: 0.6 }}
+              onDragEnd={(_, info) => info.offset.y > 80 && closeLook()}
+            >
+              <span className="sheet-grip" />
+              <LookPanel look={look} index={active} activeSlot={activeSlot} setActiveSlot={setActiveSlot} />
+            </motion.div>
+          ) : (
+            <motion.aside
+              key="panel"
+              className="look-panel"
+              initial={{ opacity: 0, x: 60 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 60 }}
+              transition={{ duration: 0.55, ease: EASE, delay: 0.2 }}
+            >
+              <LookPanel look={look} index={active} activeSlot={activeSlot} setActiveSlot={setActiveSlot} />
+            </motion.aside>
+          ))}
+      </AnimatePresence>
     </div>
   )
 }
 
-function RingFigure({ look, i, pos, R, figH, mobile, isActive, activeSlot, setActiveSlot, onPick }) {
+function LineupFigure({ look, i, pos, openMv, motionBlur, figW, figH, spacing, halfW, openScale, openShiftX, openShiftY, isActive, open, activeSlot, setActiveSlot, onClick }) {
   const off = useTransform(pos, (p) => wrap(i - p))
-  const depth = useTransform(off, (o) => 1 - Math.cos(o * STEP)) // 0 devant → 2 au fond
-  const x = useTransform(off, (o) => Math.sin(o * STEP) * R)
-  const scale = useTransform(depth, (d) => 1 - d * 0.26)
-  const y = useTransform(depth, (d) => -d * (mobile ? 18 : 30))
-  const opacity = useTransform(depth, (d) => Math.max(0.16, 1 - d * 0.44))
-  const filter = useTransform(depth, (d) => `blur(${(d * (mobile ? 2 : 3.4)).toFixed(2)}px)`)
-  const zIndex = useTransform(depth, (d) => Math.round(300 - d * 100))
-  const hotOpacity = useTransform(off, (o) => Math.max(0, 1 - Math.abs(o) * 6))
-  const figW = (figH * 200) / 540
+  // Le look central quand on ouvre : 1 pour lui, 0 pour les autres (en douceur)
+  const focus = useTransform(off, (o) => Math.max(0, 1 - Math.abs(o) * 2))
+
+  const x = useTransform([off, openMv, focus], ([o, t, f]) => {
+    const base = o * spacing
+    // à l'ouverture, les autres s'écartent vers les bords, le central va au centre de la zone libre
+    return base + t * (base * 0.9 * (1 - f)) + t * f * openShiftX
+  })
+  const y = useTransform([openMv, focus], ([t, f]) => t * f * openShiftY)
+  const scale = useTransform([off, openMv, focus], ([o, t, f]) => {
+    const lineup = 1 - Math.min(Math.abs(o), 3) * 0.035
+    return lineup * (1 + t * f * (openScale - 1))
+  })
+  const opacity = useTransform([off, openMv, focus], ([o, t, f]) => {
+    // fondu aux bords de l'écran pour que la boucle soit invisible
+    const edge = Math.min(1, Math.max(0, (halfW + figW * 0.2 - Math.abs(o * spacing)) / (figW * 0.9)))
+    return edge * (1 - t * (1 - f))
+  })
+  const filter = useTransform([motionBlur, openMv, focus], ([b, t, f]) => `blur(${(b + t * (1 - f) * 10).toFixed(2)}px)`)
+  const zIndex = useTransform(off, (o) => Math.round(100 - Math.abs(o) * 10))
 
   return (
-    <motion.div className="ring-figure" style={{ x, y, scale, opacity, filter, zIndex, width: figW, height: figH, marginLeft: -figW / 2 }}>
-      <button className="ring-hit" onClick={onPick} aria-label={`Look ${look.name}`}>
+    <motion.div
+      className="lineup-figure"
+      style={{ x, y, scale, opacity, filter, zIndex, width: figW, height: figH, marginLeft: -figW / 2, pointerEvents: open && !isActive ? 'none' : 'auto' }}
+    >
+      <motion.button
+        className="ring-hit"
+        onClick={onClick}
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        whileHover={open ? undefined : { y: -8 }}
+        transition={{ type: 'spring', stiffness: 160, damping: 22, delay: 0.05 * ((i + 3) % N) }}
+        aria-label={`Voir le look ${look.name}`}
+      >
         <LookVisual look={look} className="fill" />
-      </button>
-      <motion.div className="hotspots" style={{ opacity: hotOpacity, pointerEvents: isActive ? 'auto' : 'none' }}>
-        {SLOTS.map((slot) => (
-          <button
-            key={slot}
-            className={`hotspot ${activeSlot === slot && isActive ? 'on' : ''}`}
-            style={{ left: `${FIGURE_HOTSPOTS[slot].x}%`, top: `${FIGURE_HOTSPOTS[slot].y}%` }}
-            onMouseEnter={() => setActiveSlot(slot)}
-            onMouseLeave={() => setActiveSlot(null)}
-            onClick={() => setActiveSlot(slot)}
-            aria-label={CATEGORY[slot]}
-          >
-            <span />
-            <em className="hotspot-tip">{CATEGORY[slot]}</em>
-          </button>
-        ))}
-      </motion.div>
+      </motion.button>
+      <AnimatePresence>
+        {open && isActive && (
+          <motion.div className="hotspots" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ delay: 0.5 }}>
+            {SLOTS.map((slot, k) => (
+              <motion.button
+                key={slot}
+                className={`hotspot ${activeSlot === slot ? 'on' : ''}`}
+                style={{ left: `${FIGURE_HOTSPOTS[slot].x}%`, top: `${FIGURE_HOTSPOTS[slot].y}%` }}
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ delay: 0.55 + k * 0.1, type: 'spring', stiffness: 400, damping: 18 }}
+                onMouseEnter={() => setActiveSlot(slot)}
+                onMouseLeave={() => setActiveSlot(null)}
+                onClick={() => setActiveSlot(slot)}
+                aria-label={CATEGORY[slot]}
+              >
+                <span />
+                <em className="hotspot-tip">{CATEGORY[slot]}</em>
+              </motion.button>
+            ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.div>
   )
 }
@@ -270,7 +299,7 @@ function LookPanel({ look, index, activeSlot, setActiveSlot }) {
               className={`panel-item ${activeSlot === slot ? 'on' : ''}`}
               variants={{
                 hidden: { opacity: 0, y: 16 },
-                show: { opacity: 1, y: 0, transition: { delay: i * 0.07, duration: 0.4, ease: EASE } },
+                show: { opacity: 1, y: 0, transition: { delay: 0.25 + i * 0.07, duration: 0.4, ease: EASE } },
                 exit: { opacity: 0, y: -8, transition: { duration: 0.15 } },
               }}
               onMouseEnter={() => setActiveSlot(slot)}

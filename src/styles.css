@@ -65,15 +65,9 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 /* ── Scene 1 : Looks (cercle en perspective) ── */
 .title-lg { font-size: clamp(24px, 2.6vw, 34px); font-weight: 700; letter-spacing: -.03em; margin: 0 0 6px; }
 .looks-title { max-width: 300px; }
-.ring-stage { position: absolute; left: 0; top: 0; bottom: 0; z-index: 1; touch-action: pan-y; cursor: grab; overflow: hidden; }
-.ring-stage:active { cursor: grabbing; }
-.ring-floor {
-  position: absolute; left: 6%; right: 6%; bottom: 7vh; height: 18vh; border-radius: 50%;
-  background: radial-gradient(ellipse at center, rgba(0,0,0,.07), transparent 65%);
-  pointer-events: none;
-}
-.ring-figure { position: absolute; left: 50%; bottom: 13vh; transform-origin: 50% 100%; will-change: transform, filter; }
-.ring-hit { display: block; width: 100%; height: 100%; }
+.lineup { position: absolute; inset: 0; z-index: 1; touch-action: pan-y; overflow: hidden; }
+.lineup-figure { position: absolute; left: 50%; bottom: 11vh; transform-origin: 50% 100%; will-change: transform, filter; }
+.ring-hit { display: block; width: 100%; height: 100%; cursor: pointer; }
 .hotspots { position: absolute; inset: 0; pointer-events: none; }
 .hotspot {
   position: absolute; width: 26px; height: 26px; margin: -13px 0 0 -13px; border-radius: 50%;
@@ -95,7 +89,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .hotspot:hover .hotspot-tip, .hotspot.on .hotspot-tip { opacity: 1; }
 @keyframes ping { from { transform: scale(1); opacity: .9; } to { transform: scale(2.2); opacity: 0; } }
 
-.ring-pager { position: absolute; left: 0; bottom: 3.5vh; display: flex; align-items: center; justify-content: center; gap: 14px; z-index: 2; padding: 0 16px; }
+.ring-pager { position: absolute; left: 0; bottom: 3vh; transition: right .6s cubic-bezier(.22,1,.36,1); display: flex; align-items: center; justify-content: center; gap: 14px; z-index: 2; padding: 0 16px; }
 .pager-list { display: flex; gap: 6px; }
 .pager-item { display: flex; flex-direction: column; align-items: flex-start; gap: 5px; min-width: 34px; position: relative; }
 .pager-bar { width: 100%; height: 2px; background: var(--line); transition: background .3s; }
@@ -226,17 +220,12 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   .sneaker-title { max-width: 80vw; }
 
   .looks-title { max-width: 80vw; }
-  .ring-figure { bottom: 20vh; }
-  .ring-floor { bottom: 15vh; }
-  .ring-pager { bottom: 11vh; gap: 8px; }
+  .lineup-figure { bottom: 13vh; }
+  .ring-pager { bottom: 3vh; gap: 8px; }
   .pager-item { min-width: 22px; }
   .pager-item.on { min-width: 30px; }
-  .sheet-toggle {
-    position: absolute; left: 16px; right: 16px; bottom: max(16px, env(safe-area-inset-bottom, 0px)); height: 50px; border-radius: 4px;
-    background: var(--ink); color: #fff; font-size: 13px; font-weight: 600; z-index: 3;
-  }
   .look-sheet {
-    position: fixed; left: 0; right: 0; bottom: 0; max-height: 78vh; background: var(--card); z-index: 100;
+    position: fixed; left: 0; right: 0; bottom: 0; max-height: 52vh; background: var(--card); z-index: 100; box-shadow: 0 -10px 40px rgba(0,0,0,.12);
     border-radius: 14px 14px 0 0; display: flex; flex-direction: column; padding-bottom: env(safe-area-inset-bottom, 0px);
   }
   .sheet-grip { width: 40px; height: 4px; border-radius: 2px; background: var(--line); margin: 10px auto 0; flex: none; }
