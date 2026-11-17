@@ -33,7 +33,7 @@ export default function Home({ onNavigate }) {
         <Panel index={1} length={0.8} className="tone-dark">
           {(p) => <Manifesto {...p} />}
         </Panel>
-        <Panel index={2} length={1.6} className="tone-light">
+        <Panel index={2} length={2.6} className="tone-light">
           {(p) => <NewCollection {...p} onNavigate={onNavigate} />}
         </Panel>
         <Panel index={3} className="tone-stone">
@@ -215,7 +215,9 @@ function NewCollection({ inner, enter, onNavigate }) {
   useEffect(() => {
     if (trackRef.current) setDist(Math.max(0, trackRef.current.scrollWidth - w + 40))
   }, [w])
-  const x = useTransform(inner, [0, 1], [0, -dist])
+  // défilement plus lent et amorti pour un mouvement plus doux
+  const rawX = useTransform(inner, [0, 1], [0, -dist])
+  const x = useSpring(rawX, { stiffness: 90, damping: 26, mass: 0.6 })
   const headY = useTransform(enter, [0, 1], [100, 0])
   const headO = useTransform(enter, [0.4, 1], [0, 1])
   const items = tops.slice(0, 9)
