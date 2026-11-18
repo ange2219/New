@@ -81,7 +81,10 @@ export default function Rack() {
           onDragEnd={() => setTimeout(() => (dragged.current = false), 60)}
           onMouseLeave={() => setHover(null)}
         >
-          <div className="rail" />
+          <div className="rail">
+            <span className="rail-end left" />
+            <span className="rail-end right" />
+          </div>
           {RACK.map(({ p, key }, i) => (
             <RackItem
               key={key}
@@ -137,7 +140,14 @@ function RackItem({ p, rkey, i, hover, setHover, mobile, spacing, garmentW, garm
     <div className="rack-slot" style={{ width: spacing, height: hookH + garmentH + 20, zIndex: isHover ? 60 : 10 + (i % 2) }}>
       {/* crochet du cintre */}
       <svg className="rack-hook" viewBox="0 0 20 40" style={{ height: hookH }} aria-hidden="true">
-        <path d="M10 40 L10 18 C10 10 17 10 17 5 C17 1 12 -1 9 2" fill="none" stroke="#8d8c88" strokeWidth="1.6" strokeLinecap="round" />
+        <defs>
+          <linearGradient id="hookMetal" x1="0" x2="1">
+            <stop offset="0" stopColor="#6f6d69" />
+            <stop offset=".45" stopColor="#e9e8e5" />
+            <stop offset="1" stopColor="#7d7b77" />
+          </linearGradient>
+        </defs>
+        <path d="M10 40 L10 20 C10 13 16.5 13 16.5 8 C16.5 2.5 11 1.5 8.5 4.5" fill="none" stroke="url(#hookMetal)" strokeWidth="2" strokeLinecap="round" />
       </svg>
 
       <motion.button

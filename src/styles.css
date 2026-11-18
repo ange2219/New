@@ -277,9 +277,19 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .rack-sep { width: 1px; height: 14px; background: var(--line); }
 .rack .rack-viewport { position: absolute; left: 0; right: 0; bottom: 120px; overflow: hidden; cursor: grab; }
 .rack .rack-track { position: relative; display: flex; align-items: flex-start; height: 100%; width: max-content; padding-top: 8px; gap: 0; }
-.rack .rail { position: absolute; left: 0; right: 0; top: 8px; height: 3px; border-radius: 2px; background: linear-gradient(#d6d5d1, #9d9b96 60%, #c7c6c2); box-shadow: 0 2px 4px rgba(0,0,0,.12); transform: none; }
+/* tringle en acier chromé : reflet en haut, cœur sombre, rebond de lumière en bas, ombre portée sur le mur */
+.rack .rail {
+  position: absolute; left: 0; right: 0; top: 6px; height: 13px; border-radius: 7px; transform: none; z-index: 1;
+  background: linear-gradient(180deg, #fbfbfa 0%, #dcdbd7 14%, #a9a7a2 34%, #6f6d69 52%, #8f8d88 64%, #d3d2ce 80%, #9a9893 100%);
+  box-shadow: 0 7px 9px -5px rgba(0,0,0,.35), 0 1px 0 rgba(255,255,255,.6) inset, 0 -1px 0 rgba(0,0,0,.18) inset;
+}
+.rack .rail::before { content: ''; position: absolute; left: 0; right: 0; top: 2px; height: 2px; border-radius: 2px; background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,.95) 20%, rgba(255,255,255,.5) 50%, rgba(255,255,255,.95) 80%, rgba(255,255,255,0)); }
+.rail-end { position: absolute; top: -7px; width: 18px; height: 27px; border-radius: 5px; z-index: 2;
+  background: linear-gradient(90deg, #8f8d88, #f2f1ee 35%, #b6b4af 60%, #6e6c68); box-shadow: 0 4px 8px rgba(0,0,0,.25); }
+.rail-end.left { left: -6px; }
+.rail-end.right { right: -6px; }
 .rack-slot { position: relative; flex: none; }
-.rack-hook { position: absolute; left: 50%; top: 2px; transform: translateX(-50%); width: auto; overflow: visible; z-index: 2; }
+.rack-hook { position: absolute; left: 50%; top: 0; transform: translateX(-50%); width: auto; overflow: visible; z-index: 3; filter: drop-shadow(0 1px 1px rgba(0,0,0,.25)); }
 .rack-piece { position: absolute; display: block; cursor: pointer; }
 .rack-visual { position: absolute; left: 50%; top: 0; bottom: 0; perspective: 900px; pointer-events: none; }
 .rack-turn { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; transform-origin: 50% 0; }
