@@ -248,29 +248,6 @@ function LineupFigure({ look, i, pos, openMv, motionBlur, figW, figH, R, mobile,
       >
         <LookVisual look={look} className="fill" />
       </motion.button>
-      <AnimatePresence>
-        {open && isActive && (
-          <motion.div className="hotspots" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ delay: 0.5 }}>
-            {lookItems(look).map(({ slot, x, y, product }, k) => (
-              <motion.button
-                key={slot}
-                className={`hotspot ${activeSlot === slot ? 'on' : ''}`}
-                style={{ left: `${x}%`, top: `${y}%` }}
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ delay: 0.5 + k * 0.06, type: 'spring', stiffness: 400, damping: 18 }}
-                onMouseEnter={() => setActiveSlot(slot)}
-                onMouseLeave={() => setActiveSlot(null)}
-                onClick={() => setActiveSlot(slot)}
-                aria-label={product.name}
-              >
-                <span />
-                <em className="hotspot-tip">{product.name}</em>
-              </motion.button>
-            ))}
-          </motion.div>
-        )}
-      </AnimatePresence>
     </motion.div>
   )
 }
