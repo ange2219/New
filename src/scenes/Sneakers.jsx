@@ -181,7 +181,7 @@ function SneakerPanel({ product, colorway, setColorway, onClose }) {
   return (
     <>
       <motion.button className="back-link detail-back" onClick={onClose} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-        ← Toutes les sneakers
+        ← Toutes les chaussures
       </motion.button>
 
       <motion.div className="colorways" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }} transition={{ delay: 0.4, duration: 0.4 }}>
@@ -200,7 +200,7 @@ function SneakerPanel({ product, colorway, setColorway, onClose }) {
       </motion.div>
 
       <motion.aside className="detail-info sneaker-info" initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 50 }} transition={{ duration: 0.55, ease: EASE, delay: 0.2 }}>
-        <span className="eyebrow">Sneakers</span>
+        <span className="eyebrow">Chaussures</span>
         <h2 className="title-md">{product.name}</h2>
         <p className="muted">{product.subtitle}</p>
         <p className="price">{formatPrice(product.price)}</p>
@@ -232,7 +232,7 @@ function SneakerPanel({ product, colorway, setColorway, onClose }) {
         <motion.button className={`btn-primary ${state === 'added' ? 'red' : ''}`} onClick={addToBag} whileTap={{ scale: 0.97 }} layout>
           {state === 'added' ? 'Ajouté au panier ✓' : 'Ajouter au panier'}
         </motion.button>
-        <p className="muted small">Cuir pleine fleur · Semelle caoutchouc · Retours gratuits 30 jours</p>
+        <p className="muted small">Livraison offerte dès 100 € · Retours gratuits 30 jours</p>
         {product.model && <p className="muted small credit">Glisse sur la chaussure pour la faire tourner, pince pour zoomer. {product.credit}</p>}
       </motion.aside>
     </>

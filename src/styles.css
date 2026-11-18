@@ -302,6 +302,10 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .accshow-tile span { position: absolute; left: 12px; bottom: 10px; font-size: 11px; color: var(--muted); }
 
 
+img.fill { object-fit: contain; }
+.panel-thumb, .drawer-thumb { display: block !important; overflow: hidden; }
+.panel-thumb > *, .drawer-thumb > *, .col-card-img > *, .accshow-tile .fill { width: 100%; height: 100%; display: block; }
+
 /* ── Modèles 3D ─────────────────────── */
 model-viewer.model3d { display: block; width: 100%; height: 100%; background: transparent; --poster-color: transparent; --progress-bar-color: transparent; opacity: 0; transition: opacity .6s ease; }
 model-viewer.model3d.is-loaded { opacity: 1; }

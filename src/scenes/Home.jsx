@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { animate, motion, useMotionValue, useScroll, useSpring, useTransform } from 'framer-motion'
-import { BRAND, accessories, formatPrice, looks, sneakers, tops } from '../data/catalog.js'
-import { AccessoryVisual, GarmentVisual, LookVisual, SneakerVisual } from '../components/Visuals.jsx'
+import { BRAND, LOOK_RATIO, accessories, byId, formatPrice, looks, sneakers, tops } from '../data/catalog.js'
+import { AccessoryVisual, GarmentVisual, LookVisual, ProductThumb, SneakerVisual } from '../components/Visuals.jsx'
 import { EASE, useViewport } from '../hooks.js'
 
 // Contexte : conteneur de défilement + hauteur d'un écran
@@ -88,15 +88,15 @@ function Panel({ index, length = 0, first, className, children }) {
 
 // ── 1. Hero ─────────────────────────────────────────────────
 const FLOATS = [
-  { kind: 'garment', id: 'hd-grey', left: 6, top: 14, w: 15, rot: -12, depth: 30, m: { left: 2, top: 3, w: 28 } },
-  { kind: 'sneaker', id: 'nova-1', left: 72, top: 8, w: 22, rot: 14, depth: 45, m: { left: 60, top: 2, w: 38 } },
-  { kind: 'garment', id: 'cr-forest', left: 80, top: 52, w: 13, rot: 10, depth: 25, m: { left: 70, top: 79, w: 24 } },
-  { kind: 'sneaker', id: 'drift-3', left: 4, top: 66, w: 20, rot: -8, depth: 40, m: { left: 4, top: 82, w: 38 } },
-  { kind: 'garment', id: 'tee-black', left: 70, top: 76, w: 8, rot: -6, depth: 18 },
-  { kind: 'garment', id: 'jk-navy', left: 26, top: 4, w: 9, rot: 8, depth: 14 },
-  { kind: 'acc', id: 'gl-black', left: 26, top: 84, w: 8, rot: -10, depth: 22 },
-  { kind: 'acc', id: 'wt-steel', left: 93, top: 38, w: 5, rot: 16, depth: 35 },
-  { kind: 'acc', id: 'ch-gold', left: 12, top: 46, w: 6, rot: 6, depth: 20 },
+  { id: 'overshirt-brooklyn', left: 5, top: 12, w: 15, rot: -12, depth: 30, m: { left: 2, top: 3, w: 30 } },
+  { id: 'boots-tan', left: 73, top: 6, w: 16, rot: 10, depth: 45, m: { left: 62, top: 2, w: 34 } },
+  { id: 'polo-arodr', left: 80, top: 50, w: 13, rot: 10, depth: 25, m: { left: 70, top: 78, w: 26 } },
+  { id: 'derby-two-tone', left: 3, top: 66, w: 16, rot: -8, depth: 40, m: { left: 4, top: 82, w: 34 } },
+  { id: 'beanie-bordeaux', left: 68, top: 76, w: 7, rot: -6, depth: 18 },
+  { id: 'beret-leather', left: 25, top: 4, w: 8, rot: 8, depth: 14 },
+  { id: 'shade-round', left: 26, top: 85, w: 9, rot: -10, depth: 22 },
+  { id: 'watch-gold', left: 93, top: 34, w: 3.6, rot: 16, depth: 35 },
+  { id: 'cross-gold', left: 13, top: 44, w: 4.5, rot: 6, depth: 20 },
 ]
 
 function Hero({ exit, onNavigate }) {
@@ -166,8 +166,7 @@ function Float({ f, i, mx, my, mobile }) {
   const x = useTransform(mx, (v) => v * f.depth * 2)
   const y = useTransform(my, (v) => v * f.depth * 2)
   const pos = mobile && f.m ? f.m : f
-  const product =
-    f.kind === 'garment' ? tops.find((t) => t.id === f.id) : f.kind === 'acc' ? accessories.find((a) => a.id === f.id) : sneakers.find((s) => s.id === f.id)
+  const product = byId(f.id)
   return (
     <motion.div
       className="float"
@@ -177,13 +176,7 @@ function Float({ f, i, mx, my, mobile }) {
       transition={{ delay: 0.6 + i * 0.12, type: 'spring', stiffness: 60, damping: 14 }}
     >
       <motion.div animate={{ y: [0, -14, 0], rotate: [0, 2, 0] }} transition={{ duration: 4 + i * 0.6, repeat: Infinity, ease: 'easeInOut' }}>
-        {f.kind === 'garment' ? (
-          <GarmentVisual product={product} className="fill" />
-        ) : f.kind === 'acc' ? (
-          <AccessoryVisual product={product} className="fill" />
-        ) : (
-          <SneakerVisual product={product} className="fill" />
-        )}
+        <ProductThumb product={product} className="fill" />
       </motion.div>
     </motion.div>
   )
@@ -318,7 +311,7 @@ function CabinFigure({ look, i, rot, R, figH }) {
   const opacity = useTransform(d, (v) => Math.max(0.2, 1 - v * 0.38))
   const filter = useTransform(d, (v) => `blur(${(v * 2).toFixed(2)}px)`)
   const zIndex = useTransform(d, (v) => Math.round(300 - v * 100))
-  const figW = (figH * 200) / 540
+  const figW = figH * LOOK_RATIO
   return (
     <motion.div className="cabin-fig" style={{ x, y, scale, opacity, filter, zIndex, width: figW, height: figH, marginLeft: -figW / 2 }}>
       <LookVisual look={look} className="fill" />
@@ -328,7 +321,7 @@ function CabinFigure({ look, i, rot, R, figH }) {
 
 // ── 5. Sneakers : la paire tourne et grossit avec le défilement ──
 function SneakerShow({ inner, enter, onNavigate }) {
-  const featured = [sneakers[0], sneakers[2], sneakers[3]]
+  const featured = sneakers.slice(0, 3)
   const [idx, setIdx] = useState(0)
   useEffect(() => inner.on('change', (v) => setIdx(Math.min(featured.length - 1, Math.floor(v * featured.length * 0.999)))), [inner, featured.length])
   const s = featured[idx]
@@ -344,7 +337,7 @@ function SneakerShow({ inner, enter, onNavigate }) {
         {BRAND.bigWord} {BRAND.bigWord} {BRAND.bigWord}
       </motion.div>
       <div className="sshow-head">
-        <span className="eyebrow light">Sneakers · {String(idx + 1).padStart(2, '0')} / {String(featured.length).padStart(2, '0')}</span>
+        <span className="eyebrow light">Chaussures · {String(idx + 1).padStart(2, '0')} / {String(featured.length).padStart(2, '0')}</span>
         <motion.h2 key={s.id} className="section-title light" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, ease: EASE }}>
           {s.name}
         </motion.h2>
@@ -362,21 +355,21 @@ function SneakerShow({ inner, enter, onNavigate }) {
         </motion.div>
         <div className="sshow-shadow" />
       </motion.div>
-      <button className="btn-pill light sshow-cta" onClick={() => onNavigate('sneakers')}>Toutes les sneakers</button>
+      <button className="btn-pill light sshow-cta" onClick={() => onNavigate('sneakers')}>Toutes les chaussures</button>
     </div>
   )
 }
 
 // ── 6. Accessoires : les pièces se placent en orbite ──
 function AccShow({ enter, onNavigate }) {
-  const picks = ['gl-black', 'cap-cream', 'ch-cuban', 'wt-steel', 'br-gold', 'rg-signet'].map((id) => accessories.find((a) => a.id === id))
+  const picks = ['shade-round', 'beanie-88', 'chain-forcat', 'watch-steel-diver', 'bag-woven', 'gloves-leather'].map(byId)
   const headY = useTransform(enter, [0, 1], [100, 0])
   return (
     <div className="accshow">
       <motion.div className="accshow-head" style={{ y: headY }}>
         <span className="eyebrow">Pour finir le look</span>
         <h2 className="section-title">Accessoires</h2>
-        <p className="muted">Lunettes, casquettes, chaînes, montres, bracelets et bagues.</p>
+        <p className="muted">Lunettes, bonnets, colliers, montres, ceintures, sacs et gants.</p>
         <button className="btn-pill dark" onClick={() => onNavigate('accessories')}>Voir les accessoires</button>
       </motion.div>
       <div className="accshow-grid">

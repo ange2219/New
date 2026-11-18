@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { AnimatePresence, animate, motion, useMotionValue, useTransform } from 'framer-motion'
-import { SIZES_CLOTHES, colorOptions, formatPrice, tops } from '../data/catalog.js'
+import { SIZES_CLOTHES, TOP_TYPES, formatPrice, tops } from '../data/catalog.js'
 import { GarmentVisual } from '../components/Visuals.jsx'
 import { useBag } from '../store.jsx'
 import { EASE, useKey, useViewport } from '../hooks.js'
 
-const TYPE_LABEL = { hoodie: 'Hoodie', crewneck: 'Sweat col rond', tee: 'T-shirt', jacket: 'Veste' }
+const TYPE_LABEL = TOP_TYPES
 
 export default function Rack() {
   const [selectedId, setSelectedId] = useState(null)
@@ -199,16 +199,8 @@ function GarmentDetail({ product, onClose }) {
       <motion.aside className="detail-info" initial={{ opacity: 0, x: 40 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 40 }} transition={{ duration: 0.5, ease: EASE, delay: 0.2 }}>
         <span className="eyebrow">{TYPE_LABEL[product.type]}</span>
         <h2 className="title-md">{product.name}</h2>
+        {product.subtitle && <p className="muted">{product.subtitle}</p>}
         <p className="price">{formatPrice(product.price)}</p>
-
-        <div className="field">
-          <span className="field-label">Couleur</span>
-          <div className="swatches">
-            {[product.color, ...colorOptions.filter((c) => c !== product.color)].slice(0, 6).map((c) => (
-              <button key={c} className={`swatch ${c === color ? 'on' : ''}`} style={{ background: c }} onClick={() => setColor(c)} aria-label={`Couleur ${c}`} />
-            ))}
-          </div>
-        </div>
 
         <div className="field">
           <span className="field-label">

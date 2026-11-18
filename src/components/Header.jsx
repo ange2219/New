@@ -6,7 +6,7 @@ export const SCENES = [
   { id: 'home', label: 'Accueil' },
   { id: 'looks', label: 'Cabine' },
   { id: 'rack', label: 'Collection' },
-  { id: 'sneakers', label: 'Sneakers' },
+  { id: 'sneakers', label: 'Chaussures' },
   { id: 'accessories', label: 'Accessoires' },
 ]
 

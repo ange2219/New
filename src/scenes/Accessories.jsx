@@ -5,7 +5,8 @@ import { AccessoryVisual, LookVisual } from '../components/Visuals.jsx'
 import { useBag } from '../store.jsx'
 import { EASE, useKey } from '../hooks.js'
 
-const FILTERS = [{ id: 'all', label: 'Tout' }, ...Object.keys(ACC_PLURAL).map((id) => ({ id, label: ACC_PLURAL[id] }))]
+// Filtres : uniquement les catégories présentes dans le catalogue
+const FILTERS = [{ id: 'all', label: 'Tout' }, ...Object.keys(ACC_PLURAL).filter((id) => accessories.some((a) => a.type === id)).map((id) => ({ id, label: ACC_PLURAL[id] }))]
 
 export default function Accessories({ onNavigate }) {
   const [filter, setFilter] = useState('all')
@@ -22,7 +23,7 @@ export default function Accessories({ onNavigate }) {
           <div>
             <span className="eyebrow">{accessories.length} pièces</span>
             <h1 className="section-title">Accessoires</h1>
-            <p className="muted">Lunettes, casquettes, chaînes, montres, bracelets et bagues. Pour finir le look.</p>
+            <p className="muted">Lunettes, bonnets, casquettes, colliers, montres, ceintures, sacs… Pour finir le look.</p>
           </div>
           <div className="chips" role="tablist">
             {FILTERS.map((f) => (
@@ -100,7 +101,7 @@ function AccDetail({ a, onClose, onNavigate }) {
   const [size, setSize] = useState(null)
   const [state, setState] = useState('idle')
   const [variant, setVariant] = useState(a.variants?.[0]?.variant)
-  const wornIn = looks.filter((l) => (l.acc || []).includes(a.id))
+  const wornIn = looks.filter((l) => l.items.some((it) => it.id === a.id))
 
   // Glisser pour faire pivoter
   const rot = useMotionValue(0)

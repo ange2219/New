@@ -10,7 +10,9 @@ import Model3D from './Model3D.jsx'
 
 export function GarmentVisual({ product, color, side = 'front', className, style }) {
   const src = side === 'back' ? product.imageBack || product.image : product.image
-  if (src) return <img src={src} alt="" draggable="false" className={className} style={{ objectFit: 'contain', ...style }} />
+  // sans photo de dos, on affiche la face en miroir pour que la rotation reste crédible
+  const mirror = side === 'back' && !product.imageBack ? { transform: 'scaleX(-1)' } : null
+  if (src) return <img src={src} alt="" draggable="false" className={className} style={{ objectFit: 'contain', ...mirror, ...style }} />
   return <Garment product={product} color={color} side={side} className={className} style={style} />
 }
 
@@ -43,7 +45,7 @@ export function AccessoryVisual({ product, className, style, allow3D, interactiv
   return <Accessory product={product} className={className} style={style} />
 }
 
-export function ProductThumb({ product, className }) {
+export function ProductThumb({ product, className = 'fill' }) {
   if (ACC_TYPES[product.type]) return <AccessoryVisual product={product} className={className} />
   if (product.colorways) return <SneakerVisual product={product} className={className} />
   if (product.type === 'pants') return <PantsThumb product={product} className={className} />

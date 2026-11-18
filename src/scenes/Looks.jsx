@@ -1,25 +1,15 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { AnimatePresence, animate, motion, useMotionValue, useMotionValueEvent, useTransform, useVelocity } from 'framer-motion'
-import { ACC_TYPES, byId, formatPrice, looks } from '../data/catalog.js'
+import { LOOK_RATIO, byId, categoryLabel, formatPrice, looks } from '../data/catalog.js'
 import { LookVisual, ProductThumb } from '../components/Visuals.jsx'
-import { FIGURE_HOTSPOTS } from '../components/art/Figure.jsx'
 import { useBag } from '../store.jsx'
 import { EASE, useKey, useViewport } from '../hooks.js'
 
-const SLOTS = ['top', 'bottom', 'shoes']
-const CATEGORY = { top: 'Haut', bottom: 'Bas', shoes: 'Sneakers', ...ACC_TYPES }
-
 // Taille proposée par défaut quand on ajoute depuis la cabine
-const defaultSize = (slot) => (slot === 'shoes' ? '42' : slot === 'ring' ? '56' : ACC_TYPES[slot] ? null : 'M')
+const defaultSize = (p) => (p.category === 'shoes' ? '42' : p.category === 'accessory' ? null : 'M')
 
-// Toutes les pièces d'un look : vêtements + accessoires (clé = emplacement sur la silhouette)
-const lookItems = (look) => [
-  ...SLOTS.map((slot) => ({ slot, product: byId(look[slot]) })),
-  ...(look.acc || []).map((id) => {
-    const product = byId(id)
-    return { slot: product.type, product }
-  }),
-]
+// Pièces d'un look (slot = identifiant du produit, x/y = point cliquable sur la silhouette)
+const lookItems = (look) => look.items.map((it) => ({ slot: it.id, x: it.x, y: it.y, product: byId(it.id) }))
 const N = looks.length
 
 // Ramène un décalage dans [-N/2, N/2[ : la rangée boucle à l'infini
@@ -39,7 +29,7 @@ export default function Looks() {
 
   // Mesures
   const figH = mobile ? Math.min(h * 0.58, 520) : Math.min(h * 0.68, 640)
-  const figW = (figH * 200) / 540
+  const figW = figH * LOOK_RATIO
   // Rayon du cercle : assez large pour que les mannequins de devant couvrent tout l'écran
   const R = mobile ? w * 0.62 : Math.max(figW * 1.6, (w - 60) * 0.47)
   const spacing = R * Math.sin(STEP) // distance horizontale entre deux voisins, devant
@@ -261,21 +251,21 @@ function LineupFigure({ look, i, pos, openMv, motionBlur, figW, figH, R, mobile,
       <AnimatePresence>
         {open && isActive && (
           <motion.div className="hotspots" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ delay: 0.5 }}>
-            {lookItems(look).map(({ slot }, k) => (
+            {lookItems(look).map(({ slot, x, y, product }, k) => (
               <motion.button
                 key={slot}
                 className={`hotspot ${activeSlot === slot ? 'on' : ''}`}
-                style={{ left: `${FIGURE_HOTSPOTS[slot].x}%`, top: `${FIGURE_HOTSPOTS[slot].y}%` }}
+                style={{ left: `${x}%`, top: `${y}%` }}
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
-                transition={{ delay: 0.55 + k * 0.1, type: 'spring', stiffness: 400, damping: 18 }}
+                transition={{ delay: 0.5 + k * 0.06, type: 'spring', stiffness: 400, damping: 18 }}
                 onMouseEnter={() => setActiveSlot(slot)}
                 onMouseLeave={() => setActiveSlot(null)}
                 onClick={() => setActiveSlot(slot)}
-                aria-label={CATEGORY[slot]}
+                aria-label={product.name}
               >
                 <span />
-                <em className="hotspot-tip">{CATEGORY[slot]}</em>
+                <em className="hotspot-tip">{product.name}</em>
               </motion.button>
             ))}
           </motion.div>
@@ -292,7 +282,7 @@ function LookPanel({ look, index, activeSlot, setActiveSlot }) {
   const total = products.reduce((s, p) => s + p.product.price, 0)
 
   const addAll = () => {
-    add(products.map((p) => ({ product: p.product, size: defaultSize(p.slot) })))
+    add(products.map((p) => ({ product: p.product, size: defaultSize(p.product) })))
     setAdded(true)
     setTimeout(() => setAdded(false), 1800)
   }
@@ -325,12 +315,12 @@ function LookPanel({ look, index, activeSlot, setActiveSlot }) {
                 <ProductThumb product={product} />
               </div>
               <div className="panel-info">
-                <span className="eyebrow">{CATEGORY[slot]}</span>
+                <span className="eyebrow">{categoryLabel(product)}</span>
                 <strong>{product.name}</strong>
-                {product.subtitle && ACC_TYPES[slot] && <span className="muted">{product.subtitle}</span>}
+                {product.subtitle && <span className="muted">{product.subtitle}</span>}
                 <span>{formatPrice(product.price)}</span>
               </div>
-              <button className="icon-btn small" onClick={() => add({ product, size: defaultSize(slot) })} aria-label={`Ajouter ${product.name}`}>
+              <button className="icon-btn small" onClick={() => add({ product, size: defaultSize(product) })} aria-label={`Ajouter ${product.name}`}>
                 +
               </button>
             </motion.li>
