@@ -269,6 +269,61 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .footer-brand { font-size: 15.5vw; font-weight: 900; letter-spacing: -.06em; line-height: .78; white-space: nowrap; color: var(--ink); margin: 0 -1vw -1.5vw; }
 
 
+
+/* ── Portant (façon boutique) ───────── */
+.rack-head { position: absolute; top: 9vh; left: 0; right: 0; display: flex; justify-content: center; align-items: center; gap: 16px; z-index: 5; }
+.rack-kicker { font-size: 12px; font-weight: 700; letter-spacing: .22em; text-transform: uppercase; }
+.rack-kicker.muted { font-weight: 500; color: #a3a19b; }
+.rack-sep { width: 1px; height: 14px; background: var(--line); }
+.rack .rack-viewport { position: absolute; left: 0; right: 0; bottom: 120px; overflow: hidden; cursor: grab; }
+.rack .rack-track { position: relative; display: flex; align-items: flex-start; height: 100%; width: max-content; padding-top: 8px; gap: 0; }
+.rack .rail { position: absolute; left: 0; right: 0; top: 8px; height: 3px; border-radius: 2px; background: linear-gradient(#d6d5d1, #9d9b96 60%, #c7c6c2); box-shadow: 0 2px 4px rgba(0,0,0,.12); transform: none; }
+.rack-slot { position: relative; flex: none; }
+.rack-hook { position: absolute; left: 50%; top: 2px; transform: translateX(-50%); width: auto; overflow: visible; z-index: 2; }
+.rack-piece { position: absolute; display: block; cursor: pointer; }
+.rack-visual { position: absolute; left: 50%; top: 0; bottom: 0; perspective: 900px; pointer-events: none; }
+.rack-turn { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; transform-origin: 50% 0; }
+.rack-hanger { position: absolute; left: 20%; width: 60%; top: -6px; z-index: 2; }
+.rack-img { position: absolute; inset: 0; filter: drop-shadow(0 10px 10px rgba(0,0,0,.12)); }
+.rack-img img, .rd-piece img { object-position: 50% 0; }
+.rack-shade { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(0,0,0,.35), rgba(0,0,0,0) 70%); mix-blend-mode: multiply; pointer-events: none; -webkit-mask-image: linear-gradient(#000, #000); }
+.price-tag {
+  position: absolute; left: calc(50% + 6px); z-index: 3; transform-origin: 0 0;
+  background: #fff; color: var(--ink); font-size: 10px; font-weight: 700; letter-spacing: .02em;
+  padding: 3px 6px; border-radius: 2px; box-shadow: 0 1px 4px rgba(0,0,0,.14); white-space: nowrap; pointer-events: none;
+}
+.price-tag::before { content: ''; position: absolute; left: -5px; top: 50%; width: 3px; height: 3px; border-radius: 50%; background: #c9c7c1; }
+.rack-foot { position: absolute; left: 28px; right: 28px; bottom: 28px; display: flex; justify-content: space-between; align-items: flex-end; gap: 20px; }
+.rack-count { display: flex; flex-direction: column; gap: 10px; font-size: 11px; color: var(--muted); letter-spacing: .08em; text-transform: uppercase; }
+.rack .rack-progress { position: static; width: 160px; height: 2px; background: var(--line); }
+.rack-copy { text-align: right; font-size: 12px; font-weight: 600; line-height: 1.45; }
+.rack-copy p { margin: 0 0 8px; }
+.link-arrow { font-size: 11px; color: var(--muted); border-bottom: 1px solid currentColor; padding-bottom: 2px; display: inline-flex; gap: 6px; transition: color .2s, gap .2s; }
+.link-arrow:hover { color: var(--ink); gap: 10px; }
+
+.rack-detail .close-btn { position: absolute; top: 18px; right: 28px; z-index: 40; font-size: 12px; display: flex; gap: 8px; align-items: center; color: var(--muted); }
+.rack-detail .close-btn:hover { color: var(--ink); }
+.rd-stage { position: absolute; left: 0; top: 0; bottom: 0; width: 56%; display: flex; justify-content: center; }
+.rd-wire { position: absolute; top: 0; left: 50%; width: 1px; height: calc(12vh + 4px); background: #9b9b9b; transform-origin: top; }
+.rd-piece { position: absolute; top: 12vh; width: min(56vh, 38vw, 470px); aspect-ratio: 300 / 340; perspective: 1400px; }
+.rd-piece .spinner { cursor: grab; }
+.wood-hanger { position: absolute; left: 14%; width: 72%; top: -8%; z-index: 3; transform: translateZ(9px); filter: drop-shadow(0 3px 3px rgba(0,0,0,.2)); }
+.rd-info { position: absolute; left: 58%; top: 0; bottom: 0; width: min(300px, 36vw); display: flex; flex-direction: column; justify-content: center; gap: 4px; z-index: 35; }
+.rd-name { font-size: 22px; font-weight: 700; letter-spacing: -.02em; margin: 2px 0 0; }
+.rd-price { margin: 2px 0 18px; font-size: 14px; }
+.rd-tabs { display: flex; gap: 18px; margin-bottom: 18px; border-bottom: 1px solid var(--line); }
+.rd-tabs button { position: relative; font-size: 12px; padding: 0 0 8px; color: var(--muted); }
+.rd-tabs button.on { color: var(--ink); font-weight: 600; }
+.rd-tab-line { position: absolute; left: 0; right: 0; bottom: -1px; height: 1.5px; background: var(--ink); }
+.rd-sizes { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 18px; }
+.rd-size { width: 38px; height: 38px; border-radius: 50%; border: 1px solid var(--line); font-size: 12px; background: var(--card); transition: background .2s, color .2s, border-color .2s; }
+.rd-size:hover { border-color: var(--ink); }
+.rd-size.on { background: var(--ink); color: #fff; border-color: var(--ink); }
+.rd-add { border-radius: 999px; height: 44px; }
+.rd-foot { display: flex; justify-content: space-between; align-items: center; margin-top: 14px; font-size: 12px; }
+.rd-more { margin: 10px 0 0; overflow: hidden; }
+.flyer { position: fixed; z-index: 300; pointer-events: none; filter: drop-shadow(0 10px 16px rgba(0,0,0,.2)); }
+
 /* ── Accessoires ────────────────────── */
 .acc-scene .acc-scroll { position: absolute; inset: 0; overflow-y: auto; padding: 18px max(16px, 2vw) 60px; }
 .acc-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; flex-wrap: wrap; margin-bottom: 28px; padding: 0 8px; }
@@ -352,6 +407,17 @@ model-viewer.model3d.is-loaded { opacity: 1; }
   .accshow { grid-template-columns: 1fr; align-content: center; gap: 24px; }
   .accshow-head p { display: none; }
   .accshow-grid { gap: 8px; }
+  .rack-head { top: 6vh; gap: 10px; }
+  .rack-kicker { font-size: 10px; letter-spacing: .16em; }
+  .rack .rack-viewport { bottom: 130px; }
+  .rack-foot { left: 16px; right: 16px; bottom: 20px; }
+  .rack .rack-progress { width: 100px; }
+  .rack-copy { font-size: 11px; }
+  .rd-stage { width: 100%; bottom: 46vh; }
+  .rd-piece { top: 9vh; width: min(30vh, 62vw); }
+  .rd-wire { height: calc(9vh + 4px); }
+  .rd-info { left: 0; right: 0; top: auto; bottom: 0; width: auto; background: var(--card); border-top: 1px solid var(--line); padding: 16px; justify-content: flex-start; max-height: 46vh; overflow: auto; }
+  .rack-detail .close-btn { right: 16px; }
   .cabin { grid-template-columns: 1fr; grid-template-rows: auto 1fr; padding-top: 5vh; gap: 0; }
   .cabin-text p, .cabin-steps { display: none; }
   .cabin-text .btn-pill { margin-top: 6px; }

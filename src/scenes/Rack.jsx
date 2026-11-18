@@ -1,18 +1,26 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { AnimatePresence, animate, motion, useMotionValue, useTransform } from 'framer-motion'
+import { AnimatePresence, animate, motion, useMotionValue, useMotionValueEvent, useTransform } from 'framer-motion'
 import { SIZES_CLOTHES, TOP_TYPES, formatPrice, tops } from '../data/catalog.js'
 import { GarmentVisual } from '../components/Visuals.jsx'
 import { useBag } from '../store.jsx'
 import { EASE, useKey, useViewport } from '../hooks.js'
 
-const TYPE_LABEL = TOP_TYPES
+// Le portant est rempli comme en boutique : chaque pièce apparaît deux fois
+const RACK = [...tops, ...tops].map((p, i) => ({ p, key: `${p.id}-${i}` }))
+const PROFILE = -72 // angle de la pièce vue de profil (en degrés)
 
 export default function Rack() {
-  const [selectedId, setSelectedId] = useState(null)
-  const selected = tops.find((t) => t.id === selectedId)
+  const [selectedKey, setSelectedKey] = useState(null)
+  const [hover, setHover] = useState(null)
+  const selected = RACK.find((r) => r.key === selectedKey)
   const { w, h } = useViewport()
-  const itemW = w < 700 ? 150 : Math.max(170, Math.min(260, h * 0.3))
-  const gap = w < 700 ? 6 : 10
+  const mobile = w < 760
+
+  // Mesures : vêtements serrés, de profil
+  const garmentH = mobile ? Math.min(h * 0.34, 240) : Math.min(h * 0.4, 330)
+  const garmentW = garmentH * 0.92
+  const spacing = mobile ? garmentW * 0.46 : garmentW * 0.4
+  const hookH = garmentH * 0.16
 
   // Défilement horizontal : glisser ou molette
   const viewportRef = useRef(null)
@@ -24,145 +32,219 @@ export default function Rack() {
   useEffect(() => {
     const vw = viewportRef.current?.offsetWidth || w
     const tw = trackRef.current?.scrollWidth || 0
-    setBounds({ left: Math.min(0, vw - tw - 40), right: 0 })
-  }, [w, itemW])
+    setBounds({ left: Math.min(0, vw - tw), right: 0 })
+  }, [w, spacing])
 
   useEffect(() => {
     const el = viewportRef.current
     if (!el) return
     const onWheel = (e) => {
-      if (selectedId) return
+      if (selectedKey) return
       e.preventDefault()
       const d = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY
-      const next = Math.max(bounds.left, Math.min(bounds.right, x.get() - d))
-      animate(x, next, { type: 'spring', stiffness: 300, damping: 40 })
+      const next = Math.max(bounds.left, Math.min(bounds.right, x.get() - d * 0.8))
+      animate(x, next, { type: 'spring', stiffness: 160, damping: 32 })
     }
     el.addEventListener('wheel', onWheel, { passive: false })
     return () => el.removeEventListener('wheel', onWheel)
-  }, [bounds, selectedId, x])
+  }, [bounds, selectedKey, x])
 
   const progress = useTransform(x, (v) => (bounds.left ? v / bounds.left : 0))
-  const close = useCallback(() => setSelectedId(null), [])
+  const close = useCallback(() => setSelectedKey(null), [])
   useKey('Escape', close, !!selected)
+
+  const goEnd = () => animate(x, bounds.left, { duration: 2.4, ease: [0.65, 0, 0.35, 1] })
 
   return (
     <div className="scene rack">
-      <div className="scene-title">
-        <motion.div animate={{ opacity: selected ? 0 : 1, y: selected ? -10 : 0 }}>
-          <span className="eyebrow">Automne / Hiver 26</span>
-          <h1 className="title-sm">Collection</h1>
-          <span className="muted">{tops.length} pièces — glisse pour parcourir</span>
-        </motion.div>
-      </div>
+      <motion.div className="rack-head" animate={{ opacity: selected ? 0 : 1, y: selected ? -10 : 0 }}>
+        <span className="rack-kicker">Nouvelle collection</span>
+        <span className="rack-sep" />
+        <span className="rack-kicker muted">Streetwear premium</span>
+      </motion.div>
 
-      <motion.div className="rack-viewport" ref={viewportRef} animate={{ opacity: selected ? 0 : 1 }} transition={{ duration: 0.4 }} style={{ pointerEvents: selected ? 'none' : 'auto' }}>
+      <motion.div
+        className="rack-viewport"
+        ref={viewportRef}
+        style={{ top: mobile ? '22vh' : '24vh', pointerEvents: selected ? 'none' : 'auto' }}
+        animate={{ opacity: selected ? 0 : 1 }}
+        transition={{ duration: 0.4 }}
+      >
         <motion.div
           ref={trackRef}
           className="rack-track"
-          style={{ x, gap }}
+          style={{ x, paddingLeft: spacing * 1.4, paddingRight: spacing * 1.4 }}
           drag="x"
           dragConstraints={bounds}
-          dragElastic={0.08}
+          dragElastic={0.06}
           onDragStart={() => (dragged.current = true)}
-          onDragEnd={() => setTimeout(() => (dragged.current = false), 50)}
+          onDragEnd={() => setTimeout(() => (dragged.current = false), 60)}
+          onMouseLeave={() => setHover(null)}
         >
           <div className="rail" />
-          {tops.map((p, i) => (
-            <motion.div
-              key={p.id}
-              className="hanger-item"
-              style={{ width: itemW }}
-              initial={{ x: 400, opacity: 0, rotate: -8 }}
-              animate={{ x: 0, opacity: 1, rotate: 0 }}
-              transition={{ delay: 0.04 * i, x: { type: 'spring', stiffness: 90, damping: 16 }, rotate: { type: 'spring', stiffness: 120, damping: 6 } }}
-            >
-              <motion.button
-                className="hanger-swing"
-                whileHover={{ rotate: [0, 5, -4, 2.5, -1, 0], y: -8, transition: { duration: 1.1 } }}
-                onClick={() => !dragged.current && setSelectedId(p.id)}
-                aria-label={`${p.name} ${TYPE_LABEL[p.type]}`}
-              >
-                <Hanger />
-                {selectedId !== p.id ? (
-                  <motion.div layoutId={`garment-${p.id}`} className="hanger-garment" transition={{ type: 'spring', stiffness: 110, damping: 20 }}>
-                    <GarmentVisual product={p} className="fill" />
-                  </motion.div>
-                ) : (
-                  <div className="hanger-garment" />
-                )}
-                <span className="hanger-tag">
-                  {p.name}
-                  <em>{formatPrice(p.price)}</em>
-                </span>
-              </motion.button>
-            </motion.div>
+          {RACK.map(({ p, key }, i) => (
+            <RackItem
+              key={key}
+              rkey={key}
+              p={p}
+              i={i}
+              hover={hover}
+              setHover={setHover}
+              mobile={mobile}
+              spacing={spacing}
+              garmentW={garmentW}
+              garmentH={garmentH}
+              hookH={hookH}
+              hidden={selectedKey === key}
+              onOpen={() => !dragged.current && setSelectedKey(key)}
+            />
           ))}
         </motion.div>
       </motion.div>
 
-      <motion.div className="rack-progress" animate={{ opacity: selected ? 0 : 1 }}>
-        <motion.span style={{ scaleX: progress }} />
+      <motion.div className="rack-foot" animate={{ opacity: selected ? 0 : 1 }}>
+        <div className="rack-count">
+          <span>{tops.length} pièces</span>
+          <div className="rack-progress">
+            <motion.span style={{ scaleX: progress }} />
+          </div>
+        </div>
+        <div className="rack-copy">
+          <p>
+            Coton lourd, coupes amples.
+            <br />
+            Faits pour durer.
+          </p>
+          <button className="link-arrow" onClick={goEnd}>
+            Parcourir le portant <span>→</span>
+          </button>
+        </div>
       </motion.div>
 
-      <AnimatePresence>{selected && <GarmentDetail key="d" product={selected} onClose={close} />}</AnimatePresence>
+      <AnimatePresence>{selected && <GarmentDetail key="d" rkey={selected.key} product={selected.p} onClose={close} />}</AnimatePresence>
     </div>
   )
 }
 
-function Hanger() {
+function RackItem({ p, rkey, i, hover, setHover, mobile, spacing, garmentW, garmentH, hookH, hidden, onOpen }) {
+  const isHover = hover === i
+  // les voisins s'écartent pour laisser la pièce se tourner de face
+  const d = hover == null ? 0 : i - hover
+  const room = (garmentW - spacing) / 2 + 6
+  const shift = d === 0 || Math.abs(d) > 4 ? 0 : Math.sign(d) * room * (1 - (Math.abs(d) - 1) * 0.22)
+
   return (
-    <svg className="hanger" viewBox="0 0 120 50" aria-hidden="true">
-      <path d="M60 22 C60 14 66 12 66 6 C66 1 58 -1 55 4" fill="none" stroke="#9a9a9a" strokeWidth="2.5" strokeLinecap="round" />
-      <path d="M60 22 L8 46 L112 46 Z" fill="none" stroke="#b9b9b9" strokeWidth="3" strokeLinejoin="round" />
-    </svg>
+    <div className="rack-slot" style={{ width: spacing, height: hookH + garmentH + 20, zIndex: isHover ? 60 : 10 + (i % 2) }}>
+      {/* crochet du cintre */}
+      <svg className="rack-hook" viewBox="0 0 20 40" style={{ height: hookH }} aria-hidden="true">
+        <path d="M10 40 L10 18 C10 10 17 10 17 5 C17 1 12 -1 9 2" fill="none" stroke="#8d8c88" strokeWidth="1.6" strokeLinecap="round" />
+      </svg>
+
+      <motion.button
+        className="rack-piece"
+        style={{ width: spacing, height: garmentH, left: 0, top: hookH }}
+        initial={{ y: -60, opacity: 0 }}
+        animate={{ y: 0, opacity: hidden ? 0 : 1, x: shift }}
+        transition={{
+          y: { type: 'spring', stiffness: 120, damping: 12, delay: 0.03 * i },
+          opacity: { duration: 0.3, delay: hidden ? 0 : 0.03 * i },
+          x: { type: 'spring', stiffness: 220, damping: 26 },
+        }}
+        onMouseEnter={() => !mobile && setHover(i)}
+        onFocus={() => setHover(i)}
+        onClick={onOpen}
+        aria-label={`${p.name} — ${formatPrice(p.price)}`}
+      >
+        <div className="rack-visual" style={{ width: garmentW, marginLeft: -garmentW / 2 }}>
+        <motion.div
+          className="rack-turn"
+          initial={{ rotateY: PROFILE }}
+          animate={{ rotateY: isHover ? 0 : PROFILE, rotateZ: isHover ? 0 : 1.5 }}
+          transition={{ type: 'spring', stiffness: 140, damping: 18 }}
+        >
+          {/* cintre vu de face, qui tourne avec la pièce */}
+          <svg className="rack-hanger" viewBox="0 0 120 24" aria-hidden="true">
+            <path d="M60 2 L8 20 L112 20 Z" fill="none" stroke="#a7a59f" strokeWidth="2.4" strokeLinejoin="round" />
+          </svg>
+          {!hidden && (
+            <motion.div
+              layoutId={`garment-${rkey}`}
+              className="rack-img"
+              animate={{ filter: isHover ? 'brightness(1) drop-shadow(0 14px 14px rgba(0,0,0,.16))' : 'brightness(0.82) drop-shadow(0 8px 8px rgba(0,0,0,.1))' }}
+              transition={{ type: 'spring', stiffness: 110, damping: 20 }}
+            >
+              <GarmentVisual product={p} className="fill" />
+            </motion.div>
+          )}
+        </motion.div>
+        </div>
+
+        {/* étiquette de prix */}
+        <motion.span
+          className="price-tag"
+          style={{ top: -hookH * 0.25 }}
+          animate={{ rotate: isHover ? [0, 10, -6, 3, 0] : -4 }}
+          transition={{ duration: 0.9 }}
+        >
+          {formatPrice(p.price).replace(',00', '')}
+        </motion.span>
+      </motion.button>
+    </div>
   )
 }
 
-// ── Fiche produit avec rotation 360° ─────────────────────────
-function GarmentDetail({ product, onClose }) {
-  const { add } = useBag()
-  const [color, setColor] = useState(product.color)
+// ── Fiche produit : cintre en bois, rotation face / profil / dos ──
+function GarmentDetail({ product, rkey, onClose }) {
+  const { add, fly } = useBag()
   const [size, setSize] = useState(null)
   const [state, setState] = useState('idle') // idle | missing | added
+  const [side, setSide] = useState('front')
+  const [more, setMore] = useState(false)
   const rotY = useMotionValue(0)
   const startRot = useRef(0)
+  const pieceRef = useRef(null)
 
-  const spin = (to) => animate(rotY, to, { duration: 1.6, ease: [0.65, 0, 0.35, 1] })
+  const spin = (to) => animate(rotY, to, { duration: 1.5, ease: [0.65, 0, 0.35, 1] })
+
+  useMotionValueEvent(rotY, 'change', (v) => {
+    const a = ((v % 360) + 360) % 360
+    setSide(a > 90 && a < 270 ? 'back' : 'front')
+  })
 
   useEffect(() => {
-    // Un tour complet à l'ouverture, une fois que le vêtement est arrivé au centre
-    const t = setTimeout(() => spin(360), 700)
+    // à l'ouverture : la pièce fait un tour complet (face → profil → dos → face)
+    const t = setTimeout(() => spin(360), 750)
     return () => clearTimeout(t)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const face = (deg) => {
     const cur = rotY.get()
-    const base = Math.round(cur / 360) * 360
-    let target = base + deg
+    let target = Math.round(cur / 360) * 360 + deg
     if (Math.abs(target - cur) > 180) target += target > cur ? -360 : 360
     spin(target)
   }
 
   const addToBag = () => {
-    if (!size) {
-      setState('missing')
-      return
-    }
-    add({ product: { ...product, color }, size })
+    if (!size) return setState('missing')
+    add({ product, size })
     setState('added')
-    setTimeout(() => setState('idle'), 1800)
+    const rect = pieceRef.current?.getBoundingClientRect()
+    if (rect) fly(product, rect, { openAfter: true })
+    setTimeout(() => setState('idle'), 2200)
   }
 
-  const p = { ...product, color }
-  const layers = [-5, -3, -1, 1, 3, 5]
+  const layers = [-4, -2, 0, 2, 4]
 
   return (
-    <div className="detail">
-      <button className="back-link detail-back" onClick={onClose}>← Retour au portant</button>
+    <div className="detail rack-detail">
+      <motion.button className="close-btn" onClick={onClose} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+        Fermer <span>✕</span>
+      </motion.button>
 
-      <div className="detail-stage">
-        <motion.div layoutId={`garment-${product.id}`} className="garment-big" transition={{ type: 'spring', stiffness: 110, damping: 20 }}>
+      <div className="rd-stage">
+        <motion.div className="rd-wire" initial={{ scaleY: 0 }} animate={{ scaleY: 1 }} exit={{ scaleY: 0 }} transition={{ duration: 0.6, ease: EASE }} />
+        <motion.div layoutId={`garment-${rkey}`} className="rd-piece" ref={pieceRef} transition={{ type: 'spring', stiffness: 100, damping: 20 }}>
           <motion.div
             className="spinner"
             style={{ rotateY: rotY }}
@@ -172,61 +254,91 @@ function GarmentDetail({ product, onClose }) {
             }}
             onPan={(_, info) => rotY.set(startRot.current + info.offset.x * 0.6)}
           >
+            <WoodHanger />
             {layers.map((z) => (
-              <div key={z} className="face" style={{ transform: `translateZ(${z}px)`, filter: 'brightness(0.72)' }}>
-                <GarmentVisual product={p} className="fill" />
+              <div key={z} className="face" style={{ transform: `translateZ(${z}px)`, filter: 'brightness(0.7)' }}>
+                <GarmentVisual product={product} className="fill" />
               </div>
             ))}
-            <div className="face front" style={{ transform: 'translateZ(7px)' }}>
-              <GarmentVisual product={p} className="fill" />
+            <div className="face front" style={{ transform: 'translateZ(6px)' }}>
+              <GarmentVisual product={product} className="fill" />
             </div>
-            <div className="face back" style={{ transform: 'rotateY(180deg) translateZ(7px)' }}>
-              <GarmentVisual product={p} side="back" className="fill" />
+            <div className="face back" style={{ transform: 'rotateY(180deg) translateZ(6px)' }}>
+              <GarmentVisual product={product} side="back" className="fill" />
             </div>
           </motion.div>
         </motion.div>
-        <motion.div className="floor-shadow" initial={{ opacity: 0, scaleX: 0.4 }} animate={{ opacity: 1, scaleX: 1 }} transition={{ delay: 0.4 }} />
-        <motion.div className="view-switch" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8 }}>
-          <button onClick={() => face(0)}>Face</button>
-          <button onClick={() => face(180)}>Dos</button>
-          <button onClick={() => spin(rotY.get() + 360)}>360°</button>
-        </motion.div>
-        <motion.p className="hint" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.2 }}>
-          Glisse pour faire tourner
-        </motion.p>
       </div>
 
-      <motion.aside className="detail-info" initial={{ opacity: 0, x: 40 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 40 }} transition={{ duration: 0.5, ease: EASE, delay: 0.2 }}>
-        <span className="eyebrow">{TYPE_LABEL[product.type]}</span>
-        <h2 className="title-md">{product.name}</h2>
-        {product.subtitle && <p className="muted">{product.subtitle}</p>}
-        <p className="price">{formatPrice(product.price)}</p>
+      <motion.aside className="rd-info" initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 30 }} transition={{ duration: 0.5, ease: EASE, delay: 0.25 }}>
+        <span className="eyebrow">{TOP_TYPES[product.type]}</span>
+        <h2 className="rd-name">{product.name}</h2>
+        <p className="rd-price">{formatPrice(product.price)}</p>
 
-        <div className="field">
-          <span className="field-label">
-            Taille {state === 'missing' && <em className="warn">— choisis ta taille</em>}
-          </span>
-          <motion.div className="sizes" animate={state === 'missing' ? { x: [0, -8, 8, -5, 5, 0] } : { x: 0 }} transition={{ duration: 0.4 }}>
-            {SIZES_CLOTHES.map((s) => (
-              <button
-                key={s}
-                className={`size ${size === s ? 'on' : ''}`}
-                onClick={() => {
-                  setSize(s)
-                  setState('idle')
-                }}
-              >
-                {s}
-              </button>
-            ))}
-          </motion.div>
+        <div className="rd-tabs" role="tablist">
+          {[
+            ['front', 'Face', 0],
+            ['back', 'Dos', 180],
+          ].map(([id, label, deg]) => (
+            <button key={id} role="tab" aria-selected={side === id} className={side === id ? 'on' : ''} onClick={() => face(deg)}>
+              {label}
+              {side === id && <motion.span layoutId="rd-tab-line" className="rd-tab-line" />}
+            </button>
+          ))}
         </div>
 
-        <motion.button className={`btn-primary ${state === 'added' ? 'done' : ''}`} onClick={addToBag} whileTap={{ scale: 0.97 }}>
+        <span className="field-label">
+          Taille {state === 'missing' && <em className="warn">— choisis ta taille</em>}
+        </span>
+        <motion.div className="rd-sizes" animate={state === 'missing' ? { x: [0, -8, 8, -5, 5, 0] } : { x: 0 }} transition={{ duration: 0.4 }}>
+          {SIZES_CLOTHES.map((s) => (
+            <button
+              key={s}
+              className={`rd-size ${size === s ? 'on' : ''}`}
+              onClick={() => {
+                setSize(s)
+                setState('idle')
+              }}
+            >
+              {s}
+            </button>
+          ))}
+        </motion.div>
+
+        <motion.button className={`btn-primary rd-add ${state === 'added' ? 'done' : ''}`} onClick={addToBag} whileTap={{ scale: 0.97 }}>
           {state === 'added' ? 'Ajouté au panier ✓' : 'Ajouter au panier'}
         </motion.button>
-        <p className="muted small">Coton brossé 480 g/m² · Coupe oversize · Livraison offerte dès 100 €</p>
+
+        <div className="rd-foot">
+          <span className="muted">{product.subtitle}</span>
+          <button className="link-arrow" onClick={() => setMore((m) => !m)}>
+            {more ? 'Masquer' : 'Détails'} <span>→</span>
+          </button>
+        </div>
+        <AnimatePresence>
+          {more && (
+            <motion.p className="muted small rd-more" initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }}>
+              Coupe ample · Matière épaisse · Livraison offerte dès 100 € · Retours gratuits sous 30 jours. Glisse sur la pièce pour la faire tourner.
+            </motion.p>
+          )}
+        </AnimatePresence>
       </motion.aside>
     </div>
+  )
+}
+
+function WoodHanger() {
+  return (
+    <svg className="wood-hanger" viewBox="0 0 220 70" aria-hidden="true">
+      <defs>
+        <linearGradient id="wood" x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0" stopColor="#8a5a36" />
+          <stop offset="1" stopColor="#5c3a20" />
+        </linearGradient>
+      </defs>
+      <path d="M110 4 C110 -2 118 -2 118 4 C118 9 110 10 110 16" fill="none" stroke="#9b9b9b" strokeWidth="3" strokeLinecap="round" />
+      <path d="M110 16 C80 22 30 40 8 56 C4 59 6 64 12 63 L208 63 C214 64 216 59 212 56 C190 40 140 22 110 16 Z" fill="url(#wood)" />
+      <path d="M14 60 L206 60" stroke="#3d2614" strokeOpacity=".35" strokeWidth="1.5" />
+    </svg>
   )
 }

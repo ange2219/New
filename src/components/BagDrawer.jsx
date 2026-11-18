@@ -3,9 +3,37 @@ import { useBag } from '../store.jsx'
 import { formatPrice } from '../data/catalog.js'
 import { ProductThumb } from './Visuals.jsx'
 
+// Petite copie du produit qui vole jusqu'au bouton Panier
+function FlyLayer() {
+  const { flights, endFlight } = useBag()
+  return flights.map((f) => {
+    const target = document.querySelector('.bag-count')?.getBoundingClientRect()
+    const tx = target ? target.left + target.width / 2 : window.innerWidth - 30
+    const ty = target ? target.top + target.height / 2 : 30
+    const size = Math.min(f.rect.width, f.rect.height, 260)
+    const sx = f.rect.left + f.rect.width / 2
+    const sy = f.rect.top + f.rect.height / 2
+    return (
+      <motion.div
+        key={f.id}
+        className="flyer"
+        style={{ width: size, height: size, left: sx - size / 2, top: sy - size / 2 }}
+        initial={{ x: 0, y: 0, scale: 1, opacity: 1, rotate: 0 }}
+        animate={{ x: [0, (tx - sx) * 0.55, tx - sx], y: [0, (ty - sy) * 0.2 - 120, ty - sy], scale: [1, 0.55, 0.08], opacity: [1, 1, 0.4], rotate: [0, -8, 0] }}
+        transition={{ duration: 0.9, ease: [0.45, 0, 0.2, 1], times: [0, 0.45, 1] }}
+        onAnimationComplete={() => endFlight(f.id)}
+      >
+        <ProductThumb product={f.product} />
+      </motion.div>
+    )
+  })
+}
+
 export default function BagDrawer() {
   const { items, open, setOpen, remove, total } = useBag()
   return (
+    <>
+    <FlyLayer />
     <AnimatePresence>
       {open && (
         <>
@@ -50,5 +78,6 @@ export default function BagDrawer() {
         </>
       )}
     </AnimatePresence>
+    </>
   )
 }
