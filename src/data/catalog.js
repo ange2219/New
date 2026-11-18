@@ -8,7 +8,7 @@
 // ─────────────────────────────────────────────────────────────
 
 export const BRAND = {
-  name: 'STUDIO NOVA',
+  name: 'DH STUDIO',
   currency: '€',
   tagline: 'Try the Look.',
   bigWord: 'OBSESSED',
@@ -55,7 +55,7 @@ export const sneakers = [
   shoe('derby-classic', 'DERBY CLASSIQUE', 'Cuir verni noir', 139),
   {
     category: 'shoes',
-    id: 'runner-3d', name: 'NOVA RUNNER', subtitle: 'Running · 3 coloris · 3D', price: 199, shape: 'low',
+    id: 'runner-3d', name: 'DH RUNNER', subtitle: 'Running · 3 coloris · 3D', price: 199, shape: 'low',
     model: 'models/sneaker-runner.glb', cameraOrbit: '180deg 75deg 72%',
     credit: 'Modèle 3D © 2021 Shopify, CC BY 4.0 (Khronos glTF Sample Assets)',
     colorways: [
@@ -100,10 +100,15 @@ export const ACC_PLURAL = {
 
 const acc = (id, type, name, subtitle, price) => ({ id, type, name, subtitle, price, category: 'accessory', image: img(id) })
 export const accessories = [
-  acc('shade-round', 'glasses', 'Shade Round', 'Acétate noir · verres fumés', 79),
-  acc('shade-amber', 'glasses', 'Shade Amber', 'Noir · verres ambrés', 89),
-  acc('shade-square', 'glasses', 'Shade Square', 'Acétate noir', 79),
-  acc('shade-wayfarer', 'glasses', 'Shade Classic', 'Acétate noir', 85),
+  // Nouvelles lunettes (seules visibles dans la boutique)
+  acc('shade-rimless-gold', 'glasses', 'Lunettes sans monture', 'Doré · verres dégradés gris', 189),
+  acc('shade-rimless-black', 'glasses', 'Lunettes sans monture', 'Noir & argent · verres dégradés', 189),
+  acc('optic-rimless', 'glasses', 'Monture optique sans cercle', 'Gun metal · verres clairs', 159),
+  // Lunettes portées par les mannequins : visibles dans les looks, masquées de la page Accessoires
+  { ...acc('shade-round', 'glasses', 'Shade Round', 'Acétate noir · verres fumés', 79), hiddenInShop: true },
+  { ...acc('shade-amber', 'glasses', 'Shade Amber', 'Noir · verres ambrés', 89), hiddenInShop: true },
+  { ...acc('shade-square', 'glasses', 'Shade Square', 'Acétate noir', 79), hiddenInShop: true },
+  { ...acc('shade-wayfarer', 'glasses', 'Shade Classic', 'Acétate noir', 85), hiddenInShop: true },
   acc('beanie-88', 'beanie', 'Bonnet 88', 'Noir · broderie blanche', 35),
   acc('beanie-bordeaux', 'beanie', 'Bonnet docker', 'Bordeaux', 32),
   acc('cap-black', 'cap', 'Casquette', 'Coton noir', 35),
@@ -116,6 +121,7 @@ export const accessories = [
   acc('watch-steel-diver', 'watch', 'Montre Diver', 'Acier · cadran noir', 229),
   acc('watch-onyx', 'watch', 'Montre Onyx', 'Acier noir', 179),
   acc('watch-gold', 'watch', 'Montre Classic', 'Doré · cadran blanc', 199),
+  acc('watch-chrono-gold', 'watch', 'Chronographe Or', 'Doré · cadran vert', 349),
   acc('bracelet-gold-curb', 'bracelet', 'Bracelet gourmette', 'Doré', 59),
   { ...acc('tie-black', 'tie', 'Cravate fine', 'Noir', 39), hiddenInShop: true }, // portée dans le look Office Knit, masquée de la page Accessoires
   acc('belt-black', 'belt', 'Ceinture cuir', 'Noir · boucle argent', 55),
@@ -127,6 +133,7 @@ export const accessories = [
   acc('scarf-monogram', 'scarf', 'Foulard en soie', 'Chocolat · motif', 69),
   acc('gloves-leather', 'gloves', 'Gants en cuir', 'Chocolat', 65),
   {
+    hiddenInShop: true,
     id: 'gl-3d', type: 'glasses', name: 'Shade Lab', subtitle: 'Modèle 3D · verres irisés', price: 119, color: '#1c1c1c', lens: '#2c3a46',
     model: 'models/sunglasses.glb', cameraOrbit: '0deg 80deg 110%',
     credit: 'Modèle 3D © 2024 Darmstadt Graphics Group, Eric Chadwick, CC BY 4.0 (Khronos glTF Sample Assets)',

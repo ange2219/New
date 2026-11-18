@@ -123,7 +123,7 @@ const FLOATS = [
   { id: 'derby-two-tone', left: 3, top: 66, w: 16, rot: -8, depth: 40, m: { left: 4, top: 82, w: 34 } },
   { id: 'beanie-bordeaux', left: 68, top: 76, w: 7, rot: -6, depth: 18 },
   { id: 'beret-leather', left: 25, top: 4, w: 8, rot: 8, depth: 14 },
-  { id: 'shade-round', left: 26, top: 85, w: 9, rot: -10, depth: 22 },
+  { id: 'shade-rimless-gold', left: 24, top: 86, w: 9, rot: -10, depth: 22 },
   { id: 'watch-gold', left: 93, top: 34, w: 3.6, rot: 16, depth: 35 },
   { id: 'cross-gold', left: 13, top: 44, w: 4.5, rot: 6, depth: 20 },
 ]
@@ -391,7 +391,7 @@ function SneakerShow({ inner, enter, onNavigate }) {
 
 // ── 6. Accessoires : les pièces se placent en orbite ──
 function AccShow({ enter, onNavigate }) {
-  const picks = ['shade-round', 'beanie-88', 'chain-forcat', 'watch-steel-diver', 'bag-woven', 'gloves-leather'].map(byId)
+  const picks = ['shade-rimless-black', 'beanie-88', 'chain-forcat', 'watch-chrono-gold', 'bag-woven', 'gloves-leather'].map(byId)
   const headY = useTransform(enter, [0, 1], [100, 0])
   return (
     <div className="accshow">

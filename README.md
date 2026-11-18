@@ -1,4 +1,4 @@
-# Studio Nova — boutique animée « Try the Look »
+# DH Studio — boutique animée « Try the Look »
 
 Site e-commerce mode très animé : mannequins interactifs, portant à vêtements, rotation 360° des produits et carrousel de sneakers en lévitation.
 
