@@ -31,11 +31,13 @@ export default function Looks() {
   const figH = mobile ? Math.min(h * 0.58, 520) : Math.min(h * 0.68, 640)
   const figW = figH * LOOK_RATIO
   // Rayon du cercle : assez large pour que les mannequins de devant couvrent tout l'écran
-  const R = mobile ? w * 0.62 : Math.max(figW * 1.6, (w - 60) * 0.47)
-  const spacing = R * Math.sin(STEP) // distance horizontale entre deux voisins, devant
+  // Sur ordinateur, le panneau « Dans ce look » reste affiché à droite : le cercle se centre dans l'espace restant
   const panelW = mobile ? 0 : 380
+  const stageW = w - panelW
+  const R = mobile ? w * 0.62 : Math.max(figW * 1.4, (stageW - 40) * 0.46)
+  const spacing = R * Math.sin(STEP) // distance horizontale entre deux voisins, devant
   const openScale = mobile ? 0.56 : 1.18
-  const openShiftX = -panelW / 2
+  const stageShift = -panelW / 2
   const openShiftY = mobile ? -h * 0.37 : 0
 
   useMotionValueEvent(pos, 'change', (p) => {
@@ -105,7 +107,7 @@ export default function Looks() {
           ) : (
             <motion.div key="t-all" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.3, ease: EASE }}>
               <h1 className="title-lg">Try the Look.</h1>
-              <p className="muted small">{N} looks, stylés de la tête aux pieds. Clique sur un mannequin pour voir les pièces.</p>
+              <p className="muted small">{N} looks, stylés de la tête aux pieds. Clique sur un mannequin pour l'agrandir.</p>
             </motion.div>
           )}
         </AnimatePresence>
@@ -138,7 +140,7 @@ export default function Looks() {
             R={R}
             mobile={mobile}
             openScale={openScale}
-            openShiftX={openShiftX}
+            stageShift={stageShift}
             openShiftY={openShiftY}
             isActive={i === active}
             open={open}
@@ -154,7 +156,7 @@ export default function Looks() {
       </motion.div>
 
       {/* Pagination */}
-      <motion.div className="ring-pager" style={{ right: open ? panelW : 0 }} animate={{ opacity: 1 }}>
+      <motion.div className="ring-pager" style={{ right: panelW }} animate={{ opacity: 1 }}>
         <button className="icon-btn" onClick={() => step(-1)} aria-label="Look précédent">←</button>
         <div className="pager-list">
           {looks.map((l, i) => (
@@ -173,9 +175,9 @@ export default function Looks() {
       </motion.div>
 
       {/* Détails du look */}
+      {/* Mobile : panneau qui monte du bas au clic */}
       <AnimatePresence>
-        {open &&
-          (mobile ? (
+        {open && mobile && (
             <motion.div
               key="sheet"
               className="look-sheet"
@@ -191,24 +193,25 @@ export default function Looks() {
               <span className="sheet-grip" />
               <LookPanel look={look} index={active} activeSlot={activeSlot} setActiveSlot={setActiveSlot} />
             </motion.div>
-          ) : (
-            <motion.aside
-              key="panel"
-              className="look-panel"
-              initial={{ opacity: 0, x: 60 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: 60 }}
-              transition={{ duration: 0.55, ease: EASE, delay: 0.2 }}
-            >
-              <LookPanel look={look} index={active} activeSlot={activeSlot} setActiveSlot={setActiveSlot} />
-            </motion.aside>
-          ))}
+        )}
       </AnimatePresence>
+
+      {/* Ordinateur : panneau toujours visible à droite, il suit le look du centre */}
+      {!mobile && (
+        <motion.aside
+          className="look-panel"
+          initial={{ opacity: 0, x: 60 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6, ease: EASE, delay: 0.35 }}
+        >
+          <LookPanel look={look} index={active} activeSlot={activeSlot} setActiveSlot={setActiveSlot} />
+        </motion.aside>
+      )}
     </div>
   )
 }
 
-function LineupFigure({ look, i, pos, openMv, motionBlur, figW, figH, R, mobile, openScale, openShiftX, openShiftY, isActive, open, activeSlot, setActiveSlot, onClick }) {
+function LineupFigure({ look, i, pos, openMv, motionBlur, figW, figH, R, mobile, openScale, stageShift, openShiftY, isActive, open, activeSlot, setActiveSlot, onClick }) {
   const off = useTransform(pos, (p) => wrap(i - p))
   // Le look central quand on ouvre : 1 pour lui, 0 pour les autres (en douceur)
   const focus = useTransform(off, (o) => Math.max(0, 1 - Math.abs(o) * 2))
@@ -217,8 +220,8 @@ function LineupFigure({ look, i, pos, openMv, motionBlur, figW, figH, R, mobile,
   const depth = useTransform(off, (o) => 1 - Math.cos(o * STEP)) // 0 devant → 2 au fond
   const x = useTransform([off, openMv, focus], ([o, t, f]) => {
     const base = Math.sin(o * STEP) * R
-    // à l'ouverture, les autres s'écartent vers l'extérieur, le look choisi se place au centre de la zone libre
-    return base + t * (1 - f) * base * 0.8 + t * f * openShiftX
+    // à l'ouverture, les autres s'écartent vers l'extérieur ; tout est centré dans l'espace à gauche du panneau
+    return stageShift + base + t * (1 - f) * base * 0.8
   })
   const y = useTransform([depth, openMv, focus], ([d, t, f]) => -d * (mobile ? 14 : 26) * (1 - t * f) + t * f * openShiftY)
   const scale = useTransform([depth, openMv, focus], ([d, t, f]) => {
