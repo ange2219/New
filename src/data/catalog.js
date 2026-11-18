@@ -117,7 +117,7 @@ export const accessories = [
   acc('watch-onyx', 'watch', 'Montre Onyx', 'Acier noir', 179),
   acc('watch-gold', 'watch', 'Montre Classic', 'Doré · cadran blanc', 199),
   acc('bracelet-gold-curb', 'bracelet', 'Bracelet gourmette', 'Doré', 59),
-  acc('tie-black', 'tie', 'Cravate fine', 'Noir', 39),
+  { ...acc('tie-black', 'tie', 'Cravate fine', 'Noir', 39), hiddenInShop: true }, // portée dans le look Office Knit, masquée de la page Accessoires
   acc('belt-black', 'belt', 'Ceinture cuir', 'Noir · boucle argent', 55),
   acc('belt-brown', 'belt', 'Ceinture cuir', 'Chocolat · boucle argent', 55),
   acc('wallet-chain-double', 'walletchain', 'Chaîne de pantalon double', 'Argent', 45),

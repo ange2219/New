@@ -6,12 +6,15 @@ import { useBag } from '../store.jsx'
 import { EASE, useKey } from '../hooks.js'
 
 // Filtres : uniquement les catégories présentes dans le catalogue
-const FILTERS = [{ id: 'all', label: 'Tout' }, ...Object.keys(ACC_PLURAL).filter((id) => accessories.some((a) => a.type === id)).map((id) => ({ id, label: ACC_PLURAL[id] }))]
+// Accessoires visibles dans la boutique
+const shopAccessories = accessories.filter((a) => !a.hiddenInShop)
+
+const FILTERS = [{ id: 'all', label: 'Tout' }, ...Object.keys(ACC_PLURAL).filter((id) => shopAccessories.some((a) => a.type === id)).map((id) => ({ id, label: ACC_PLURAL[id] }))]
 
 export default function Accessories({ onNavigate }) {
   const [filter, setFilter] = useState('all')
   const [selectedId, setSelectedId] = useState(null)
-  const list = filter === 'all' ? accessories : accessories.filter((a) => a.type === filter)
+  const list = filter === 'all' ? shopAccessories : shopAccessories.filter((a) => a.type === filter)
   const selected = accessories.find((a) => a.id === selectedId)
   const close = useCallback(() => setSelectedId(null), [])
   useKey('Escape', close, !!selected)
@@ -21,7 +24,7 @@ export default function Accessories({ onNavigate }) {
       <motion.div className="acc-scroll" animate={{ opacity: selected ? 0 : 1, scale: selected ? 0.97 : 1, filter: selected ? 'blur(6px)' : 'blur(0px)' }} transition={{ duration: 0.5, ease: EASE }} style={{ pointerEvents: selected ? 'none' : 'auto' }}>
         <div className="acc-head">
           <div>
-            <span className="eyebrow">{accessories.length} pièces</span>
+            <span className="eyebrow">{shopAccessories.length} pièces</span>
             <h1 className="section-title">Accessoires</h1>
             <p className="muted">Lunettes, bonnets, casquettes, colliers, montres, ceintures, sacs… Pour finir le look.</p>
           </div>
