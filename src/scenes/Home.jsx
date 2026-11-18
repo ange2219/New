@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useLayoutEffect, useRef, useState
 import { animate, motion, useMotionValue, useScroll, useSpring, useTransform } from 'framer-motion'
 import { BRAND, LOOK_RATIO, accessories, byId, formatPrice, looks, sneakers, tops } from '../data/catalog.js'
 import { AccessoryVisual, GarmentVisual, LookVisual, ProductThumb, SneakerVisual } from '../components/Visuals.jsx'
+import Lenis from 'lenis'
 import { EASE, useViewport } from '../hooks.js'
 
 // Contexte : conteneur de défilement + hauteur d'un écran
@@ -21,13 +22,38 @@ export default function Home({ onNavigate }) {
     return () => ro.disconnect()
   }, [])
 
+  // Défilement doux (inertie) à la molette et au trackpad
+  const contentRef = useRef(null)
+  useEffect(() => {
+    if (!scrollRef.current || !contentRef.current) return
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    const lenis = new Lenis({
+      wrapper: scrollRef.current,
+      content: contentRef.current,
+      lerp: 0.075, // plus petit = plus doux et plus lent
+      wheelMultiplier: 0.75,
+      smoothWheel: true,
+    })
+    let id
+    const raf = (t) => {
+      lenis.raf(t)
+      id = requestAnimationFrame(raf)
+    }
+    id = requestAnimationFrame(raf)
+    return () => {
+      cancelAnimationFrame(id)
+      lenis.destroy()
+    }
+  }, [])
+
   const { scrollYProgress } = useScroll({ container: scrollRef })
   const bar = useSpring(scrollYProgress, { stiffness: 200, damping: 40 })
 
   return (
     <ScrollCtx.Provider value={{ scrollRef, ph }}>
       <div className="home-scroll" ref={scrollRef}>
-        <Panel index={0} first className="tone-light">
+        <div className="home-content" ref={contentRef}>
+        <Panel index={0} first hold={0.6} className="tone-light">
           {(p) => <Hero {...p} onNavigate={onNavigate} />}
         </Panel>
         <Panel index={1} length={0.8} className="tone-dark">
@@ -46,6 +72,7 @@ export default function Home({ onNavigate }) {
           {(p) => <AccShow {...p} onNavigate={onNavigate} />}
         </Panel>
         <Footer onNavigate={onNavigate} />
+        </div>
       </div>
       <motion.div className="home-progress" style={{ scaleX: bar }} />
     </ScrollCtx.Provider>
@@ -53,16 +80,18 @@ export default function Home({ onNavigate }) {
 }
 
 // ── Panneau collant : il reste en place, puis recule pendant que le suivant glisse par-dessus ──
-function Panel({ index, length = 0, first, className, children }) {
+// hold : temps de pause (en écrans) où la section reste immobile avant de laisser place à la suivante
+function Panel({ index, length = 0, hold = 0.9, first, className, children }) {
   const { scrollRef, ph } = useContext(ScrollCtx)
   const ref = useRef(null)
-  const total = 1 + length // en écrans
+  const total = 1 + length + hold // en écrans
   const { scrollYProgress } = useScroll({ container: scrollRef, target: ref, offset: ['start start', 'end end'] })
   const { scrollYProgress: enter } = useScroll({ container: scrollRef, target: ref, offset: ['start end', 'start start'] })
 
   const split = length / total
+  const exitStart = (length + hold) / total
   const inner = useTransform(scrollYProgress, (v) => (split ? Math.min(1, v / split) : 1))
-  const exit = useTransform(scrollYProgress, (v) => Math.max(0, (v - split) / (1 - split)))
+  const exit = useTransform(scrollYProgress, (v) => Math.max(0, (v - exitStart) / (1 - exitStart)))
 
   const scale = useTransform(exit, [0, 1], [1, 0.88])
   const y = useTransform(exit, [0, 1], [0, -ph * 0.05])
