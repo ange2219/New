@@ -210,7 +210,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .sk-float { width: 100%; height: 100%; filter: drop-shadow(0 12px 14px rgba(0,0,0,.14)); }
 .sk-float > * { width: 100%; height: 100%; }
 .sk-shadow { position: absolute; left: 18%; right: 18%; bottom: -14%; height: 16%; border-radius: 50%; background: radial-gradient(rgba(0,0,0,.22), transparent 70%); }
-.sk-ruler-wrap { position: absolute; left: 0; right: 0; margin: 0 auto; bottom: 13vh; width: min(300px, 60vw); z-index: 20; text-align: center; }
+.sk-ruler-wrap { position: absolute; left: 0; right: 0; margin: 0 auto; bottom: 11vh; width: min(300px, 60vw); z-index: 20; text-align: center; }
 .sk-ruler {
   position: relative; height: 16px; border-radius: 8px; cursor: ew-resize; touch-action: none;
   background:

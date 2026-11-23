@@ -8,8 +8,7 @@ import { EASE, useKey, useViewport } from '../hooks.js'
 const N = sneakers.length
 const QUICK_SIZES = ['40', '41', '42', '43', '44', '45', '46']
 const SPRING = { type: 'spring', stiffness: 60, damping: 16, mass: 1 }
-const STEP = (Math.PI * 2) / N
-const TILT = (-20 * Math.PI) / 180 // inclinaison du cercle : il monte vers la droite
+const DEG = Math.PI / 180
 // Ramène un décalage dans [-N/2, N/2[ : le cercle boucle à l'infini
 const wrap = (v) => ((((v % N) + N) % N) + N / 2) % N - N / 2
 
@@ -71,16 +70,14 @@ export default function Sneakers() {
     return () => el.removeEventListener('wheel', onWheel)
   }, [go, open])
 
-  // ── Géométrie : un vrai cercle vu en perspective (ellipse inclinée) ──
-  // La paire de devant est en bas du cercle, la plus grande ; les autres font le tour en rapetissant.
-  const shoeW = mobile ? Math.min(box.w * 0.5, 240) : Math.min(box.w * 0.2, 310)
+  // ── Géométrie : un arc de cercle à plat, comme dans la vidéo ──
+  // Le centre du cercle est en bas à droite (hors écran) : les paires montent du bas-gauche
+  // vers le haut-droite en suivant la courbe. La paire active est au milieu de l'arc.
+  const shoeW = mobile ? Math.min(box.w * 0.38, 190) : Math.min(box.w * 0.15, 250)
   const shoeH = shoeW * 0.62
-  const ring = {
-    cx: box.w * 0.5,
-    cy: mobile ? box.h * 0.5 : box.h * 0.55,
-    rx: mobile ? box.w * 0.4 : Math.min(box.w * 0.34, 520),
-    ry: mobile ? box.h * 0.12 : box.h * 0.17,
-  }
+  const arc = mobile
+    ? { cx: box.w * 0.92, cy: box.h * 0.72, r: box.w * 0.74, a0: -140 * DEG, step: 32 * DEG }
+    : { cx: box.w * 0.78, cy: box.h * 0.8, r: Math.min(box.h * 0.64, box.w * 0.46), a0: -140 * DEG, step: 30 * DEG }
   const detailW = mobile ? Math.min(box.w * 0.82, 340) : Math.min(box.w * 0.4, 560)
   const detail = mobile ? { x: box.w * 0.5, y: box.h * 0.24 } : { x: box.w * 0.33, y: box.h * 0.45 }
 
@@ -134,7 +131,7 @@ export default function Sneakers() {
             i={i}
             pos={pos}
             openMv={openMv}
-            ring={ring}
+            arc={arc}
             detail={detail}
             shoeW={shoeW}
             shoeH={shoeH}
@@ -204,25 +201,27 @@ export default function Sneakers() {
   )
 }
 
-function RingShoe({ s, i, pos, openMv, ring, detail, shoeW, shoeH, detailScale, isActive, open, colorway, onClick }) {
+function RingShoe({ s, i, pos, openMv, arc, detail, shoeW, shoeH, detailScale, isActive, open, colorway, onClick }) {
   const off = useTransform(pos, (p) => wrap(i - p))
   const focus = useTransform(off, (o) => Math.max(0, 1 - Math.abs(o) * 2))
-  // point sur l'ellipse, puis inclinaison
+  // point sur l'arc : un pas d'angle par paire
   const pt = useTransform(off, (o) => {
-    const t = o * STEP
-    const ex = ring.rx * Math.sin(t)
-    const ey = -ring.ry * (1 - Math.cos(t)) // devant en bas, fond en haut
-    return { x: ring.cx + ex * Math.cos(TILT) - ey * Math.sin(TILT), y: ring.cy + ex * Math.sin(TILT) + ey * Math.cos(TILT), depth: (1 - Math.cos(t)) / 2 }
+    const a = arc.a0 + o * arc.step
+    return { x: arc.cx + Math.cos(a) * arc.r, y: arc.cy + Math.sin(a) * arc.r, d: Math.abs(o) }
   })
   const x = useTransform([pt, openMv, focus], ([p, t, f]) => p.x + t * f * (detail.x - p.x))
   const y = useTransform([pt, openMv, focus], ([p, t, f]) => p.y + t * f * (detail.y - p.y))
   const scale = useTransform([pt, openMv, focus], ([p, t, f]) => {
-    const r = 1 - p.depth * 0.68
+    const r = Math.max(0.3, 1 - p.d * 0.28) // la paire active est la plus grande
     return r + t * f * (detailScale - r)
   })
-  const opacity = useTransform([pt, openMv, focus], ([p, t, f]) => (1 - p.depth * 0.45) * (1 - t * (1 - f)))
-  const filter = useTransform([pt, openMv, focus], ([p, t, f]) => `blur(${(p.depth * 2.2 * (1 - t * f)).toFixed(2)}px)`)
-  const zIndex = useTransform(pt, (p) => Math.round(200 - p.depth * 100))
+  const opacity = useTransform([off, openMv, focus], ([o, t, f]) => {
+    // partie visible de l'arc : une paire avant, trois après
+    const vis = o < 0 ? Math.min(1, Math.max(0, 2.2 + o)) : Math.min(1, Math.max(0, 3.4 - o))
+    return vis * (1 - t * (1 - f))
+  })
+  const zIndex = useTransform(pt, (p) => Math.round(200 - p.d * 10))
+  const filter = 'none'
 
   return (
     <motion.div
