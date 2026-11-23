@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { AnimatePresence, animate, motion, useMotionValue, useMotionValueEvent, useTransform } from 'framer-motion'
 import { BRAND, SIZES_SHOES, formatPrice, sneakers } from '../data/catalog.js'
 import { SneakerVisual } from '../components/Visuals.jsx'
 import { useBag } from '../store.jsx'
@@ -7,12 +7,15 @@ import { EASE, useKey, useViewport } from '../hooks.js'
 
 const N = sneakers.length
 const QUICK_SIZES = ['40', '41', '42', '43', '44', '45', '46']
-const SPRING = { type: 'spring', stiffness: 70, damping: 17, mass: 1 }
-
-// Taille selon la distance au centre de la courbe
-const SCALES = [1, 0.6, 0.42, 0.3, 0.22]
+const SPRING = { type: 'spring', stiffness: 60, damping: 16, mass: 1 }
+const STEP = (Math.PI * 2) / N
+const TILT = (-20 * Math.PI) / 180 // inclinaison du cercle : il monte vers la droite
+// Ramène un décalage dans [-N/2, N/2[ : le cercle boucle à l'infini
+const wrap = (v) => ((((v % N) + N) % N) + N / 2) % N - N / 2
 
 export default function Sneakers() {
+  const pos = useMotionValue(0) // rotation du cercle (en nombre de paires)
+  const openMv = useMotionValue(0) // 0 = cercle, 1 = fiche ouverte
   const [active, setActive] = useState(0)
   const [open, setOpen] = useState(false)
   const [colorway, setColorway] = useState(0)
@@ -33,17 +36,19 @@ export default function Sneakers() {
     return () => ro.disconnect()
   }, [])
 
-  const go = useCallback(
-    (d) => {
-      setActive((a) => Math.max(0, Math.min(N - 1, a + d)))
-      setColorway(0)
-    },
-    [],
-  )
-  const select = (i) => {
-    setActive(i)
-    setColorway(0)
-  }
+  useMotionValueEvent(pos, 'change', (p) => {
+    const a = ((Math.round(p) % N) + N) % N
+    setActive((cur) => {
+      if (cur !== a) setColorway(0)
+      return a
+    })
+  })
+  useEffect(() => {
+    animate(openMv, open ? 1 : 0, { duration: 0.8, ease: EASE })
+  }, [open, openMv])
+
+  const go = useCallback((d) => animate(pos, Math.round(pos.get()) + d, SPRING), [pos])
+  const select = useCallback((i) => animate(pos, Math.round(pos.get() + wrap(i - pos.get())), SPRING), [pos])
 
   useKey('ArrowRight', () => go(1), !open)
   useKey('ArrowLeft', () => go(-1), !open)
@@ -66,67 +71,18 @@ export default function Sneakers() {
     return () => el.removeEventListener('wheel', onWheel)
   }, [go, open])
 
-  // ── Géométrie : les paires suivent une courbe (bas-gauche → haut-droite) ──
-  const shoeW = mobile ? Math.min(box.w * 0.56, 260) : Math.min(box.w * 0.21, 330)
+  // ── Géométrie : un vrai cercle vu en perspective (ellipse inclinée) ──
+  // La paire de devant est en bas du cercle, la plus grande ; les autres font le tour en rapetissant.
+  const shoeW = mobile ? Math.min(box.w * 0.5, 240) : Math.min(box.w * 0.2, 310)
   const shoeH = shoeW * 0.62
-  const cx = mobile ? box.w * 0.5 : box.w * 0.5
-  const cy = mobile ? box.h * 0.42 : box.h * 0.5
-  const sx = mobile ? shoeW * 0.62 : shoeW * 0.92
-  const sy = mobile ? shoeW * 0.42 : shoeW * 0.5
-
-  const pointAt = useCallback(
-    (d) => {
-      const a = Math.abs(d)
-      // courbe douce : on remonte vite à droite, on s'aplatit au loin
-      const x = cx + d * sx * (1 - a * 0.06)
-      const y = cy - d * sy * (1 - a * 0.12) + (d < 0 ? a * sy * 0.05 : 0)
-      return { x, y }
-    },
-    [cx, cy, sx, sy],
-  )
-
-  const detailW = mobile ? Math.min(box.w * 0.82, 340) : Math.min(box.w * 0.4, 560)
-
-  const placement = (i) => {
-    const d = i - active
-    const a = Math.abs(d)
-    if (open) {
-      if (d === 0) {
-        return mobile
-          ? { x: box.w * 0.5, y: box.h * 0.24, scale: detailW / shoeW, rotate: -4, opacity: 1 }
-          : { x: box.w * 0.33, y: box.h * 0.45, scale: detailW / shoeW, rotate: -4, opacity: 1 }
-      }
-      const p = pointAt(d * 1.6)
-      return { x: p.x, y: p.y, scale: 0.2, rotate: 0, opacity: 0 }
-    }
-    const p = pointAt(d)
-    return {
-      x: p.x,
-      y: p.y,
-      scale: SCALES[Math.min(a, SCALES.length - 1)],
-      rotate: d === 0 ? -4 : d * -2,
-      opacity: a > 4 ? 0 : 1,
-    }
+  const ring = {
+    cx: box.w * 0.5,
+    cy: mobile ? box.h * 0.5 : box.h * 0.55,
+    rx: mobile ? box.w * 0.4 : Math.min(box.w * 0.34, 520),
+    ry: mobile ? box.h * 0.12 : box.h * 0.17,
   }
-
-  // Fil très fin qui relie les paires (courbe lissée)
-  const threadPath = useMemo(() => {
-    const pts = [-3, -2, -1, 0, 1, 2, 3].map((d) => {
-      const p = pointAt(d)
-      return { x: p.x, y: p.y + shoeH * 0.5 * SCALES[Math.min(Math.abs(d), SCALES.length - 1)] }
-    })
-    let path = `M ${pts[0].x.toFixed(1)} ${pts[0].y.toFixed(1)}`
-    for (let i = 0; i < pts.length - 1; i++) {
-      const p0 = pts[i - 1] || pts[i]
-      const p1 = pts[i]
-      const p2 = pts[i + 1]
-      const p3 = pts[i + 2] || p2
-      const c1 = { x: p1.x + (p2.x - p0.x) / 6, y: p1.y + (p2.y - p0.y) / 6 }
-      const c2 = { x: p2.x - (p3.x - p1.x) / 6, y: p2.y - (p3.y - p1.y) / 6 }
-      path += ` C ${c1.x.toFixed(1)} ${c1.y.toFixed(1)} ${c2.x.toFixed(1)} ${c2.y.toFixed(1)} ${p2.x.toFixed(1)} ${p2.y.toFixed(1)}`
-    }
-    return path
-  }, [pointAt, shoeH])
+  const detailW = mobile ? Math.min(box.w * 0.82, 340) : Math.min(box.w * 0.4, 560)
+  const detail = mobile ? { x: box.w * 0.5, y: box.h * 0.24 } : { x: box.w * 0.33, y: box.h * 0.45 }
 
   const product = sneakers[active]
 
@@ -145,11 +101,6 @@ export default function Sneakers() {
       <motion.div className="sk-word" aria-hidden="true" animate={{ opacity: open ? 0 : 1, y: open ? 40 : 0 }} transition={{ duration: 0.6, ease: EASE }}>
         {BRAND.bigWord}
       </motion.div>
-
-      {/* Fil */}
-      <motion.svg className="sk-thread" width={box.w} height={box.h} animate={{ opacity: open ? 0 : 1 }}>
-        <motion.path d={threadPath} fill="none" stroke="rgba(17,17,17,.16)" strokeWidth="1" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 1.6, ease: EASE }} />
-      </motion.svg>
 
       {/* Titre */}
       <motion.div className="sk-title" animate={{ opacity: open ? 0 : 1 }} style={{ pointerEvents: open ? 'none' : 'auto' }}>
@@ -176,36 +127,28 @@ export default function Sneakers() {
           else if (info.offset.x > 40 || info.offset.y < -50) go(-1)
         }}
       >
-        {sneakers.map((s, i) => {
-          const d = i - active
-          const pl = placement(i)
-          const isActive = d === 0
-          return (
-            <motion.div
-              key={s.id}
-              className="sk-shoe"
-              style={{ width: shoeW, height: shoeH, marginLeft: -shoeW / 2, marginTop: -shoeH / 2, zIndex: 100 - Math.abs(d), pointerEvents: pl.opacity === 0 ? 'none' : 'auto' }}
-              initial={{ opacity: 0, x: pl.x + 200, y: pl.y - 160, scale: pl.scale * 0.6 }}
-              animate={pl}
-              transition={SPRING}
-              onClick={() => {
-                if (open) return
-                if (isActive) setOpen(true)
-                else select(i)
-              }}
-            >
-              <motion.div
-                className="sk-float"
-                animate={{ y: [0, -8, 0] }}
-                transition={{ duration: 3.2 + (i % 3) * 0.5, repeat: Infinity, ease: 'easeInOut', delay: i * 0.25 }}
-                whileHover={!open ? { scale: 1.06 } : undefined}
-              >
-                <SneakerVisual product={s} colorwayIndex={isActive ? colorway : 0} className="fill" allow3D={Math.abs(d) <= 1} interactive={open && isActive} autoRotate={open && isActive} />
-              </motion.div>
-              <div className="sk-shadow" />
-            </motion.div>
-          )
-        })}
+        {sneakers.map((s, i) => (
+          <RingShoe
+            key={s.id}
+            s={s}
+            i={i}
+            pos={pos}
+            openMv={openMv}
+            ring={ring}
+            detail={detail}
+            shoeW={shoeW}
+            shoeH={shoeH}
+            detailScale={detailW / shoeW}
+            isActive={i === active}
+            open={open}
+            colorway={colorway}
+            onClick={() => {
+              if (open) return
+              if (i === active) setOpen(true)
+              else select(i)
+            }}
+          />
+        ))}
       </motion.div>
 
       {/* Règle graduée */}
@@ -258,6 +201,46 @@ export default function Sneakers() {
         )}
       </AnimatePresence>
     </div>
+  )
+}
+
+function RingShoe({ s, i, pos, openMv, ring, detail, shoeW, shoeH, detailScale, isActive, open, colorway, onClick }) {
+  const off = useTransform(pos, (p) => wrap(i - p))
+  const focus = useTransform(off, (o) => Math.max(0, 1 - Math.abs(o) * 2))
+  // point sur l'ellipse, puis inclinaison
+  const pt = useTransform(off, (o) => {
+    const t = o * STEP
+    const ex = ring.rx * Math.sin(t)
+    const ey = -ring.ry * (1 - Math.cos(t)) // devant en bas, fond en haut
+    return { x: ring.cx + ex * Math.cos(TILT) - ey * Math.sin(TILT), y: ring.cy + ex * Math.sin(TILT) + ey * Math.cos(TILT), depth: (1 - Math.cos(t)) / 2 }
+  })
+  const x = useTransform([pt, openMv, focus], ([p, t, f]) => p.x + t * f * (detail.x - p.x))
+  const y = useTransform([pt, openMv, focus], ([p, t, f]) => p.y + t * f * (detail.y - p.y))
+  const scale = useTransform([pt, openMv, focus], ([p, t, f]) => {
+    const r = 1 - p.depth * 0.68
+    return r + t * f * (detailScale - r)
+  })
+  const opacity = useTransform([pt, openMv, focus], ([p, t, f]) => (1 - p.depth * 0.45) * (1 - t * (1 - f)))
+  const filter = useTransform([pt, openMv, focus], ([p, t, f]) => `blur(${(p.depth * 2.2 * (1 - t * f)).toFixed(2)}px)`)
+  const zIndex = useTransform(pt, (p) => Math.round(200 - p.depth * 100))
+
+  return (
+    <motion.div
+      className="sk-shoe"
+      style={{ x, y, scale, opacity, filter, zIndex, rotate: -4, width: shoeW, height: shoeH, marginLeft: -shoeW / 2, marginTop: -shoeH / 2, pointerEvents: open && !isActive ? 'none' : 'auto' }}
+      onClick={onClick}
+    >
+      <motion.div
+        className="sk-float"
+        initial={{ opacity: 0, y: 40 }}
+        animate={{ opacity: 1, y: [0, -8, 0] }}
+        transition={{ opacity: { duration: 0.6, delay: i * 0.06 }, y: { duration: 3.2 + (i % 3) * 0.5, repeat: Infinity, ease: 'easeInOut', delay: i * 0.25 } }}
+        whileHover={!open ? { scale: 1.06 } : undefined}
+      >
+        <SneakerVisual product={s} colorwayIndex={isActive ? colorway : 0} className="fill" allow3D interactive={open && isActive} autoRotate={open && isActive} />
+      </motion.div>
+      <div className="sk-shadow" />
+    </motion.div>
   )
 }
 
