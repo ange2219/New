@@ -131,6 +131,7 @@ export default function Rack() {
 
 function RackItem({ p, rkey, i, hover, setHover, mobile, spacing, garmentW, garmentH, hookH, hidden, onOpen }) {
   const isHover = hover === i
+  const real = !!p.hangerImage // vraie photo sur cintre
   // les voisins s'écartent pour laisser la pièce se tourner de face
   const d = hover == null ? 0 : i - hover
   const room = (garmentW - spacing) / 2 + 6
@@ -149,8 +150,8 @@ function RackItem({ p, rkey, i, hover, setHover, mobile, spacing, garmentW, garm
           x: { type: 'spring', stiffness: 220, damping: 26 },
         }}
       >
-        {/* crochet métallique, accroché par-dessus la tringle */}
-        <svg className="rack-hook" viewBox="0 0 20 40" style={{ height: hookH + garmentH * 0.03 }} preserveAspectRatio="xMidYMin meet" aria-hidden="true">
+        {/* crochet métallique, accroché par-dessus la tringle (inutile si la photo a son vrai cintre) */}
+        {!real && <svg className="rack-hook" viewBox="0 0 20 40" style={{ height: hookH + garmentH * 0.03 }} preserveAspectRatio="xMidYMin meet" aria-hidden="true">
           <defs>
             <linearGradient id="hookMetal" x1="0" x2="1">
               <stop offset="0" stopColor="#6f6d69" />
@@ -159,17 +160,17 @@ function RackItem({ p, rkey, i, hover, setHover, mobile, spacing, garmentW, garm
             </linearGradient>
           </defs>
           <path d="M10 40 L10 20 C10 13 16.5 13 16.5 8 C16.5 2.5 11 1.5 8.5 4.5" fill="none" stroke="url(#hookMetal)" strokeWidth="2" strokeLinecap="round" />
-        </svg>
+        </svg>}
 
         <button
           className="rack-piece"
-          style={{ width: spacing, height: garmentH, left: 0, top: hookH }}
+          style={real ? { width: spacing, height: hookH + garmentH, left: 0, top: 2 } : { width: spacing, height: garmentH, left: 0, top: hookH }}
           onMouseEnter={() => !mobile && setHover(i)}
           onFocus={() => setHover(i)}
           onClick={onOpen}
           aria-label={`${p.name} — ${formatPrice(p.price)}`}
         >
-          <div className="rack-visual" style={{ width: garmentW, marginLeft: -garmentW / 2 }}>
+          <div className="rack-visual" style={{ width: real ? garmentW * 1.04 : garmentW, marginLeft: (real ? -garmentW * 1.04 : -garmentW) / 2 }}>
             <motion.div
               className="rack-turn"
               initial={{ rotateY: PROFILE }}
@@ -177,7 +178,7 @@ function RackItem({ p, rkey, i, hover, setHover, mobile, spacing, garmentW, garm
               transition={{ type: 'spring', stiffness: 140, damping: 18 }}
             >
               {/* cintre en bois, glissé dans l'encolure sous les épaules ; il tourne avec la pièce */}
-              <RackHanger />
+              {!real && <RackHanger />}
               {!hidden && (
                 <motion.div
                   layoutId={`garment-${rkey}`}
@@ -185,7 +186,7 @@ function RackItem({ p, rkey, i, hover, setHover, mobile, spacing, garmentW, garm
                   animate={{ filter: isHover ? 'brightness(1) drop-shadow(0 14px 14px rgba(0,0,0,.16))' : 'brightness(0.82) drop-shadow(0 8px 8px rgba(0,0,0,.1))' }}
                   transition={{ type: 'spring', stiffness: 110, damping: 20 }}
                 >
-                  <GarmentVisual product={p} className="fill" />
+                  {real ? <img src={p.hangerImage} alt="" draggable="false" className="fill hang-photo" /> : <GarmentVisual product={p} className="fill" />}
                 </motion.div>
               )}
             </motion.div>
@@ -194,7 +195,7 @@ function RackItem({ p, rkey, i, hover, setHover, mobile, spacing, garmentW, garm
           {/* étiquette de prix */}
           <motion.span
             className="price-tag"
-            style={{ top: -hookH * 0.25 }}
+            style={{ top: real ? hookH * 0.55 : -hookH * 0.25 }}
             animate={{ rotate: isHover ? [0, 10, -6, 3, 0] : -4 }}
             transition={{ duration: 0.9 }}
           >
@@ -274,7 +275,7 @@ function GarmentDetail({ product, rkey, onClose }) {
       </motion.button>
 
       <div className="rd-stage">
-        <motion.div className="rd-wire" initial={{ scaleY: 0 }} animate={{ scaleY: 1 }} exit={{ scaleY: 0 }} transition={{ duration: 0.6, ease: EASE }} />
+        <motion.div className={`rd-wire ${product.hangerImage ? 'real' : ''}`} initial={{ scaleY: 0 }} animate={{ scaleY: 1 }} exit={{ scaleY: 0 }} transition={{ duration: 0.6, ease: EASE }} />
         <motion.div layoutId={`garment-${rkey}`} className="rd-piece" ref={pieceRef} transition={{ type: 'spring', stiffness: 100, damping: 20 }}>
           <motion.div
             className="spinner"
@@ -285,17 +286,17 @@ function GarmentDetail({ product, rkey, onClose }) {
             }}
             onPan={(_, info) => rotY.set(startRot.current + info.offset.x * 0.6)}
           >
-            <WoodHanger />
+            {!product.hangerImage && <WoodHanger />}
             {layers.map((z) => (
               <div key={z} className="face" style={{ transform: `translateZ(${z}px)`, filter: 'brightness(0.7)' }}>
-                <GarmentVisual product={product} className="fill" />
+                <DetailFace product={product} />
               </div>
             ))}
             <div className="face front" style={{ transform: 'translateZ(6px)' }}>
-              <GarmentVisual product={product} className="fill" />
+              <DetailFace product={product} />
             </div>
             <div className="face back" style={{ transform: 'rotateY(180deg) translateZ(6px)' }}>
-              <GarmentVisual product={product} side="back" className="fill" />
+              <DetailFace product={product} side="back" />
             </div>
           </motion.div>
         </motion.div>
@@ -356,6 +357,14 @@ function GarmentDetail({ product, rkey, onClose }) {
       </motion.aside>
     </div>
   )
+}
+
+// Face de la pièce dans la fiche : la vraie photo sur cintre si elle existe
+function DetailFace({ product, side = 'front' }) {
+  if (product.hangerImage) {
+    return <img src={product.hangerImage} alt="" draggable="false" className="fill hang-photo" style={side === 'back' ? { transform: 'scaleX(-1)' } : undefined} />
+  }
+  return <GarmentVisual product={product} side={side} className="fill" />
 }
 
 function WoodHanger() {

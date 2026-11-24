@@ -21,6 +21,8 @@ export const SIZES_RINGS = ['50', '52', '54', '56', '58', '60', '62']
 const img = (id) => `products/${id}.webp`
 
 // ── Hauts ────────────────────────────────────────────────────
+// Hauts photographiés sur un vrai cintre (fichiers public/products/<id>-cintre.webp)
+const HANGER_PHOTOS = ['overshirt-brooklyn', 'polo-arodr', 'zip-knit-charcoal', 'vest-chocolate', 'tee-essential-black']
 export const TOP_TYPES = { tee: 'T-shirt', shirt: 'Chemise', overshirt: 'Surchemise', polo: 'Polo', knit: 'Maille', vest: 'Gilet' }
 export const tops = [
   { id: 'overshirt-brooklyn', type: 'overshirt', name: 'Surchemise Brooklyn 92', subtitle: 'Sauge · broderie jaune', price: 89 },
@@ -32,7 +34,13 @@ export const tops = [
   { id: 'shirt-oxford-white', type: 'shirt', name: 'Chemise Oxford', subtitle: 'Blanc', price: 79 },
   { id: 'tee-ls-white', type: 'tee', name: 'T-shirt manches longues', subtitle: 'Blanc', price: 45 },
   { id: 'tee-white', type: 'tee', name: 'T-shirt ajusté', subtitle: 'Blanc', price: 35 },
-].map((p) => ({ ...p, category: 'top', image: img(p.id) }))
+].map((p) => ({
+  ...p,
+  category: 'top',
+  image: img(p.id),
+  // photo réelle sur cintre (portant + fiche), si elle existe
+  ...(HANGER_PHOTOS.includes(p.id) ? { hangerImage: `products/${p.id}-cintre.webp` } : {}),
+}))
 
 // ── Bas ──────────────────────────────────────────────────────
 export const bottoms = [

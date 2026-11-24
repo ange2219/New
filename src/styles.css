@@ -346,6 +346,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .rack-hang { position: absolute; inset: 0; }
 .rack-hanger { position: absolute; left: 13%; width: 74%; top: 1.5%; z-index: 0; filter: drop-shadow(0 2px 2px rgba(0,0,0,.2)); }
 .rack-img { z-index: 1; }
+.hang-photo { object-fit: contain; object-position: 50% 0; }
 .rack-img { position: absolute; inset: 0; filter: drop-shadow(0 10px 10px rgba(0,0,0,.12)); }
 .rack-img img, .rd-piece img { object-position: 50% 0; }
 .rack-shade { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(0,0,0,.35), rgba(0,0,0,0) 70%); mix-blend-mode: multiply; pointer-events: none; -webkit-mask-image: linear-gradient(#000, #000); }
@@ -367,6 +368,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .rack-detail .close-btn:hover { color: var(--ink); }
 .rd-stage { position: absolute; left: 0; top: 0; bottom: 0; width: 56%; display: flex; justify-content: center; }
 .rd-wire { position: absolute; top: 0; left: 50%; width: 1px; height: calc(12vh + 4px); background: #9b9b9b; transform-origin: top; }
+.rd-wire.real { height: calc(12vh + 1px); }
 .rd-piece { position: absolute; top: 12vh; width: min(56vh, 38vw, 470px); aspect-ratio: 300 / 340; perspective: 1400px; }
 .rd-piece .spinner { cursor: grab; }
 .wood-hanger { position: absolute; left: 14%; width: 72%; top: -8%; z-index: 3; transform: translateZ(9px); filter: drop-shadow(0 3px 3px rgba(0,0,0,.2)); }
