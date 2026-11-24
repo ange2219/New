@@ -138,21 +138,9 @@ function RackItem({ p, rkey, i, hover, setHover, mobile, spacing, garmentW, garm
 
   return (
     <div className="rack-slot" style={{ width: spacing, height: hookH + garmentH + 20, zIndex: isHover ? 60 : 10 + (i % 2) }}>
-      {/* crochet du cintre */}
-      <svg className="rack-hook" viewBox="0 0 20 40" style={{ height: hookH }} aria-hidden="true">
-        <defs>
-          <linearGradient id="hookMetal" x1="0" x2="1">
-            <stop offset="0" stopColor="#6f6d69" />
-            <stop offset=".45" stopColor="#e9e8e5" />
-            <stop offset="1" stopColor="#7d7b77" />
-          </linearGradient>
-        </defs>
-        <path d="M10 40 L10 20 C10 13 16.5 13 16.5 8 C16.5 2.5 11 1.5 8.5 4.5" fill="none" stroke="url(#hookMetal)" strokeWidth="2" strokeLinecap="round" />
-      </svg>
-
-      <motion.button
-        className="rack-piece"
-        style={{ width: spacing, height: garmentH, left: 0, top: hookH }}
+      {/* tout le cintre (crochet + pièce) glisse ensemble le long de la tringle */}
+      <motion.div
+        className="rack-hang"
         initial={{ y: -60, opacity: 0 }}
         animate={{ y: 0, opacity: hidden ? 0 : 1, x: shift }}
         transition={{
@@ -160,46 +148,79 @@ function RackItem({ p, rkey, i, hover, setHover, mobile, spacing, garmentW, garm
           opacity: { duration: 0.3, delay: hidden ? 0 : 0.03 * i },
           x: { type: 'spring', stiffness: 220, damping: 26 },
         }}
-        onMouseEnter={() => !mobile && setHover(i)}
-        onFocus={() => setHover(i)}
-        onClick={onOpen}
-        aria-label={`${p.name} — ${formatPrice(p.price)}`}
       >
-        <div className="rack-visual" style={{ width: garmentW, marginLeft: -garmentW / 2 }}>
-        <motion.div
-          className="rack-turn"
-          initial={{ rotateY: PROFILE }}
-          animate={{ rotateY: isHover ? 0 : PROFILE, rotateZ: isHover ? 0 : 1.5 }}
-          transition={{ type: 'spring', stiffness: 140, damping: 18 }}
-        >
-          {/* cintre vu de face, qui tourne avec la pièce */}
-          <svg className="rack-hanger" viewBox="0 0 120 24" aria-hidden="true">
-            <path d="M60 2 L8 20 L112 20 Z" fill="none" stroke="#a7a59f" strokeWidth="2.4" strokeLinejoin="round" />
-          </svg>
-          {!hidden && (
-            <motion.div
-              layoutId={`garment-${rkey}`}
-              className="rack-img"
-              animate={{ filter: isHover ? 'brightness(1) drop-shadow(0 14px 14px rgba(0,0,0,.16))' : 'brightness(0.82) drop-shadow(0 8px 8px rgba(0,0,0,.1))' }}
-              transition={{ type: 'spring', stiffness: 110, damping: 20 }}
-            >
-              <GarmentVisual product={p} className="fill" />
-            </motion.div>
-          )}
-        </motion.div>
-        </div>
+        {/* crochet métallique, accroché par-dessus la tringle */}
+        <svg className="rack-hook" viewBox="0 0 20 40" style={{ height: hookH + garmentH * 0.03 }} preserveAspectRatio="xMidYMin meet" aria-hidden="true">
+          <defs>
+            <linearGradient id="hookMetal" x1="0" x2="1">
+              <stop offset="0" stopColor="#6f6d69" />
+              <stop offset=".45" stopColor="#e9e8e5" />
+              <stop offset="1" stopColor="#7d7b77" />
+            </linearGradient>
+          </defs>
+          <path d="M10 40 L10 20 C10 13 16.5 13 16.5 8 C16.5 2.5 11 1.5 8.5 4.5" fill="none" stroke="url(#hookMetal)" strokeWidth="2" strokeLinecap="round" />
+        </svg>
 
-        {/* étiquette de prix */}
-        <motion.span
-          className="price-tag"
-          style={{ top: -hookH * 0.25 }}
-          animate={{ rotate: isHover ? [0, 10, -6, 3, 0] : -4 }}
-          transition={{ duration: 0.9 }}
+        <button
+          className="rack-piece"
+          style={{ width: spacing, height: garmentH, left: 0, top: hookH }}
+          onMouseEnter={() => !mobile && setHover(i)}
+          onFocus={() => setHover(i)}
+          onClick={onOpen}
+          aria-label={`${p.name} — ${formatPrice(p.price)}`}
         >
-          {formatPrice(p.price).replace(',00', '')}
-        </motion.span>
-      </motion.button>
+          <div className="rack-visual" style={{ width: garmentW, marginLeft: -garmentW / 2 }}>
+            <motion.div
+              className="rack-turn"
+              initial={{ rotateY: PROFILE }}
+              animate={{ rotateY: isHover ? 0 : PROFILE, rotateZ: isHover ? 0 : 1.5 }}
+              transition={{ type: 'spring', stiffness: 140, damping: 18 }}
+            >
+              {/* cintre en bois, glissé dans l'encolure sous les épaules ; il tourne avec la pièce */}
+              <RackHanger />
+              {!hidden && (
+                <motion.div
+                  layoutId={`garment-${rkey}`}
+                  className="rack-img"
+                  animate={{ filter: isHover ? 'brightness(1) drop-shadow(0 14px 14px rgba(0,0,0,.16))' : 'brightness(0.82) drop-shadow(0 8px 8px rgba(0,0,0,.1))' }}
+                  transition={{ type: 'spring', stiffness: 110, damping: 20 }}
+                >
+                  <GarmentVisual product={p} className="fill" />
+                </motion.div>
+              )}
+            </motion.div>
+          </div>
+
+          {/* étiquette de prix */}
+          <motion.span
+            className="price-tag"
+            style={{ top: -hookH * 0.25 }}
+            animate={{ rotate: isHover ? [0, 10, -6, 3, 0] : -4 }}
+            transition={{ duration: 0.9 }}
+          >
+            {formatPrice(p.price).replace(',00', '')}
+          </motion.span>
+        </button>
+      </motion.div>
     </div>
+  )
+}
+
+function RackHanger() {
+  return (
+    <svg className="rack-hanger" viewBox="0 0 200 44" aria-hidden="true">
+      <defs>
+        <linearGradient id="rackWood" x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0" stopColor="#9a6a43" />
+          <stop offset=".55" stopColor="#7a4f2f" />
+          <stop offset="1" stopColor="#4f321c" />
+        </linearGradient>
+      </defs>
+      <rect x="97.5" y="0" width="5" height="12" rx="2" fill="#bdbbb6" />
+      <path d="M100 9 C72 13 28 27 7 35 C2 37 3 43 10 42 L190 42 C197 43 198 37 193 35 C172 27 128 13 100 9 Z" fill="url(#rackWood)" />
+      <path d="M12 40 L188 40" stroke="#3b2414" strokeOpacity=".4" strokeWidth="1.5" />
+      <path d="M100 11 C75 15 40 26 20 33" fill="none" stroke="#fff" strokeOpacity=".18" strokeWidth="2" strokeLinecap="round" />
+    </svg>
   )
 }
 
