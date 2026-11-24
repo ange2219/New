@@ -24,7 +24,11 @@
         return;
       }
       const msg = `Bonjour DH ACADEMY, je m'appelle ${name}. Je souhaite recevoir le lien d'accès à la formation.`;
-      window.open(`https://wa.me/${WA}?text=${encodeURIComponent(msg)}`, '_blank', 'noopener');
+      const url = `https://wa.me/${WA}?text=${encodeURIComponent(msg)}`;
+      const win = window.open(url, '_blank', 'noopener');
+      // si la fenêtre n'a pas pu s'ouvrir, on affiche un lien direct sous le formulaire
+      const fb = form.parentElement.querySelector('.wa-fallback');
+      if (fb) { fb.href = url; if (!win) fb.hidden = false; }
     });
   });
 
@@ -329,6 +333,18 @@
     });
   });
   gsap.from('.services__track > *', { y: 80, autoAlpha: 0, duration: 1.2, stagger: 0.08, ease: 'expo.out', scrollTrigger: { trigger: '.services', start: 'top 65%' } });
+
+  /* =========================================================
+     10b. Réalisations — cadres qui se dévoilent, vidéos lues à l'écran
+     ========================================================= */
+  $$('.work__item').forEach((item) => {
+    gsap.timeline({ scrollTrigger: { trigger: item, start: 'top 88%' } })
+      .fromTo(item.querySelector('.work__frame'), { clipPath: 'inset(100% 0% 0% 0% round 12px)' }, { clipPath: 'inset(0% 0% 0% 0% round 12px)', duration: 1.4, ease: 'expo.inOut' })
+      .from(item.querySelector('.work__ph'), { scale: 1.2, autoAlpha: 0, duration: 1.4, ease: 'expo.out' }, 0.5)
+      .from(item.querySelector('.work__meta'), { autoAlpha: 0, y: 16, duration: 0.8 }, 0.9);
+    const v = item.querySelector('video');
+    if (v) ScrollTrigger.create({ trigger: item, start: 'top bottom', end: 'bottom top', onToggle: (s) => (s.isActive ? v.play().catch(() => {}) : v.pause()) });
+  });
 
   /* =========================================================
      11. Value

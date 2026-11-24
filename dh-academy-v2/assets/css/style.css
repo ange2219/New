@@ -26,7 +26,7 @@
 }
 
 *, *::before, *::after { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; background: var(--canvas); }
+html { -webkit-text-size-adjust: 100%; background: var(--canvas); color-scheme: dark; }
 html.lenis, html.lenis body { height: auto; }
 .lenis.lenis-smooth { scroll-behavior: auto !important; }
 body {
@@ -302,6 +302,29 @@ ul, ol { list-style: none; margin: 0; padding: 0; }
 .svc__end-t { font-size: 42px; line-height: 1.1; letter-spacing: .01em; margin-bottom: 20px; }
 
 /* =========================================================
+   RÉALISATIONS (emplacements vidéo)
+   ========================================================= */
+.work__grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+.work__item--wide { grid-column: span 2; }
+.work__frame { background: var(--card); border-radius: var(--r-card); overflow: hidden; border: 1px solid var(--line); }
+.work__bar { height: 40px; display: flex; align-items: center; gap: 16px; padding: 0 16px; border-bottom: 1px solid var(--line); background: #1a1a25; }
+.work__url { margin: 0 auto; font-size: 12px; color: var(--ash); background: var(--canvas); padding: 5px 16px; border-radius: var(--r-pill); transform: translateX(-24px); }
+.work__video { position: relative; aspect-ratio: 16 / 9; max-width: 100%; overflow: hidden; background: radial-gradient(ellipse 70% 80% at 50% 120%, #2a2d48, transparent 70%), var(--canvas); }
+.work__video video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; }
+.work__ph { position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: 16px; background-image: radial-gradient(rgba(237, 237, 243, .06) 1px, transparent 1px); background-size: 18px 18px; }
+.work__play { width: 72px; height: 72px; border-radius: 50%; border: 1px solid var(--line); display: grid; place-items: center; position: relative; transition: background-color .4s var(--ease), border-color .4s; }
+.work__play::after { content: ""; position: absolute; inset: -1px; border-radius: 50%; border: 1px solid var(--ivory); opacity: 0; animation: ring 2.6s var(--ease) infinite; }
+@keyframes ring { 0% { transform: scale(1); opacity: .5; } 100% { transform: scale(1.6); opacity: 0; } }
+.work__play svg { width: 22px; height: 22px; fill: var(--ivory); margin-left: 3px; transition: fill .4s; }
+.work__item:hover .work__play { background: var(--ivory); border-color: var(--ivory); }
+.work__item:hover .work__play svg { fill: var(--canvas); }
+.work__soon { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--ash); }
+.work__meta { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding: 18px 4px 0; }
+.work__meta h3 { font-family: var(--display); font-stretch: 112%; font-weight: 480; font-size: 21px; letter-spacing: .02em; }
+.work__meta span { font-size: 14px; color: var(--slate); }
+.wa-fallback { margin-top: 14px; font-size: 15px; color: var(--ivory); border-bottom: 1px solid var(--ivory); }
+
+/* =========================================================
    VALUE
    ========================================================= */
 .value { position: relative; padding: 176px 0 128px; text-align: center; overflow: hidden; }
@@ -455,6 +478,10 @@ ul, ol { list-style: none; margin: 0; padding: 0; }
   .bar span { font-size: 10px; }
   .step { grid-template-columns: 1fr; padding: 24px; gap: 12px; }
   .aud { grid-template-columns: 1fr; }
+  .work__grid { grid-template-columns: 1fr; }
+  .work__item--wide { grid-column: auto; }
+  .work__url { display: none; }
+  .work__play { width: 56px; height: 56px; }
   .aud__card { min-height: 0; }
   .aud__card h3 { margin-top: 24px; }
   .acc__q { font-size: 16px; padding: 20px; }

@@ -36,6 +36,7 @@
       <nav class="nav__links" aria-label="Navigation principale">
         <a href="#a-propos">À propos</a>
         <a href="#services">Services</a>
+        <a href="#realisations">Réalisations</a>
         <a href="#methode">Méthode</a>
         <a href="#faq">FAQ</a>
         <a href="#contact">Contact</a>
@@ -53,9 +54,10 @@
       <a href="#accueil"><span class="mmenu__n">01</span>Accueil</a>
       <a href="#a-propos"><span class="mmenu__n">02</span>À propos</a>
       <a href="#services"><span class="mmenu__n">03</span>Services</a>
-      <a href="#methode"><span class="mmenu__n">04</span>Méthode</a>
-      <a href="#faq"><span class="mmenu__n">05</span>FAQ</a>
-      <a href="#contact"><span class="mmenu__n">06</span>Contact</a>
+      <a href="#realisations"><span class="mmenu__n">04</span>Réalisations</a>
+      <a href="#methode"><span class="mmenu__n">05</span>Méthode</a>
+      <a href="#faq"><span class="mmenu__n">06</span>FAQ</a>
+      <a href="#contact"><span class="mmenu__n">07</span>Contact</a>
     </nav>
     <div class="mmenu__foot">
       <a class="btn btn--ghost btn--lg" href="https://wa.me/2290199563785" target="_blank" rel="noopener"><span>WhatsApp · +229 01 99 56 37 85</span></a>
@@ -84,6 +86,7 @@
           <input id="hero-name" class="capture__input" type="text" name="name" placeholder="Ton prénom" autocomplete="given-name" />
           <button class="capture__btn" type="submit"><span>Recevoir le lien d'accès</span><span class="capture__arrow">→</span></button>
         </form>
+        <a class="wa-fallback" hidden target="_blank" rel="noopener">Ouvrir WhatsApp →</a>
         <p class="hero__note">Réponse directe sur WhatsApp · +229 01 99 56 37 85</p>
       </div>
 
@@ -260,6 +263,61 @@
       </div>
     </section>
 
+    <!-- ================= REALISATIONS (vidéos à compléter) ================= -->
+    <section class="work section" id="realisations">
+      <div class="container">
+        <div class="shead">
+          <p class="eyebrow reveal">Réalisations</p>
+          <h2 class="h2" data-split>Des sites déjà livrés, présentés en vidéo.</h2>
+          <p class="lead reveal">Les présentations vidéo de nos projets arrivent ici très bientôt.</p>
+        </div>
+        <div class="work__grid">
+          <article class="work__item work__item--wide">
+            <div class="work__frame">
+              <div class="work__bar"><span class="app__dots"><i></i><i></i><i></i></span><span class="work__url">projet-01.com</span></div>
+              <div class="work__video">
+                <!-- Pour ajouter ta vidéo : place le fichier dans assets/videos/ puis décommente la ligne suivante
+                <video src="assets/videos/projet-01.mp4" muted loop playsinline preload="metadata"></video> -->
+                <div class="work__ph" aria-hidden="true">
+                  <span class="work__play"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l10.5-6.5z"/></svg></span>
+                  <span class="work__soon">Vidéo à venir</span>
+                </div>
+              </div>
+            </div>
+            <div class="work__meta"><h3>Projet 01</h3><span>Site vitrine · à compléter</span></div>
+          </article>
+          <article class="work__item">
+            <div class="work__frame">
+              <div class="work__bar"><span class="app__dots"><i></i><i></i><i></i></span><span class="work__url">projet-02.com</span></div>
+              <div class="work__video">
+                <!-- Pour ajouter ta vidéo : place le fichier dans assets/videos/ puis décommente la ligne suivante
+                <video src="assets/videos/projet-02.mp4" muted loop playsinline preload="metadata"></video> -->
+                <div class="work__ph" aria-hidden="true">
+                  <span class="work__play"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l10.5-6.5z"/></svg></span>
+                  <span class="work__soon">Vidéo à venir</span>
+                </div>
+              </div>
+            </div>
+            <div class="work__meta"><h3>Projet 02</h3><span>Landing page · à compléter</span></div>
+          </article>
+          <article class="work__item">
+            <div class="work__frame">
+              <div class="work__bar"><span class="app__dots"><i></i><i></i><i></i></span><span class="work__url">projet-03.com</span></div>
+              <div class="work__video">
+                <!-- Pour ajouter ta vidéo : place le fichier dans assets/videos/ puis décommente la ligne suivante
+                <video src="assets/videos/projet-03.mp4" muted loop playsinline preload="metadata"></video> -->
+                <div class="work__ph" aria-hidden="true">
+                  <span class="work__play"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l10.5-6.5z"/></svg></span>
+                  <span class="work__soon">Vidéo à venir</span>
+                </div>
+              </div>
+            </div>
+            <div class="work__meta"><h3>Projet 03</h3><span>E-commerce · à compléter</span></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
     <!-- ================= VALUE ================= -->
     <section class="value">
       <div class="value__glow" aria-hidden="true"></div>
@@ -368,6 +426,7 @@
           <input id="contact-name" class="capture__input" type="text" name="name" placeholder="Ton prénom" autocomplete="given-name" />
           <button class="capture__btn" type="submit"><span>Recevoir le lien d'accès</span><span class="capture__arrow">→</span></button>
         </form>
+        <a class="wa-fallback" hidden target="_blank" rel="noopener">Ouvrir WhatsApp →</a>
         <a class="btn btn--ghost magnetic contact__call" href="tel:+2290199563785"><span>Appeler le +229 01 99 56 37 85</span></a>
       </div>
       <div class="container contact__cards">
@@ -386,7 +445,7 @@
         <a href="#accueil" class="logo"><svg class="logo__mark" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="14.5"/><circle cx="16" cy="16" r="9.5"/><circle cx="16" cy="16" r="4.5"/></svg><span class="logo__word">DH ACADEMY</span></a>
         <p>Rendre la création de sites web professionnels accessible à tous, grâce à l'intelligence artificielle.</p>
       </div>
-      <div class="footer__col"><span>Navigation</span><a href="#accueil">Accueil</a><a href="#a-propos">À propos</a><a href="#services">Services</a><a href="#contact">Contact</a></div>
+      <div class="footer__col"><span>Navigation</span><a href="#accueil">Accueil</a><a href="#a-propos">À propos</a><a href="#services">Services</a><a href="#realisations">Réalisations</a><a href="#contact">Contact</a></div>
       <div class="footer__col"><span>Formation</span><a href="#methode">La méthode</a><a href="#pour-qui">Pour qui&nbsp;?</a><a href="#faq">FAQ</a></div>
       <div class="footer__col"><span>Contact</span><a href="https://wa.me/2290199563785" target="_blank" rel="noopener">WhatsApp</a><a href="tel:+2290199563785">+229 01 99 56 37 85</a><span class="footer__muted">Bénin · 100 % en ligne</span></div>
     </div>
