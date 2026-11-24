@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>DH Academy — Méthode 4K</title>
+  <meta name="description" content="DH Academy : des sites animés haut de gamme, et la Méthode 4K pour apprendre à les créer." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;900&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Barre de progression -->
+  <div class="progress"><span id="progress"></span></div>
+
+  <header class="nav">
+    <a href="#top" class="logo">DH<span>Academy</span></a>
+    <nav>
+      <a href="#projets">Projets</a>
+      <a href="#methode">Méthode 4K</a>
+      <a href="#programme">Programme</a>
+      <a href="#faq">Questions</a>
+    </nav>
+    <a class="btn btn-sm js-checkout" href="#formation">Rejoindre</a>
+  </header>
+
+  <main id="top">
+    <!-- ── HERO ─────────────────────────────── -->
+    <section class="hero">
+      <div class="hero-screens" aria-hidden="true">
+        <figure class="screen s1"><img src="media/axe/040.webp" alt="" /></figure>
+        <figure class="screen s2"><img src="media/aza/060.webp" alt="" /></figure>
+        <figure class="screen s3"><img src="media/dh/0.webp" alt="" /></figure>
+      </div>
+      <div class="hero-content">
+        <p class="kicker"><span class="dot"></span> Sites animés · Formation</p>
+        <h1 class="hero-title">
+          <span class="line"><span>DH</span></span>
+          <span class="line"><span>ACADEMY</span></span>
+        </h1>
+        <p class="hero-lede">Je crée des sites qui racontent une histoire au défilement. <br />Et je t'apprends à faire pareil.</p>
+        <div class="hero-ctas">
+          <a class="btn" href="#methode">Découvrir la Méthode 4K</a>
+          <a class="btn btn-ghost" href="#projets">Voir les projets</a>
+        </div>
+      </div>
+      <div class="scroll-cue"><span>Défiler</span><i></i></div>
+    </section>
+
+    <!-- ── MANIFESTE ─────────────────────────── -->
+    <section class="manifesto">
+      <p class="reveal-words">Un site à 4 000 € ne se joue pas sur le code. Il se joue sur l'émotion des cinq premières secondes, sur le rythme du défilement, sur chaque détail qui fait dire « waouh ». C'est ça que je construis. Et c'est ça que je t'apprends.</p>
+    </section>
+
+    <!-- ── PROJETS ───────────────────────────── -->
+    <div id="projets" class="section-head">
+      <p class="label">01 · Projets</p>
+      <h2>Trois univers. <em>Une même exigence.</em></h2>
+    </div>
+
+    <!-- Film AXE -->
+    <section class="film" data-film="axe" data-count="131" data-path="media/axe/" data-units="320">
+      <canvas></canvas>
+      <div class="film-shade"></div>
+      <div class="film-info">
+        <p class="label">Site produit · Maquette d'étude</p>
+        <h3>AXE <em>Wild Spice</em></h3>
+        <p>Un film de 262 images piloté par le défilement. La caméra s'arrête sur cinq plans, et chaque arrêt écrit son chapitre.</p>
+        <ul class="tags"><li>Film au scroll</li><li>GSAP</li><li>Lenis</li><li>Direction cinéma</li></ul>
+        <a class="link-arrow js-link" data-link="axe" href="#" target="_blank" rel="noopener" hidden>Voir le site →</a>
+      </div>
+      <div class="film-steps">
+        <span>Lévitation</span><span>La pierre</span><span>Les épices</span><span>Le geste</span>
+      </div>
+    </section>
+
+    <!-- Film AZA -->
+    <section class="film" data-film="aza" data-count="119" data-path="media/aza/" data-units="320">
+      <canvas></canvas>
+      <div class="film-shade"></div>
+      <div class="film-info right">
+        <p class="label">Restaurant · Bénin</p>
+        <h3>Complexe <em>AZA</em></h3>
+        <p>On entre dans le restaurant en un seul plan-séquence : la façade, la porte, la salle, le bar. Puis le menu et la réservation en un message.</p>
+        <ul class="tags"><li>Plan-séquence</li><li>Next.js</li><li>Réservation WhatsApp</li></ul>
+        <a class="link-arrow js-link" data-link="aza" href="#" target="_blank" rel="noopener" hidden>Voir le site →</a>
+      </div>
+      <div class="film-steps">
+        <span>La façade</span><span>L'entrée</span><span>La salle</span><span>Le bar</span>
+      </div>
+    </section>
+
+    <!-- DH Studio -->
+    <section class="showcase" data-units="260">
+      <div class="showcase-info">
+        <p class="label">E-commerce mode · Cabine virtuelle</p>
+        <h3>DH <em>Studio</em></h3>
+        <p>Une boutique de prêt-à-porter où l'on essaie les looks avant d'acheter : mannequins en cercle, portant de vêtements sur cintres, chaussures en arc, modèles 3D.</p>
+        <ul class="tags"><li>React</li><li>Framer Motion</li><li>3D</li><li>Panier animé</li></ul>
+        <a class="link-arrow js-link" data-link="dh" href="#" target="_blank" rel="noopener" hidden>Voir le site →</a>
+      </div>
+      <div class="device">
+        <div class="device-bar"><i></i><i></i><i></i></div>
+        <div class="device-screen">
+          <img src="media/dh/0.webp" alt="DH Studio, accueil" />
+          <img src="media/dh/1.webp" alt="DH Studio, cabine virtuelle" />
+          <img src="media/dh/2.webp" alt="DH Studio, look ouvert" />
+          <img src="media/dh/3.webp" alt="DH Studio, portant" />
+          <img src="media/dh/4.webp" alt="DH Studio, chaussures" />
+        </div>
+      </div>
+    </section>
+
+    <!-- ── SAVOIR-FAIRE ───────────────────────── -->
+    <section class="skills">
+      <div class="section-head inline">
+        <p class="label">02 · Savoir-faire</p>
+        <h2>Ce qui fait la différence <em>entre un site et une expérience.</em></h2>
+      </div>
+      <div class="skill-grid">
+        <article><span>01</span><h4>Films au scroll</h4><p>Une vidéo découpée en images, rejouée au rythme du doigt. Le visiteur réalise lui-même la mise en scène.</p></article>
+        <article><span>02</span><h4>Transitions cinéma</h4><p>Sections qui se recouvrent, pauses pour contempler, textes qui s'écrivent. Tout est minuté.</p></article>
+        <article><span>03</span><h4>3D et interactions</h4><p>Produits qui tournent, cabines virtuelles, carrousels en arc. Le site se touche, il ne se lit pas seulement.</p></article>
+        <article><span>04</span><h4>Visuels à l'IA</h4><p>Packshots, vidéos produit, détourages : produire des visuels de marque sans studio photo.</p></article>
+      </div>
+    </section>
+
+    <!-- ── MÉTHODE 4K ─────────────────────────── -->
+    <section id="methode" class="method">
+      <div class="method-bg" aria-hidden="true">4K</div>
+      <div class="method-inner">
+        <p class="label gold">03 · La formation</p>
+        <h2 class="method-title">Méthode <span>4K</span></h2>
+        <p class="method-promise">Apprends à créer le niveau de sites que les agences facturent <strong>4 000 € et plus</strong>. Pas des templates. Des expériences.</p>
+        <div class="method-stats">
+          <div><b>3</b><span>projets complets à ton portfolio</span></div>
+          <div><b>8</b><span>modules, du premier fichier à la mise en ligne</span></div>
+          <div><b>1</b><span>méthode pour vendre tes sites au bon prix</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── PROGRAMME ──────────────────────────── -->
+    <section id="programme" class="program">
+      <div class="section-head inline">
+        <p class="label">04 · Programme</p>
+        <h2>Huit modules. <em>Un seul objectif : livrer du premium.</em></h2>
+      </div>
+      <ol class="modules">
+        <li><span>01</span><div><h4>Penser premium</h4><p>Direction artistique, typographie, rythme. Ce qui sépare un site à 300 € d'un site à 4 000 €.</p></div></li>
+        <li><span>02</span><div><h4>Animer au défilement</h4><p>GSAP, ScrollTrigger et Lenis : apparitions, sections épinglées, défilement fluide.</p></div></li>
+        <li><span>03</span><div><h4>Le film au scroll</h4><p>De la vidéo aux images, du canvas à la timeline : la technique d'AXE et d'AZA, pas à pas.</p></div></li>
+        <li><span>04</span><div><h4>Produire les visuels</h4><p>Générer packshots, ambiances et vidéos produit, puis les détourer et les optimiser.</p></div></li>
+        <li><span>05</span><div><h4>3D et interactions</h4><p>Modèles 3D, rotations, carrousels en arc, cabine virtuelle.</p></div></li>
+        <li><span>06</span><div><h4>E-commerce animé</h4><p>Fiches produit, panier, animation d'ajout, tunnel de commande.</p></div></li>
+        <li><span>07</span><div><h4>Mettre en ligne</h4><p>GitHub, hébergement, nom de domaine, performance et mobile.</p></div></li>
+        <li><span>08</span><div><h4>Vendre ses sites</h4><p>Portfolio, prix, devis, trouver ses premiers clients et défendre son tarif.</p></div></li>
+      </ol>
+    </section>
+
+    <!-- ── CE QUE TU CONSTRUIS ────────────────── -->
+    <section class="build">
+      <div class="section-head inline">
+        <p class="label">05 · Ce que tu construis</p>
+        <h2>Tu repars avec <em>trois projets de portfolio.</em></h2>
+      </div>
+      <div class="build-grid">
+        <article><img src="media/axe/070.webp" alt="" /><h4>Un site produit cinématique</h4><p>Film au scroll, chapitres, achat.</p></article>
+        <article><img src="media/aza/085.webp" alt="" /><h4>Un site de lieu</h4><p>Plan-séquence, menu, réservation.</p></article>
+        <article><img src="media/dh/3.webp" alt="" /><h4>Une boutique animée</h4><p>Catalogue, 3D, panier.</p></article>
+      </div>
+    </section>
+
+    <!-- ── INSCRIPTION ────────────────────────── -->
+    <section id="formation" class="offer">
+      <div class="offer-card">
+        <p class="label gold">Méthode 4K</p>
+        <h2>Rejoins la formation</h2>
+        <p class="offer-price js-price" hidden></p>
+        <ul class="offer-list">
+          <li>Les 8 modules en vidéo, à ton rythme</li>
+          <li>Les fichiers sources des projets</li>
+          <li>Les 3 projets de portfolio à construire</li>
+          <li>Le module « Vendre ses sites »</li>
+          <li>Accès à vie et mises à jour</li>
+        </ul>
+        <a class="btn btn-big js-checkout" href="#">Rejoindre la Méthode 4K</a>
+        <p class="offer-note">Paiement sécurisé · Accès immédiat après paiement</p>
+      </div>
+    </section>
+
+    <!-- ── FAQ ────────────────────────────────── -->
+    <section id="faq" class="faq">
+      <div class="section-head inline">
+        <p class="label">06 · Questions</p>
+        <h2>Tu te demandes <em>peut-être…</em></h2>
+      </div>
+      <div class="faq-list">
+        <details><summary>Faut-il savoir coder ?</summary><p>Non. On part des bases et chaque étape est montrée à l'écran. Si tu sais déjà coder, tu iras simplement plus vite.</p></details>
+        <details><summary>Combien de temps faut-il ?</summary><p>Tu avances à ton rythme. Compte quelques heures par semaine pour construire les trois projets.</p></details>
+        <details><summary>De quel matériel ai-je besoin ?</summary><p>Un ordinateur et une connexion internet. Tous les outils utilisés sont gratuits pour démarrer.</p></details>
+        <details><summary>Comment j'accède à la formation ?</summary><p>Juste après le paiement, tu reçois ton accès. Tu peux commencer tout de suite.</p></details>
+        <details><summary>Je peux poser des questions ?</summary><p>Oui, écris-moi directement sur WhatsApp.</p></details>
+      </div>
+    </section>
+  </main>
+
+  <!-- ── CONTACT ──────────────────────────────── -->
+  <footer class="footer">
+    <p class="label">Contact</p>
+    <h2 class="footer-title">On en parle ?</h2>
+    <div class="contact">
+      <a class="btn js-wa" href="#" target="_blank" rel="noopener">Écrire sur WhatsApp</a>
+      <span class="phone">01 99 56 37 85</span>
+    </div>
+    <div class="footer-brand" aria-hidden="true">DH ACADEMY</div>
+    <p class="legal">© <span class="js-year"></span> DH Academy. Les projets AXE et DH Studio sont des maquettes d'étude, sans lien avec les marques citées.</p>
+  </footer>
+
+  <script>
+    // ─── Réglages : à modifier ici ───────────────────────
+    window.DH = {
+      checkoutUrl: '',            // lien de la page de paiement de la formation
+      price: '',                  // ex. '97 €' — laisser vide pour ne pas l'afficher
+      whatsapp: '2290199563785',  // numéro au format international, sans + ni espaces
+      links: {
+        axe: '',                  // lien du site AXE en ligne
+        aza: '',                  // lien du site AZA en ligne
+        dh: 'https://ange2219.github.io/New/',
+      },
+    }
+  </script>
+  <script src="vendor/gsap.min.js"></script>
+  <script src="vendor/ScrollTrigger.min.js"></script>
+  <script src="vendor/lenis.min.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>
