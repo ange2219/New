@@ -5,8 +5,8 @@ import { GarmentVisual } from '../components/Visuals.jsx'
 import { useBag } from '../store.jsx'
 import { EASE, useKey, useViewport } from '../hooks.js'
 
-// Le portant est rempli comme en boutique : chaque pièce apparaît deux fois
-const RACK = [...tops, ...tops].map((p, i) => ({ p, key: `${p.id}-${i}` }))
+// Chaque pièce apparaît une seule fois sur le portant
+const RACK = tops.map((p, i) => ({ p, key: `${p.id}-${i}` }))
 const PROFILE = -72 // angle de la pièce vue de profil (en degrés)
 
 export default function Rack() {
