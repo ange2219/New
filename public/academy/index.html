@@ -17,8 +17,8 @@
     <a href="#top" class="logo"><span class="logo-mark"><i></i><i></i><i></i><i></i></span>DH Academy</a>
     <nav class="nav-pill">
       <a href="#projets">Projets</a>
+      <a href="#approche">Approche</a>
       <a href="#formation">Formation</a>
-      <a href="#contact">Contact</a>
     </nav>
     <div class="nav-right">
       <a class="nav-link js-wa" href="#" target="_blank" rel="noopener">Contact</a>
@@ -58,6 +58,29 @@
       </div>
     </section>
 
+    <!-- ═════ MANIFESTE ═════ -->
+    <section class="manifesto">
+      <p class="eyebrow">L'approche</p>
+      <p>Un site premium ne se joue pas sur la quantité de pages. Il se joue sur les cinq premières secondes, sur le rythme du défilement, sur chaque détail qui fait dire « waouh » et donne envie d'aller jusqu'en bas.</p>
+    </section>
+
+    <!-- ═════ CE QUE JE CRÉE ═════ -->
+    <section class="services">
+      <div class="lib-head">
+        <div>
+          <p class="eyebrow">Ce que je crée</p>
+          <h2 class="h2">Quatre types de sites, <em>un même niveau.</em></h2>
+        </div>
+        <p class="lib-sub">Chaque projet est conçu sur mesure : direction artistique, animations et développement.</p>
+      </div>
+      <div class="service-grid">
+        <article class="service"><span class="s-ico s1"></span><h3>Site produit</h3><p>Un produit mis en scène comme dans une publicité : film au défilement, gros plans, chapitres.</p></article>
+        <article class="service"><span class="s-ico s2"></span><h3>Site de lieu</h3><p>Restaurant, hôtel, boutique : on entre dans le lieu en un seul plan, puis on réserve.</p></article>
+        <article class="service"><span class="s-ico s3"></span><h3>E-commerce animé</h3><p>Une boutique qui se vit : cabine, portant, produits en 3D, panier animé.</p></article>
+        <article class="service"><span class="s-ico s4"></span><h3>Lancement</h3><p>Une page unique et marquante pour annoncer une marque, une collection ou un événement.</p></article>
+      </div>
+    </section>
+
     <!-- ═════ PROJETS ═════ -->
     <section id="projets" class="library">
       <div class="lib-head">
@@ -68,6 +91,21 @@
         <p class="lib-sub">Chaque case joue l'animation du site. De nouveaux projets arrivent régulièrement.</p>
       </div>
       <div class="lib-grid" id="lib"></div>
+    </section>
+
+    <!-- ═════ ÉTAPES ═════ -->
+    <section class="steps" id="approche">
+      <div class="steps-head">
+        <p class="eyebrow">Comment on travaille</p>
+        <h2 class="h2">Du brief <em>au lancement.</em></h2>
+      </div>
+      <div class="steps-list">
+        <span class="steps-line"><i></i></span>
+        <article class="step"><span>01</span><div><h3>Le brief</h3><p>On définit la cible, le message et l'émotion que le site doit provoquer.</p></div></article>
+        <article class="step"><span>02</span><div><h3>La direction artistique</h3><p>Ambiance, typographie, couleurs, visuels : le site prend son identité.</p></div></article>
+        <article class="step"><span>03</span><div><h3>L'animation</h3><p>Le défilement, les transitions et les interactions sont réglés au détail près.</p></div></article>
+        <article class="step"><span>04</span><div><h3>La mise en ligne</h3><p>Optimisation mobile, rapidité, nom de domaine : le site est prêt à être vu.</p></div></article>
+      </div>
     </section>
 
     <!-- ═════ FORMATION ═════ -->
@@ -95,6 +133,14 @@
       <span class="legal">© <span class="js-year"></span> DH Academy</span>
     </div>
   </footer>
+
+  <!-- Visionneuse plein écran -->
+  <div class="viewer" id="viewer" hidden>
+    <div class="v-window">
+      <div class="v-top"><div><strong class="v-title"></strong><span class="v-kind"></span></div><button class="v-close" aria-label="Fermer">Fermer ✕</button></div>
+      <div class="v-screen browser"><span class="browser-bar"><i></i><i></i><i></i></span><canvas></canvas><span class="scrollbar"><i></i></span></div>
+    </div>
+  </div>
 
   <script>
     // ─── Réglages : à modifier ici ───────────────────────
