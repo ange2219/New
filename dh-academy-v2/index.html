@@ -3,34 +3,22 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>DH ACADEMY — Crée des sites web professionnels avec l'IA</title>
+  <title>DH ACADEMY</title>
   <meta name="description" content="Apprends à créer des sites web professionnels valorisés jusqu'à 4 000 € grâce à l'intelligence artificielle. Formation 100 % en ligne, depuis le Bénin." />
   <meta name="theme-color" content="#171721" />
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='16' fill='%23171721'/%3E%3Ccircle cx='16' cy='16' r='11' fill='none' stroke='%23ededf3' stroke-width='1.6'/%3E%3Ccircle cx='16' cy='16' r='6' fill='none' stroke='%23ededf3' stroke-width='1.6'/%3E%3C/svg%3E" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='16' fill='%23171721'/%3E%3Ccircle cx='16' cy='16' r='10' fill='none' stroke='%23ededf3' stroke-width='2'/%3E%3Ccircle cx='16' cy='16' r='4' fill='%23ededf3'/%3E%3C/svg%3E" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="preconnect" href="https://images.unsplash.com" />
   <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..600&family=Inter:opsz,wght@14..32,360..520&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="assets/css/style.css" />
 </head>
-<body class="is-loading">
-
-  <!-- ================= LOADER ================= -->
-  <div class="loader" aria-hidden="true">
-    <svg class="loader__ring" viewBox="0 0 120 120">
-      <circle cx="60" cy="60" r="54" />
-      <circle cx="60" cy="60" r="38" />
-      <circle cx="60" cy="60" r="22" />
-    </svg>
-    <div class="loader__word"><span>D</span><span>H</span><span>&nbsp;</span><span>A</span><span>C</span><span>A</span><span>D</span><span>E</span><span>M</span><span>Y</span></div>
-    <div class="loader__count"><span class="loader__num">0</span>%</div>
-  </div>
+<body>
 
   <!-- ================= NAV ================= -->
-  <header class="nav">
-    <div class="nav__bar">
-      <a href="#accueil" class="logo" aria-label="DH ACADEMY — accueil">
-        <svg class="logo__mark" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="14.5"/><circle cx="16" cy="16" r="9.5"/><circle cx="16" cy="16" r="4.5"/></svg>
+  <header class="nav" id="nav">
+    <div class="nav__inner container">
+      <a href="#accueil" class="logo" aria-label="DH ACADEMY, retour en haut">
+        <svg class="logo__mark" viewBox="0 0 28 28" aria-hidden="true"><circle cx="14" cy="14" r="12.5"/><circle cx="14" cy="14" r="5" class="logo__core"/></svg>
         <span class="logo__word">DH ACADEMY</span>
       </a>
       <nav class="nav__links" aria-label="Navigation principale">
@@ -38,428 +26,255 @@
         <a href="#services">Services</a>
         <a href="#realisations">Réalisations</a>
         <a href="#methode">Méthode</a>
-        <a href="#faq">FAQ</a>
         <a href="#contact">Contact</a>
       </nav>
       <div class="nav__actions">
-        <a class="nav__link-plain" href="https://wa.me/2290199563785" target="_blank" rel="noopener">WhatsApp</a>
-        <a class="btn btn--cobalt btn--sm magnetic" href="#rejoindre"><span>Rejoindre</span></a>
+        <a class="nav__link" href="https://wa.me/2290199563785" target="_blank" rel="noopener">WhatsApp</a>
+        <a class="btn btn--primary btn--sm" href="#rejoindre">Rejoindre la formation</a>
       </div>
-      <button class="nav__burger" aria-label="Ouvrir le menu" aria-expanded="false"><i></i><i></i></button>
+      <button class="nav__burger" type="button" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="menu"><i></i><i></i></button>
     </div>
   </header>
 
-  <div class="mmenu" aria-hidden="true">
-    <nav>
-      <a href="#accueil"><span class="mmenu__n">01</span>Accueil</a>
-      <a href="#a-propos"><span class="mmenu__n">02</span>À propos</a>
-      <a href="#services"><span class="mmenu__n">03</span>Services</a>
-      <a href="#realisations"><span class="mmenu__n">04</span>Réalisations</a>
-      <a href="#methode"><span class="mmenu__n">05</span>Méthode</a>
-      <a href="#faq"><span class="mmenu__n">06</span>FAQ</a>
-      <a href="#contact"><span class="mmenu__n">07</span>Contact</a>
+  <div class="menu" id="menu" hidden>
+    <nav aria-label="Menu mobile">
+      <a href="#a-propos">À propos</a>
+      <a href="#services">Services</a>
+      <a href="#realisations">Réalisations</a>
+      <a href="#methode">Méthode</a>
+      <a href="#faq">Questions</a>
+      <a href="#contact">Contact</a>
     </nav>
-    <div class="mmenu__foot">
-      <a class="btn btn--ghost btn--lg" href="https://wa.me/2290199563785" target="_blank" rel="noopener"><span>WhatsApp · +229 01 99 56 37 85</span></a>
-    </div>
+    <a class="btn btn--primary btn--block" href="#rejoindre">Rejoindre la formation</a>
   </div>
 
   <main>
     <!-- ================= HERO ================= -->
     <section class="hero" id="accueil">
-      <div class="hero__media">
-        <div class="hero__img img-fallback img-fallback--sky">
-          <img src="https://images.unsplash.com/photo-1519681393784-d120267933ba?w=2400&q=75&auto=format&fit=crop" alt="" fetchpriority="high" onerror="this.remove()" />
-        </div>
-        <div class="hero__fog hero__fog--1"></div>
-        <div class="hero__fog hero__fog--2"></div>
-        <div class="hero__overlay"></div>
+      <div class="hero__photo photo photo--night">
+        <img src="https://images.unsplash.com/photo-1519681393784-d120267933ba?w=2400&q=75&auto=format&fit=crop" alt="" fetchpriority="high" onerror="this.remove()" />
       </div>
-
-      <div class="hero__content">
-        <p class="pill-tag hero__tag"><span class="pill-tag__dot"></span>Formation 100 % en ligne · depuis le Bénin</p>
-        <h1 class="hero__title" data-hero-title>Crée des sites web pros valorisés jusqu'à <span class="nowrap">4&nbsp;000&nbsp;€</span> grâce à l'IA.</h1>
-        <p class="hero__sub">Transforme une compétence digitale en opportunité professionnelle — même sans savoir programmer.</p>
-
-        <form class="capture hero__form" data-wa-form>
+      <div class="hero__shade"></div>
+      <div class="hero__inner">
+        <p class="hero__kicker" data-in>Formation 100&nbsp;% en ligne · depuis le Bénin</p>
+        <h1 class="hero__title" data-hero-title>Crée des sites web professionnels valorisés jusqu'à <span class="nowrap">4&nbsp;000&nbsp;€</span> grâce à l'IA.</h1>
+        <p class="hero__sub" data-in>Transforme une compétence digitale en opportunité professionnelle, même sans savoir programmer.</p>
+        <form class="capture" data-wa-form data-in>
           <label class="sr-only" for="hero-name">Ton prénom</label>
           <input id="hero-name" class="capture__input" type="text" name="name" placeholder="Ton prénom" autocomplete="given-name" />
-          <button class="capture__btn" type="submit"><span>Recevoir le lien d'accès</span><span class="capture__arrow">→</span></button>
+          <button class="capture__btn" type="submit">Rejoindre la formation</button>
         </form>
-        <a class="wa-fallback" hidden target="_blank" rel="noopener">Ouvrir WhatsApp →</a>
-        <p class="hero__note">Réponse directe sur WhatsApp · +229 01 99 56 37 85</p>
-      </div>
-
-      <div class="hero__bottom">
-        <div class="hero__facts">
-          <span>Sans code</span><i></i><span>Méthode pratique</span><i></i><span>Projets jusqu'à 4 000 €</span>
-        </div>
-        <div class="hero__scroll" aria-hidden="true"><span>Défiler</span><i></i></div>
+        <a class="wa-fallback" hidden target="_blank" rel="noopener">Ouvrir la conversation WhatsApp →</a>
+        <p class="hero__fine" data-in>On te répond sur WhatsApp au +229 01 99 56 37 85 avec le lien d'accès.</p>
       </div>
     </section>
 
-    <!-- ================= STUDIO (product UI) ================= -->
-    <section class="studio" aria-label="Démonstration de la méthode">
-      <div class="container studio__head">
-        <p class="eyebrow reveal">Le studio DH ACADEMY</p>
-        <h2 class="h2" data-split>D'un brief client à un site livré, avec l'IA comme copilote.</h2>
-      </div>
-      <div class="studio__stage">
-        <div class="app" id="app">
-          <div class="app__bar">
-            <span class="app__dots"><i></i><i></i><i></i></span>
-            <span class="app__url">studio.dhacademy.app / maison-ayo</span>
-            <span class="app__status"><i></i>En direct</span>
-          </div>
-          <div class="app__body">
-            <aside class="app__side">
-              <div class="app__side-head">
-                <svg viewBox="0 0 32 32" class="logo__mark logo__mark--sm"><circle cx="16" cy="16" r="14.5"/><circle cx="16" cy="16" r="9.5"/><circle cx="16" cy="16" r="4.5"/></svg>
-                Assistant IA
-              </div>
-              <div class="brief">
-                <span class="brief__label">Brief client</span>
-                <p class="brief__text" data-text="Site vitrine élégant pour Maison Ayo, restaurant à Cotonou : menu, réservation en ligne, galerie et avis clients."></p>
-              </div>
-              <ul class="checks">
-                <li>Analyse du besoin</li>
-                <li>Architecture des pages</li>
-                <li>Direction artistique</li>
-                <li>Version mobile</li>
-              </ul>
-              <div class="app__prompt"><span>Affiner le design…</span><i>↑</i></div>
-            </aside>
-            <div class="app__canvas">
-              <div class="gsite">
-                <div class="gsite__nav gen"><b>Maison Ayo</b><span><i></i><i></i><i></i></span><em>Réserver</em></div>
-                <div class="gsite__hero gen">
-                  <div class="gsite__img img-fallback img-fallback--warm">
-                    <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1400&q=70&auto=format&fit=crop" alt="" loading="lazy" onerror="this.remove()" />
-                  </div>
-                  <div class="gsite__copy">
-                    <span class="gen">Cuisine béninoise · Cotonou</span>
-                    <strong class="gen">Saveurs d'ici, art de la table.</strong>
-                    <em class="gen">Voir le menu</em>
-                  </div>
-                </div>
-                <div class="gsite__row">
-                  <div class="gen"><i></i><i class="s"></i></div>
-                  <div class="gen"><i></i><i class="s"></i></div>
-                  <div class="gen"><i></i><i class="s"></i></div>
-                </div>
-              </div>
-              <div class="app__sel"><span>Section · Hero</span></div>
-            </div>
-          </div>
-        </div>
-        <div class="studio__notes" aria-hidden="true">
-          <span class="snote snote--1"><b>01</b>Comprendre le besoin</span>
-          <span class="snote snote--2"><b>02</b>Générer avec l'IA</span>
-          <span class="snote snote--3"><b>03</b>Livrer un site pro</span>
-        </div>
-      </div>
-    </section>
-
-    <!-- ================= MANIFESTO ================= -->
-    <section class="manifesto">
+    <!-- ================= PROMESSE ================= -->
+    <section class="section promise" aria-labelledby="promise-title">
       <div class="container">
-        <p class="eyebrow">Notre conviction</p>
-        <p class="manifesto__text" data-words>Nous ne formons pas simplement des personnes capables de générer des pages avec l'IA. Nous formons des créateurs capables de comprendre un besoin, de concevoir une véritable solution digitale et de transformer cette compétence en opportunité professionnelle.</p>
+        <div class="head head--center">
+          <h2 class="h-lg" id="promise-title" data-reveal-lines>Une formation pour apprendre à créer des sites web professionnels avec l'IA.</h2>
+          <p class="body-lg" data-reveal>Des méthodes pratiques et les bons outils d'intelligence artificielle pour concevoir des sites modernes, élégants et performants.</p>
+        </div>
+        <div class="grid3" data-stagger>
+          <div class="card fact"><p class="fact__big">0</p><h3>ligne de code requise</h3><p>Tu apprends sans maîtriser la programmation traditionnelle.</p></div>
+          <div class="card fact"><p class="fact__big">100&nbsp;%</p><h3>en ligne</h3><p>Accessible depuis le Bénin et partout ailleurs, via un lien dédié.</p></div>
+          <div class="card fact"><p class="fact__big"><span class="nowrap">4&nbsp;000&nbsp;€</span></p><h3>par projet, au maximum</h3><p>La valeur possible d'un site selon sa complexité, sa qualité et les besoins du client.</p></div>
+        </div>
       </div>
     </section>
 
-    <!-- ================= ABOUT ================= -->
-    <section class="about section" id="a-propos">
-      <div class="container about__grid">
-        <div class="about__text">
-          <p class="eyebrow reveal">À propos</p>
-          <h2 class="h2" data-split>Former la nouvelle génération de créateurs de sites web.</h2>
-          <p class="lead reveal">DH ACADEMY est une plateforme de formation spécialisée dans la création de sites web professionnels à l'aide de l'intelligence artificielle.</p>
-          <p class="body reveal">Notre mission : former des créateurs capables de concevoir des projets digitaux de qualité professionnelle et de répondre aux besoins des entreprises, des entrepreneurs et des particuliers. Grâce à des méthodes pratiques et aux outils d'IA, tu apprends à concevoir des sites modernes, élégants, performants et adaptés aux objectifs de tes clients — même sans maîtriser la programmation traditionnelle.</p>
-          <a class="btn btn--ghost reveal magnetic" href="#methode"><span>Découvrir la méthode</span><span class="btn__arrow">→</span></a>
+    <!-- ================= ABOUT (text left / image right) ================= -->
+    <section class="section" id="a-propos">
+      <div class="container split">
+        <div class="split__text">
+          <p class="label" data-reveal>À propos</p>
+          <h2 class="h-lg" data-reveal-lines>Former la nouvelle génération de créateurs de sites web.</h2>
+          <p class="body-lg" data-reveal>DH ACADEMY est une plateforme de formation spécialisée dans la création de sites web professionnels à l'aide de l'intelligence artificielle.</p>
+          <p class="body" data-reveal>Notre mission est de former des créateurs capables de concevoir des projets digitaux de qualité professionnelle et de répondre aux besoins des entreprises, des entrepreneurs et des particuliers. Avec des méthodes pratiques et les outils d'IA, tu apprends à concevoir des sites modernes, élégants et performants, adaptés aux objectifs de tes clients.</p>
+          <div class="split__actions" data-reveal><a class="btn btn--ghost" href="#methode">Découvrir la méthode</a></div>
         </div>
-        <figure class="about__figure">
-          <div class="about__img img-fallback img-fallback--dusk">
-            <img src="https://images.unsplash.com/photo-1531482615713-2afd69097998?w=1400&q=72&auto=format&fit=crop" alt="Une créatrice travaille sur son ordinateur portable" loading="lazy" onerror="this.remove()" />
+        <div class="split__media">
+          <div class="frame photo photo--desk" data-photo>
+            <img src="https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?w=1400&q=72&auto=format&fit=crop" alt="Un bureau avec un ordinateur portable ouvert" loading="lazy" onerror="this.remove()" />
           </div>
-          <figcaption class="about__cap"><span class="pill-tag pill-tag--glass">Bénin · 100 % en ligne</span></figcaption>
-        </figure>
-      </div>
-      <div class="container stats">
-        <div class="card stat"><span class="stat__num"><span data-count="4000" data-format="space">0</span>&nbsp;€</span><span class="stat__label">Valeur possible d'un projet web</span></div>
-        <div class="card stat"><span class="stat__num"><span data-count="100">0</span>&nbsp;%</span><span class="stat__label">En ligne, à ton rythme</span></div>
-        <div class="card stat"><span class="stat__num"><span data-count="5">0</span></span><span class="stat__label">Types de sites maîtrisés</span></div>
-        <div class="card stat"><span class="stat__num"><span data-count="0">0</span></span><span class="stat__label">Ligne de code requise</span></div>
-      </div>
-    </section>
-
-    <!-- ================= AMBITION (image expands to full-bleed) ================= -->
-    <section class="ambition" aria-label="Notre ambition">
-      <div class="ambition__pin">
-        <div class="ambition__frame img-fallback img-fallback--sky">
-          <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=2200&q=72&auto=format&fit=crop" alt="" loading="lazy" onerror="this.remove()" />
-          <div class="ambition__shade"></div>
-        </div>
-        <div class="ambition__copy">
-          <p class="eyebrow eyebrow--light">Notre ambition</p>
-          <p class="ambition__title" data-ambition>Rendre la création de sites web professionnels accessible à tous.</p>
-          <p class="ambition__sub">Et permettre à chacun de développer une compétence recherchée sur le marché du digital.</p>
         </div>
       </div>
     </section>
 
-    <!-- ================= SERVICES ================= -->
-    <section class="services" id="services">
-      <div class="services__pin">
-        <div class="container services__head">
+    <!-- ================= CONVICTION ================= -->
+    <section class="section section--tight">
+      <div class="container">
+        <div class="card quote" data-reveal>
+          <p class="quote__text" data-quote>Nous ne formons pas simplement des personnes capables de générer des pages avec l'IA. Nous formons des créateurs capables de comprendre un besoin, de concevoir une véritable solution digitale et de transformer cette compétence en opportunité professionnelle.</p>
+          <p class="quote__by">L'équipe DH ACADEMY</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= SERVICES (3-col graphite cards) ================= -->
+    <section class="section" id="services">
+      <div class="container">
+        <div class="head">
+          <p class="label" data-reveal>Services</p>
+          <h2 class="h-lg" data-reveal-lines>Ce que tu vas apprendre à créer.</h2>
+          <p class="body-lg" data-reveal>De la simple vitrine professionnelle aux plateformes e-commerce complexes.</p>
+        </div>
+        <div class="grid3" data-stagger>
+          <article class="card svc"><p class="svc__lvl">Essentiel</p><h3>Site vitrine</h3><p>Présenter une activité avec élégance&nbsp;: identité, services, coordonnées. La base de tout professionnel.</p></article>
+          <article class="card svc"><p class="svc__lvl">Conversion</p><h3>Landing page</h3><p>Une page pensée pour convertir&nbsp;: lancement de produit, campagne, inscription ou prise de rendez-vous.</p></article>
+          <article class="card svc"><p class="svc__lvl">Image</p><h3>Portfolio</h3><p>Mettre en valeur un talent et des réalisations, pour les artistes, freelances et créatifs.</p></article>
+          <article class="card svc"><p class="svc__lvl">Crédibilité</p><h3>Site d'entreprise</h3><p>Plusieurs pages, une structure solide et un discours clair pour porter toute une organisation.</p></article>
+          <article class="card svc"><p class="svc__lvl">Haute valeur</p><h3>Plateforme e-commerce</h3><p>Catalogue, panier, paiement et commandes&nbsp;: les projets les plus complexes et les mieux valorisés.</p></article>
+          <article class="card svc"><p class="svc__lvl">Business</p><h3>Vendre tes prestations</h3><p>Comprendre la demande, chiffrer un projet et le présenter pour transformer ta compétence en revenu.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= VALUE (image left / text right) ================= -->
+    <section class="section">
+      <div class="container split split--reverse">
+        <div class="split__text">
+          <p class="label" data-reveal>Le potentiel</p>
+          <p class="value" data-reveal><span class="value__pre">Jusqu'à</span> <span class="value__num"><span data-count="4000">4&nbsp;000</span>&nbsp;€</span></p>
+          <h2 class="h-md" data-reveal-lines>par projet, selon sa complexité, sa qualité et les besoins du client.</h2>
+          <p class="body" data-reveal>Vitrines, portfolios, landing pages, sites d'entreprise et e-commerce&nbsp;: nos formations te donnent les compétences pour réaliser des projets web à forte valeur commerciale.</p>
+          <ul class="facts" data-reveal>
+            <li><span>Prérequis</span><b>Aucune programmation</b></li>
+            <li><span>Format</span><b>100&nbsp;% en ligne</b></li>
+            <li><span>Accès</span><b>Lien dédié, envoyé sur WhatsApp</b></li>
+          </ul>
+        </div>
+        <div class="split__media">
+          <div class="frame photo photo--peak" data-photo>
+            <img src="https://images.unsplash.com/photo-1454496522488-7a8e488e8606?w=1400&q=72&auto=format&fit=crop" alt="Un sommet enneigé au crépuscule" loading="lazy" onerror="this.remove()" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= RÉALISATIONS (videos to come) ================= -->
+    <section class="section" id="realisations">
+      <div class="container">
+        <div class="head head--row">
           <div>
-            <p class="eyebrow">Services · ce que tu vas apprendre à créer</p>
-            <h2 class="h2" data-split>De la simple vitrine à l'e-commerce complet.</h2>
+            <p class="label" data-reveal>Réalisations</p>
+            <h2 class="h-lg" data-reveal-lines>Des sites déjà livrés, présentés en vidéo.</h2>
           </div>
-          <div class="services__count" aria-hidden="true"><b class="services__idx">01</b><span class="services__line"><i></i></span><span>05</span></div>
+          <p class="body" data-reveal>Les présentations vidéo des projets arrivent ici prochainement.</p>
         </div>
-        <div class="services__track">
-          <article class="card svc">
-            <div class="svc__img img-fallback img-fallback--dusk"><img src="https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?w=900&q=70&auto=format&fit=crop" alt="" loading="lazy" onerror="this.remove()" /></div>
-            <div class="svc__meta"><span>01</span><span class="pill-tag pill-tag--sm">Essentiel</span></div>
-            <h3>Site vitrine</h3>
-            <p>Présenter une activité avec élégance : identité, services, contact. La porte d'entrée de tout professionnel.</p>
-            <div class="meter"><span>Complexité</span><b><i style="--w:25%"></i></b></div>
+        <div class="works" data-stagger>
+          <!-- Pour ajouter une vidéo : place le fichier dans assets/videos/ et remplace le bloc .work__empty par
+               <video src="assets/videos/projet-01.mp4" muted loop playsinline preload="metadata"></video> -->
+          <article class="work work--wide">
+            <div class="work__media"><div class="work__empty"><span class="work__play" aria-hidden="true"></span><span>Vidéo à venir</span></div></div>
+            <div class="work__info"><h3>Projet 01</h3><span>Titre et type de site à compléter</span></div>
           </article>
-          <article class="card svc">
-            <div class="svc__img img-fallback img-fallback--dusk"><img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=900&q=70&auto=format&fit=crop" alt="" loading="lazy" onerror="this.remove()" /></div>
-            <div class="svc__meta"><span>02</span><span class="pill-tag pill-tag--sm">Conversion</span></div>
-            <h3>Landing page</h3>
-            <p>Une page pensée pour convertir : lancement de produit, campagne, inscription, prise de rendez-vous.</p>
-            <div class="meter"><span>Complexité</span><b><i style="--w:40%"></i></b></div>
+          <article class="work">
+            <div class="work__media"><div class="work__empty"><span class="work__play" aria-hidden="true"></span><span>Vidéo à venir</span></div></div>
+            <div class="work__info"><h3>Projet 02</h3><span>À compléter</span></div>
           </article>
-          <article class="card svc">
-            <div class="svc__img img-fallback img-fallback--dusk"><img src="https://images.unsplash.com/photo-1561070791-2526d30994b5?w=900&q=70&auto=format&fit=crop" alt="" loading="lazy" onerror="this.remove()" /></div>
-            <div class="svc__meta"><span>03</span><span class="pill-tag pill-tag--sm">Image</span></div>
-            <h3>Portfolio</h3>
-            <p>Mettre en valeur un talent, des réalisations, une signature créative — pour artistes, freelances et créatifs.</p>
-            <div class="meter"><span>Complexité</span><b><i style="--w:50%"></i></b></div>
-          </article>
-          <article class="card svc">
-            <div class="svc__img img-fallback img-fallback--dusk"><img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=900&q=70&auto=format&fit=crop" alt="" loading="lazy" onerror="this.remove()" /></div>
-            <div class="svc__meta"><span>04</span><span class="pill-tag pill-tag--sm">Crédibilité</span></div>
-            <h3>Site d'entreprise</h3>
-            <p>Plusieurs pages, une structure solide, un discours clair : le site qui porte toute une organisation.</p>
-            <div class="meter"><span>Complexité</span><b><i style="--w:70%"></i></b></div>
-          </article>
-          <article class="card svc">
-            <div class="svc__img img-fallback img-fallback--dusk"><img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=900&q=70&auto=format&fit=crop" alt="" loading="lazy" onerror="this.remove()" /></div>
-            <div class="svc__meta"><span>05</span><span class="pill-tag pill-tag--sm pill-tag--ivory">Haute valeur</span></div>
-            <h3>Plateforme e-commerce</h3>
-            <p>Catalogue, panier, paiement, commandes : les projets les plus complexes, facturables jusqu'à 4 000 €.</p>
-            <div class="meter"><span>Complexité</span><b><i style="--w:100%"></i></b></div>
-          </article>
-          <div class="svc svc--end">
-            <p class="svc__end-k">Et chaque projet devient</p>
-            <p class="svc__end-t">une opportunité facturable.</p>
-            <a class="btn btn--ghost magnetic" href="#rejoindre"><span>Je me lance</span><span class="btn__arrow">→</span></a>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ================= REALISATIONS (vidéos à compléter) ================= -->
-    <section class="work section" id="realisations">
-      <div class="container">
-        <div class="shead">
-          <p class="eyebrow reveal">Réalisations</p>
-          <h2 class="h2" data-split>Des sites déjà livrés, présentés en vidéo.</h2>
-          <p class="lead reveal">Les présentations vidéo de nos projets arrivent ici très bientôt.</p>
-        </div>
-        <div class="work__grid">
-          <article class="work__item work__item--wide">
-            <div class="work__frame">
-              <div class="work__bar"><span class="app__dots"><i></i><i></i><i></i></span><span class="work__url">projet-01.com</span></div>
-              <div class="work__video">
-                <!-- Pour ajouter ta vidéo : place le fichier dans assets/videos/ puis décommente la ligne suivante
-                <video src="assets/videos/projet-01.mp4" muted loop playsinline preload="metadata"></video> -->
-                <div class="work__ph" aria-hidden="true">
-                  <span class="work__play"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l10.5-6.5z"/></svg></span>
-                  <span class="work__soon">Vidéo à venir</span>
-                </div>
-              </div>
-            </div>
-            <div class="work__meta"><h3>Projet 01</h3><span>Site vitrine · à compléter</span></div>
-          </article>
-          <article class="work__item">
-            <div class="work__frame">
-              <div class="work__bar"><span class="app__dots"><i></i><i></i><i></i></span><span class="work__url">projet-02.com</span></div>
-              <div class="work__video">
-                <!-- Pour ajouter ta vidéo : place le fichier dans assets/videos/ puis décommente la ligne suivante
-                <video src="assets/videos/projet-02.mp4" muted loop playsinline preload="metadata"></video> -->
-                <div class="work__ph" aria-hidden="true">
-                  <span class="work__play"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l10.5-6.5z"/></svg></span>
-                  <span class="work__soon">Vidéo à venir</span>
-                </div>
-              </div>
-            </div>
-            <div class="work__meta"><h3>Projet 02</h3><span>Landing page · à compléter</span></div>
-          </article>
-          <article class="work__item">
-            <div class="work__frame">
-              <div class="work__bar"><span class="app__dots"><i></i><i></i><i></i></span><span class="work__url">projet-03.com</span></div>
-              <div class="work__video">
-                <!-- Pour ajouter ta vidéo : place le fichier dans assets/videos/ puis décommente la ligne suivante
-                <video src="assets/videos/projet-03.mp4" muted loop playsinline preload="metadata"></video> -->
-                <div class="work__ph" aria-hidden="true">
-                  <span class="work__play"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l10.5-6.5z"/></svg></span>
-                  <span class="work__soon">Vidéo à venir</span>
-                </div>
-              </div>
-            </div>
-            <div class="work__meta"><h3>Projet 03</h3><span>E-commerce · à compléter</span></div>
+          <article class="work">
+            <div class="work__media"><div class="work__empty"><span class="work__play" aria-hidden="true"></span><span>Vidéo à venir</span></div></div>
+            <div class="work__info"><h3>Projet 03</h3><span>À compléter</span></div>
           </article>
         </div>
       </div>
     </section>
 
-    <!-- ================= VALUE ================= -->
-    <section class="value">
-      <div class="value__glow" aria-hidden="true"></div>
-      <div class="container value__inner">
-        <p class="eyebrow">Le potentiel</p>
-        <p class="value__upto">jusqu'à</p>
-        <p class="value__digits"><span data-value>0</span>&nbsp;€</p>
-        <p class="value__caption">Un site web professionnel peut être facturé jusqu'à 4 000 € selon sa complexité, sa qualité et les besoins du client. Nous t'apprenons à produire ce niveau d'exigence.</p>
-        <div class="bars" aria-hidden="true">
-          <div class="bar"><i style="--h:28%"></i><span>Vitrine</span></div>
-          <div class="bar"><i style="--h:40%"></i><span>Landing</span></div>
-          <div class="bar"><i style="--h:52%"></i><span>Portfolio</span></div>
-          <div class="bar"><i style="--h:72%"></i><span>Entreprise</span></div>
-          <div class="bar bar--top"><i style="--h:100%"></i><span>E-commerce</span></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ================= METHOD ================= -->
-    <section class="method section" id="methode">
-      <div class="container method__grid">
-        <div class="method__aside">
-          <p class="eyebrow">La méthode</p>
-          <h2 class="h2" data-split>Du besoin client au site livré.</h2>
-          <p class="lead">Cinq étapes pratiques, du premier échange avec le client jusqu'à la facturation.</p>
-          <div class="method__progress" aria-hidden="true"><i></i></div>
+    <!-- ================= MÉTHODE ================= -->
+    <section class="section" id="methode">
+      <div class="container method">
+        <div class="method__head">
+          <p class="label" data-reveal>La méthode</p>
+          <h2 class="h-lg" data-reveal-lines>Du besoin du client au site livré.</h2>
+          <p class="body" data-reveal>Une approche pratique, en cinq étapes, que tu appliques sur de vrais projets.</p>
         </div>
         <ol class="steps">
-          <li class="step"><span class="step__n">01</span><div><h3>Comprendre le besoin</h3><p>Analyser l'activité, les objectifs et la cible du client pour poser un cahier des charges clair.</p></div></li>
-          <li class="step"><span class="step__n">02</span><div><h3>Concevoir la solution</h3><p>Définir l'architecture, les pages, les parcours et la direction artistique avant de produire.</p></div></li>
-          <li class="step"><span class="step__n">03</span><div><h3>Créer avec l'IA</h3><p>Utiliser les bons outils et les bons prompts pour générer contenus, visuels et mises en page.</p></div></li>
-          <li class="step"><span class="step__n">04</span><div><h3>Affiner &amp; livrer</h3><p>Peaufiner le design, la version mobile et les performances pour un résultat professionnel.</p></div></li>
-          <li class="step"><span class="step__n">05</span><div><h3>Valoriser &amp; facturer</h3><p>Présenter, chiffrer et vendre tes prestations pour transformer la compétence en revenu.</p></div></li>
+          <li class="step"><span class="step__n">1</span><div><h3>Comprendre le besoin</h3><p>Analyser l'activité, les objectifs et la cible du client pour poser un cahier des charges clair.</p></div></li>
+          <li class="step"><span class="step__n">2</span><div><h3>Concevoir la solution</h3><p>Définir les pages, les parcours et la direction artistique avant de produire.</p></div></li>
+          <li class="step"><span class="step__n">3</span><div><h3>Créer avec l'IA</h3><p>Utiliser les bons outils et les bons prompts pour générer contenus, visuels et mises en page.</p></div></li>
+          <li class="step"><span class="step__n">4</span><div><h3>Affiner et livrer</h3><p>Soigner le design, la version mobile et les performances pour un rendu professionnel.</p></div></li>
+          <li class="step"><span class="step__n">5</span><div><h3>Valoriser et facturer</h3><p>Présenter ton travail, chiffrer et vendre tes prestations.</p></div></li>
         </ol>
       </div>
     </section>
 
-    <!-- ================= AUDIENCE ================= -->
-    <section class="audience section" id="pour-qui">
+    <!-- ================= POUR QUI ================= -->
+    <section class="section" id="pour-qui">
       <div class="container">
-        <div class="shead">
-          <p class="eyebrow reveal">Pour qui ?</p>
-          <h2 class="h2" data-split>Une compétence ouverte à tous.</h2>
-          <p class="lead reveal">Aucun prérequis technique. Juste l'envie de créer et de développer une activité dans le digital.</p>
+        <div class="head">
+          <p class="label" data-reveal>Pour qui</p>
+          <h2 class="h-lg" data-reveal-lines>Une compétence ouverte à tous.</h2>
         </div>
-        <div class="aud">
-          <article class="card aud__card">
-            <svg viewBox="0 0 24 24"><path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M7 10.5V15c0 1.5 2.2 3 5 3s5-1.5 5-3v-4.5"/></svg>
-            <h3>Débutants</h3><p>Tu pars de zéro et veux apprendre à créer des sites professionnels avec l'IA.</p>
-          </article>
-          <article class="card aud__card">
-            <svg viewBox="0 0 24 24"><path d="M4 20V9l8-5 8 5v11"/><path d="M9 20v-6h6v6"/></svg>
-            <h3>Entrepreneurs</h3><p>Porteurs de projets qui veulent développer leurs compétences digitales.</p>
-          </article>
-          <article class="card aud__card">
-            <svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
-            <h3>Freelances</h3><p>Tu veux proposer des prestations de création de sites web à forte valeur.</p>
-          </article>
-          <article class="card aud__card">
-            <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg>
-            <h3>Étudiants &amp; passionnés</h3><p>Le numérique t'attire et tu veux une compétence concrète, recherchée sur le marché.</p>
-          </article>
-          <article class="card aud__card">
-            <svg viewBox="0 0 24 24"><path d="M4 17l5-5 4 4 7-8"/><path d="M15 8h5v5"/></svg>
-            <h3>Futurs créateurs web</h3><p>Toute personne qui souhaite développer une activité dans la création de solutions web.</p>
-          </article>
-          <article class="card aud__card aud__card--cta">
-            <p class="aud__q">Tu te reconnais&nbsp;?</p>
-            <p>Parle-nous de ton projet, on t'oriente.</p>
-            <a class="btn btn--ghost magnetic" href="https://wa.me/2290199563785" target="_blank" rel="noopener"><span>Écrire sur WhatsApp</span><span class="btn__arrow">→</span></a>
-          </article>
+        <div class="grid3" data-stagger>
+          <article class="card who"><h3>Débutants</h3><p>Tu pars de zéro et veux apprendre à créer des sites professionnels avec l'IA.</p></article>
+          <article class="card who"><h3>Entrepreneurs</h3><p>Porteurs de projets qui veulent développer leurs compétences digitales.</p></article>
+          <article class="card who"><h3>Freelances</h3><p>Tu veux proposer des prestations de création de sites web.</p></article>
+          <article class="card who"><h3>Étudiants et passionnés</h3><p>Le numérique t'attire et tu veux une compétence recherchée sur le marché.</p></article>
+          <article class="card who"><h3>Futurs créateurs web</h3><p>Tu souhaites développer une activité dans la création de solutions web.</p></article>
+          <article class="card who who--cta"><h3>Tu te reconnais&nbsp;?</h3><p>Écris-nous, on t'oriente vers le bon parcours.</p><a class="btn btn--ghost" href="https://wa.me/2290199563785" target="_blank" rel="noopener">Écrire sur WhatsApp</a></article>
         </div>
       </div>
     </section>
 
     <!-- ================= FAQ ================= -->
-    <section class="faq section" id="faq">
-      <div class="container faq__grid">
-        <div>
-          <p class="eyebrow reveal">Questions fréquentes</p>
-          <h2 class="h2" data-split>Tout ce qu'il faut savoir.</h2>
-          <p class="body reveal">Une autre question&nbsp;? Écris-nous directement sur WhatsApp au +229 01 99 56 37 85.</p>
+    <section class="section" id="faq">
+      <div class="container method">
+        <div class="method__head">
+          <p class="label" data-reveal>Questions</p>
+          <h2 class="h-lg" data-reveal-lines>Tout ce qu'il faut savoir.</h2>
+          <p class="body" data-reveal>Une autre question&nbsp;? Écris-nous sur WhatsApp au +229 01 99 56 37 85.</p>
         </div>
-        <div class="acc">
-          <div class="acc__item"><button class="acc__q" aria-expanded="false">Faut-il savoir programmer pour suivre la formation&nbsp;?<span class="acc__ic"></span></button><div class="acc__a"><p>Non. Tu apprends à concevoir des sites professionnels grâce aux outils d'intelligence artificielle, sans maîtriser la programmation traditionnelle. L'accent est mis sur la compréhension du besoin et la conception de la solution.</p></div></div>
-          <div class="acc__item"><button class="acc__q" aria-expanded="false">Comment accéder à la formation&nbsp;?<span class="acc__ic"></span></button><div class="acc__a"><p>La formation est accessible directement via un lien dédié, entièrement en ligne. Contacte-nous sur WhatsApp pour recevoir toutes les informations d'accès.</p></div></div>
-          <div class="acc__item"><button class="acc__q" aria-expanded="false">Puis-je suivre la formation hors du Bénin&nbsp;?<span class="acc__ic"></span></button><div class="acc__a"><p>Oui. DH ACADEMY est basée au Bénin, mais la formation est 100 % en ligne : tu peux la suivre où que tu sois, à ton rythme.</p></div></div>
-          <div class="acc__item"><button class="acc__q" aria-expanded="false">Quels types de sites vais-je savoir créer&nbsp;?<span class="acc__ic"></span></button><div class="acc__a"><p>Sites vitrines, landing pages, portfolios, sites d'entreprise et plateformes e-commerce — des projets à forte valeur commerciale, pouvant être facturés jusqu'à 4 000 € selon leur complexité.</p></div></div>
-          <div class="acc__item"><button class="acc__q" aria-expanded="false">Pourrai-je vendre mes prestations ensuite&nbsp;?<span class="acc__ic"></span></button><div class="acc__a"><p>C'est tout l'objectif : transformer une compétence digitale en opportunité professionnelle, en freelance, pour ton entreprise ou pour lancer ta propre activité.</p></div></div>
+        <div class="faq">
+          <details class="faq__item"><summary>Faut-il savoir programmer&nbsp;?<span class="faq__ic" aria-hidden="true"></span></summary><div class="faq__a"><p>Non. Tu apprends à concevoir des sites professionnels avec les outils d'intelligence artificielle, sans maîtriser la programmation traditionnelle.</p></div></details>
+          <details class="faq__item"><summary>Comment accéder à la formation&nbsp;?<span class="faq__ic" aria-hidden="true"></span></summary><div class="faq__a"><p>La formation est accessible en ligne via un lien dédié. Écris-nous sur WhatsApp pour le recevoir.</p></div></details>
+          <details class="faq__item"><summary>Puis-je la suivre hors du Bénin&nbsp;?<span class="faq__ic" aria-hidden="true"></span></summary><div class="faq__a"><p>Oui. DH ACADEMY est basée au Bénin, et la formation est entièrement en ligne&nbsp;: tu la suis où que tu sois, à ton rythme.</p></div></details>
+          <details class="faq__item"><summary>Quels sites vais-je savoir créer&nbsp;?<span class="faq__ic" aria-hidden="true"></span></summary><div class="faq__a"><p>Sites vitrines, landing pages, portfolios, sites d'entreprise et plateformes e-commerce.</p></div></details>
+          <details class="faq__item"><summary>Pourrai-je vendre mes prestations&nbsp;?<span class="faq__ic" aria-hidden="true"></span></summary><div class="faq__a"><p>C'est l'objectif&nbsp;: transformer une compétence digitale en opportunité professionnelle, en freelance, pour ton entreprise ou pour lancer ta propre activité.</p></div></details>
         </div>
       </div>
     </section>
 
-    <!-- ================= CONTACT ================= -->
-    <section class="contact" id="contact">
-      <div class="contact__media img-fallback img-fallback--sky" aria-hidden="true">
-        <img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=2200&q=72&auto=format&fit=crop" alt="" loading="lazy" onerror="this.remove()" />
-        <div class="contact__overlay"></div>
+    <!-- ================= CTA / CONTACT ================= -->
+    <section class="cta" id="contact">
+      <div class="cta__photo photo photo--dawn">
+        <img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=2400&q=72&auto=format&fit=crop" alt="" loading="lazy" onerror="this.remove()" />
       </div>
-      <div class="container contact__inner" id="rejoindre">
-        <p class="eyebrow eyebrow--light">Contact</p>
-        <h2 class="contact__title" data-split>Transforme une compétence digitale en opportunité.</h2>
-        <p class="contact__sub">Laisse ton prénom : la conversation s'ouvre sur WhatsApp et on t'envoie le lien d'accès à la formation.</p>
-        <form class="capture contact__form" data-wa-form>
-          <label class="sr-only" for="contact-name">Ton prénom</label>
-          <input id="contact-name" class="capture__input" type="text" name="name" placeholder="Ton prénom" autocomplete="given-name" />
-          <button class="capture__btn" type="submit"><span>Recevoir le lien d'accès</span><span class="capture__arrow">→</span></button>
+      <div class="cta__shade"></div>
+      <div class="cta__inner" id="rejoindre">
+        <h2 class="cta__title" data-reveal-lines>Transforme une compétence digitale en opportunité.</h2>
+        <p class="hero__sub" data-reveal>Laisse ton prénom&nbsp;: la conversation s'ouvre sur WhatsApp et on t'envoie le lien d'accès.</p>
+        <form class="capture" data-wa-form data-reveal>
+          <label class="sr-only" for="cta-name">Ton prénom</label>
+          <input id="cta-name" class="capture__input" type="text" name="name" placeholder="Ton prénom" autocomplete="given-name" />
+          <button class="capture__btn" type="submit">Rejoindre la formation</button>
         </form>
-        <a class="wa-fallback" hidden target="_blank" rel="noopener">Ouvrir WhatsApp →</a>
-        <a class="btn btn--ghost magnetic contact__call" href="tel:+2290199563785"><span>Appeler le +229 01 99 56 37 85</span></a>
+        <a class="wa-fallback" hidden target="_blank" rel="noopener">Ouvrir la conversation WhatsApp →</a>
       </div>
-      <div class="container contact__cards">
-        <div class="card ccard"><span>Téléphone / WhatsApp</span><p>+229 01 99 56 37 85</p></div>
-        <div class="card ccard"><span>Localisation</span><p>Bénin — formation 100 % en ligne</p></div>
-        <div class="card ccard"><span>Accès</span><p>Via un lien dédié, envoyé sur demande</p></div>
-        <div class="card ccard"><span>Email</span><p class="muted">Bientôt disponible</p></div>
+      <div class="container cta__cards" data-stagger>
+        <div class="card info"><span>Téléphone et WhatsApp</span><p>+229 01 99 56 37 85</p></div>
+        <div class="card info"><span>Localisation</span><p>Bénin, formation 100&nbsp;% en ligne</p></div>
+        <div class="card info"><span>Email</span><p class="muted">Bientôt disponible</p></div>
       </div>
     </section>
   </main>
 
   <!-- ================= FOOTER ================= -->
   <footer class="footer">
-    <div class="container footer__grid">
+    <div class="container footer__top">
       <div class="footer__brand">
-        <a href="#accueil" class="logo"><svg class="logo__mark" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="14.5"/><circle cx="16" cy="16" r="9.5"/><circle cx="16" cy="16" r="4.5"/></svg><span class="logo__word">DH ACADEMY</span></a>
-        <p>Rendre la création de sites web professionnels accessible à tous, grâce à l'intelligence artificielle.</p>
+        <a href="#accueil" class="logo"><svg class="logo__mark" viewBox="0 0 28 28" aria-hidden="true"><circle cx="14" cy="14" r="12.5"/><circle cx="14" cy="14" r="5" class="logo__core"/></svg><span class="logo__word">DH ACADEMY</span></a>
+        <p>Rendre la création de sites web professionnels accessible à tous.</p>
       </div>
-      <div class="footer__col"><span>Navigation</span><a href="#accueil">Accueil</a><a href="#a-propos">À propos</a><a href="#services">Services</a><a href="#realisations">Réalisations</a><a href="#contact">Contact</a></div>
-      <div class="footer__col"><span>Formation</span><a href="#methode">La méthode</a><a href="#pour-qui">Pour qui&nbsp;?</a><a href="#faq">FAQ</a></div>
-      <div class="footer__col"><span>Contact</span><a href="https://wa.me/2290199563785" target="_blank" rel="noopener">WhatsApp</a><a href="tel:+2290199563785">+229 01 99 56 37 85</a><span class="footer__muted">Bénin · 100 % en ligne</span></div>
+      <div class="footer__col"><span>Formation</span><a href="#a-propos">À propos</a><a href="#services">Services</a><a href="#methode">Méthode</a><a href="#faq">Questions</a></div>
+      <div class="footer__col"><span>Contact</span><a href="https://wa.me/2290199563785" target="_blank" rel="noopener">WhatsApp</a><span class="footer__plain">+229 01 99 56 37 85</span><span class="footer__plain">Bénin</span></div>
     </div>
-    <div class="footer__word" aria-hidden="true">DH ACADEMY</div>
     <div class="container footer__legal">
-      <p>Les montants mentionnés (jusqu'à 4 000 €) illustrent la valeur possible d'un projet web selon sa complexité, sa qualité et les besoins du client. Ils ne constituent pas une garantie de revenus.</p>
-      <p>© <span id="year">2026</span> DH ACADEMY · Tous droits réservés</p>
+      <p>Les montants mentionnés (jusqu'à 4&nbsp;000&nbsp;€) illustrent la valeur possible d'un projet web selon sa complexité, sa qualité et les besoins du client. Ils ne constituent pas une garantie de revenus.</p>
+      <p>© <span id="year">2026</span> DH ACADEMY</p>
     </div>
   </footer>
-
-  <a class="float-wa" href="https://wa.me/2290199563785" target="_blank" rel="noopener" aria-label="Écrire à DH ACADEMY sur WhatsApp">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 00-8.6 15.1L2 22l5-1.3A10 10 0 1012 2zm0 18.2a8.2 8.2 0 01-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1112 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 01-3.3-2.9c-.3-.4.2-.4.7-1.4.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 00-.7.3 3 3 0 00-.9 2.2 5.2 5.2 0 001.1 2.7 11.8 11.8 0 004.5 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 001.8-1.3 2.2 2.2 0 00.1-1.3c0-.1-.2-.2-.5-.3z"/></svg>
-    <span>Une question&nbsp;?</span>
-  </a>
 
   <script src="assets/vendor/gsap.min.js"></script>
   <script src="assets/vendor/ScrollTrigger.min.js"></script>

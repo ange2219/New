@@ -1,4 +1,4 @@
-# DH ACADEMY — v2 « blue hour » (thème sombre)
+# DH ACADEMY — version sombre « blue hour »
 
 Site statique (HTML / CSS / JS), sans étape de build.
 
@@ -6,6 +6,7 @@ Site statique (HTML / CSS / JS), sans étape de build.
 - **Typo** : Archivo élargi (graisse 480) pour les titres, Inter pour le texte (Google Fonts).
 - **Animations** : GSAP 3.13 + ScrollTrigger + SplitText, défilement fluide Lenis (`assets/vendor/`).
 - **Photos** : chargées depuis Unsplash (placeholders). Si une photo ne charge pas, un fond dégradé prend le relais.
+- **Réalisations** : trois emplacements vidéo prêts. Mets tes fichiers dans `assets/videos/` et remplace chaque bloc `.work__empty` par la balise `<video>` indiquée en commentaire.
 - **Formulaires** : le prénom saisi ouvre une conversation WhatsApp pré-remplie vers le +229 01 99 56 37 85.
 
 ## Voir le site en local
