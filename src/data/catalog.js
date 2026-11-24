@@ -22,7 +22,7 @@ const img = (id) => `products/${id}.webp`
 
 // ── Hauts ────────────────────────────────────────────────────
 // Hauts photographiés sur un vrai cintre (fichiers public/products/<id>-cintre.webp)
-const HANGER_PHOTOS = ['overshirt-brooklyn', 'polo-arodr', 'zip-knit-charcoal', 'vest-chocolate', 'tee-essential-black']
+const HANGER_PHOTOS = ['overshirt-brooklyn', 'polo-arodr', 'zip-knit-charcoal', 'vest-chocolate', 'tee-essential-black', 'shirt-stripe-ss', 'shirt-oxford-white', 'tee-ls-white', 'tee-white']
 export const TOP_TYPES = { tee: 'T-shirt', shirt: 'Chemise', overshirt: 'Surchemise', polo: 'Polo', knit: 'Maille', vest: 'Gilet' }
 export const tops = [
   { id: 'overshirt-brooklyn', type: 'overshirt', name: 'Surchemise Brooklyn 92', subtitle: 'Sauge · broderie jaune', price: 89 },
