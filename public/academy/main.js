@@ -101,7 +101,7 @@ if (!reduce) {
 }
 
 // ═════ PROJETS : 12 cases, 3 réalisées ═════
-// Chaque projet est une courte vidéo du début du site (MP4 léger, 8 s, 30 images/s, en boucle).
+// Chaque projet est un montage des meilleurs passages du site (MP4 léger, ~10 s, 30 images/s, en boucle).
 // Pour ajouter un projet : déposer media/<nom>.mp4 + media/<nom>-poster.jpg et remplacer une case « À venir ».
 const PROJECTS = [
   { name: 'AXE Wild Spice', kind: 'Site produit', video: 'media/axe.mp4', poster: 'media/axe-poster.jpg' },
