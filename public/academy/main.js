@@ -101,15 +101,14 @@ if (!reduce) {
 }
 
 // ═════ PROJETS : 12 cases, 3 réalisées ═════
-// Chaque projet est un enregistrement du site qui défile du haut en bas (130 images).
-// Pour ajouter un projet : remplacer une case « À venir » par un objet comme ceux-ci.
+// Chaque projet est une courte vidéo du site qui défile (MP4 léger, ~13 s, en boucle).
+// Pour ajouter un projet : déposer media/<nom>.mp4 + media/<nom>-poster.jpg et remplacer une case « À venir ».
 const PROJECTS = [
-  { name: 'AXE Wild Spice', kind: 'Site produit', path: 'media/axe/', count: 130 },
-  { name: 'Complexe AZA', kind: 'Restaurant', path: 'media/aza/', count: 130 },
-  { name: 'DH Studio', kind: 'E-commerce mode', path: 'media/dh/', count: 130 },
+  { name: 'AXE Wild Spice', kind: 'Site produit', video: 'media/axe.mp4', poster: 'media/axe-poster.jpg' },
+  { name: 'Complexe AZA', kind: 'Restaurant', video: 'media/aza.mp4', poster: 'media/aza-poster.jpg' },
+  { name: 'DH Studio', kind: 'E-commerce mode', video: 'media/dh.mp4', poster: 'media/dh-poster.jpg' },
 ]
 const TOTAL = 12
-const SPEED = 6 // images par seconde : défilement lent, avec fondu entre deux images
 const lib = document.getElementById('lib')
 lib.innerHTML = Array.from({ length: TOTAL }, (_, i) => {
   const p = PROJECTS[i]
@@ -120,98 +119,55 @@ lib.innerHTML = Array.from({ length: TOTAL }, (_, i) => {
   }
   return `<article class="tile" data-i="${i}"><button class="tile-view browser" aria-label="Voir ${p.name} en grand">
       <span class="browser-bar"><i></i><i></i><i></i><b>${p.name}</b></span>
-      <canvas class="proj-canvas"></canvas><span class="scrollbar"><i></i></span><span class="zoom">Voir en grand</span></button>
+      <video class="proj-video" poster="${p.poster}" muted loop playsinline preload="none"></video>
+      <span class="zoom">Voir en grand</span></button>
     <div class="tile-meta"><h4>${p.name}</h4><span>${p.kind}</span></div></article>`
 }).join('')
 
-// Lecteur : séquence d'images avec fondu, lent, en boucle
-function player(p, canvas, bar, offset = 0) {
-  const ctx = canvas.getContext('2d')
-  const imgs = []
-  let t = offset // position en images (nombre décimal)
-  let last = 0
-  let playing = false
-  const load = () => {
-    if (imgs.length) return
-    for (let k = 0; k < p.count; k++) {
-      const im = new Image()
-      im.src = `${p.path}${String(k).padStart(3, '0')}.webp`
-      imgs.push(im)
-    }
-  }
-  const ok = (im) => im && im.complete && im.naturalWidth
-  const paint = (im, a) => {
-    ctx.globalAlpha = a
-    const s = Math.max(canvas.width / im.naturalWidth, canvas.height / im.naturalHeight)
-    ctx.drawImage(im, (canvas.width - im.naturalWidth * s) / 2, (canvas.height - im.naturalHeight * s) / 2, im.naturalWidth * s, im.naturalHeight * s)
-  }
-  const draw = () => {
-    const w = canvas.clientWidth * Math.min(2, devicePixelRatio || 1)
-    const h = canvas.clientHeight * Math.min(2, devicePixelRatio || 1)
-    if (canvas.width !== w) canvas.width = w
-    if (canvas.height !== h) canvas.height = h
-    const a = Math.floor(t) % p.count
-    const b2 = (a + 1) % p.count
-    const f = t - Math.floor(t)
-    if (!ok(imgs[a])) return
-    paint(imgs[a], 1)
-    if (ok(imgs[b2]) && b2 !== 0) paint(imgs[b2], f)
-    ctx.globalAlpha = 1
-    if (bar) bar.style.transform = `scaleY(${(a + f) / (p.count - 1)})`
-  }
-  const tick = (now) => {
-    if (!playing) return
-    const dt = last ? (now - last) / 1000 : 0
-    last = now
-    t = (t + dt * SPEED) % p.count
-    // petite pause en fin de site avant de revenir en haut
-    if (t > p.count - 1) t = 0
-    draw()
-    requestAnimationFrame(tick)
-  }
-  return {
-    play() {
-      load()
-      if (playing || reduce) {
-        imgs[Math.floor(t)].onload = draw
-        return draw()
-      }
-      playing = true
-      last = 0
-      requestAnimationFrame(tick)
-    },
-    stop() {
-      playing = false
-    },
-  }
-}
-
-const players = []
+// La vidéo ne joue que quand la case est à l'écran (économise la batterie et les données)
 lib.querySelectorAll('.tile[data-i]').forEach((tile, k) => {
   const p = PROJECTS[+tile.dataset.i]
-  const pl = player(p, tile.querySelector('canvas'), tile.querySelector('.scrollbar i'), k * 20)
-  players.push(pl)
-  ScrollTrigger.create({ trigger: tile, start: 'top bottom', end: 'bottom top', onToggle: (st) => (st.isActive ? pl.play() : pl.stop()) })
+  const v = tile.querySelector('video')
+  let started = false
+  ScrollTrigger.create({
+    trigger: tile,
+    start: 'top bottom',
+    end: 'bottom top',
+    onToggle: (st) => {
+      if (reduce) return
+      if (st.isActive) {
+        if (!started) {
+          started = true
+          // départs décalés (#t=…) pour ne pas voir trois débuts de site en même temps
+          v.addEventListener('loadeddata', () => (v.currentTime = k * 4.3), { once: true })
+          v.src = p.video
+          v.preload = 'auto'
+        }
+        v.play().catch(() => {})
+      } else v.pause()
+    },
+  })
   tile.querySelector('.tile-view').addEventListener('click', () => openViewer(p))
 })
 
 // Visionneuse plein écran
 const viewer = document.getElementById('viewer')
-let vPlayer = null
+const vVideo = viewer.querySelector('video')
 function openViewer(p) {
   viewer.querySelector('.v-title').textContent = p.name
   viewer.querySelector('.v-kind').textContent = p.kind
+  vVideo.poster = p.poster
+  vVideo.src = p.video
   viewer.hidden = false
   document.documentElement.classList.add('locked')
-  vPlayer = player(p, viewer.querySelector('canvas'), viewer.querySelector('.scrollbar i'))
   requestAnimationFrame(() => {
     viewer.classList.add('open')
-    vPlayer.play()
+    vVideo.play().catch(() => {})
   })
 }
 function closeViewer() {
   viewer.classList.remove('open')
-  vPlayer?.stop()
+  vVideo.pause()
   document.documentElement.classList.remove('locked')
   setTimeout(() => (viewer.hidden = true), 400)
 }
