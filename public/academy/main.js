@@ -101,7 +101,7 @@ if (!reduce) {
 }
 
 // ═════ PROJETS : 12 cases, 3 réalisées ═════
-// Chaque projet est une courte vidéo du site qui défile (MP4 léger, ~13 s, en boucle).
+// Chaque projet est une courte vidéo du début du site (MP4 léger, 8 s, 30 images/s, en boucle).
 // Pour ajouter un projet : déposer media/<nom>.mp4 + media/<nom>-poster.jpg et remplacer une case « À venir ».
 const PROJECTS = [
   { name: 'AXE Wild Spice', kind: 'Site produit', video: 'media/axe.mp4', poster: 'media/axe-poster.jpg' },
@@ -139,7 +139,7 @@ lib.querySelectorAll('.tile[data-i]').forEach((tile, k) => {
         if (!started) {
           started = true
           // départs décalés (#t=…) pour ne pas voir trois débuts de site en même temps
-          v.addEventListener('loadeddata', () => (v.currentTime = k * 4.3), { once: true })
+          v.addEventListener('loadeddata', () => (v.currentTime = k * 2.2), { once: true })
           v.src = p.video
           v.preload = 'auto'
         }
